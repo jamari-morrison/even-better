@@ -51,8 +51,22 @@ router.post('/delete', async (req, res) => {
   else res.json({
     message: 'could not find user ' + req.body['rose-username']
   })
+})
 
+router.post('/addFriend', async (req, res) => {
+  //database operation to add friend
 
+  // const deleted = await User.deleteOne({
+  //   'rose-username': req.body['rose-username']
+  // }).catch(err => {
+  //   res.json({
+  //     message: err
+  //   })
+  // })
+
+  res.json({
+    message: 'could not find user ' + req.body['rose-username']
+  })
 })
 
 router.post('/sendValidationEmail', async (req, res) => {
@@ -161,8 +175,6 @@ router.get('/emailValidated/:username', async (req, res) => {
   res.json({
     message: false
   });
-
-
 }
 
 
