@@ -68,9 +68,12 @@ void requestSignUpEB(
       .createUserWithEmailAndPassword(email: username, password: password)
       .then((val) {
     if (val.user?.email == username) {
-      createAlbumSignUpEB(username, roseUsername)
-          .then((value) => {print(value)})
-          .catchError((error) {
+      createAlbumSignUpEB(username, roseUsername).then((value) {
+        //pop to the homescreen
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }).catchError((error) {
         //delete the the account that fb created since we can't connect to the
         //database to finish creating the account
         //if this then fails, there's no saving us.
@@ -78,10 +81,6 @@ void requestSignUpEB(
 
         modalErrorHandler(error, context, "Database connection error");
       });
-      //pop to the homescreen
-      Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.pop(context);
     }
   }).catchError((error) {
     modalErrorHandler(error, context, "Account Creation Failure");

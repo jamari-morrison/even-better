@@ -11,13 +11,11 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 //import 'package:socket_io/socket_io.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-
 String randomString() {
   final random = Random.secure();
   final values = List<int>.generate(16, (i) => random.nextInt(255));
   return base64UrlEncode(values);
 }
-
 
 class DirectMessage extends StatefulWidget {
   const DirectMessage({
@@ -30,19 +28,16 @@ class DirectMessage extends StatefulWidget {
 
   @override
   State<DirectMessage> createState() => _DirectMessageState();
-
-
 }
-
-
-
-
 
 class _DirectMessageState extends State<DirectMessage> {
   List<types.Message> _messages = [];
   final _user = const types.User(id: 'currentStudent');
   final _recipient = const types.User(id: 'recipient');
-  Socket socket = io('http://10.0.2.2:3000', <String, dynamic>{'transports': ['websocket'], 'autoConnect': false});
+  Socket socket = io('http://10.0.2.2:3000', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': false
+  });
 
   // IO.Socket socket = IO.io('http://10.0.2.2:3000', OptionBuilder()
   //     .setTransports(['websocket']) // for Flutter or Dart VM
@@ -50,11 +45,9 @@ class _DirectMessageState extends State<DirectMessage> {
   //     .setExtraHeaders({'foo': 'bar'}) // optional
   //     .build());
 
-
-
-  void getMessageHistory() async{
-    final uri =
-    Uri.http('10.0.2.2:3000', '/messages/conversation', {'sender': widget.currentStudent, 'recipient': widget.recipient});
+  void getMessageHistory() async {
+    final uri = Uri.http('10.0.2.2:3000', '/messages/conversation',
+        {'sender': widget.currentStudent, 'recipient': widget.recipient});
 
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -64,7 +57,7 @@ class _DirectMessageState extends State<DirectMessage> {
 
     Map<String, dynamic> responseList = jsonDecode(response.body);
 
-    for(var msg in responseList['messages']){
+    for (var msg in responseList['messages']) {
       final textMessage = types.TextMessage(
         author: msg['sender'] == widget.currentStudent ? _user : _recipient,
         createdAt: msg['timestamp'],
@@ -74,23 +67,15 @@ class _DirectMessageState extends State<DirectMessage> {
 
       _addMessage(textMessage);
     }
-
-
   }
 
-
   void _addMessage(types.Message message) {
-
     setState(() {
       _messages.insert(0, message);
     });
   }
 
-
-
   void _handleSendPressed(types.PartialText message) {
-
-
     final textMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -122,12 +107,12 @@ class _DirectMessageState extends State<DirectMessage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-      appBar: AppBar(title: Text(widget.recipient), backgroundColor: Colors.purple,),
-      body:
-      SafeArea(
+      appBar: AppBar(
+        title: Text(widget.recipient),
+        backgroundColor: Colors.purple,
+      ),
+      body: SafeArea(
         bottom: false,
         child: Chat(
           messages: _messages,
@@ -136,13 +121,6 @@ class _DirectMessageState extends State<DirectMessage> {
         ),
       ),
     );
-
-
-
-
-
-
-
   }
 
   @override
@@ -151,7 +129,6 @@ class _DirectMessageState extends State<DirectMessage> {
     getMessageHistory();
     socket.connect();
     print('START');
-
 
     socket.onConnect((_) {
       print('connect');
@@ -163,10 +140,5 @@ class _DirectMessageState extends State<DirectMessage> {
     //TODO: get timestamp from server, don't make own
     //TODO: upload message id to server so they're the same (?)
     socket.on('fromServer', (_) => {_handleGetMessage(_.toString())});
-
   }
-
 }
-
-
-

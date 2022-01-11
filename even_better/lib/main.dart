@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:even_better/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'fb_services/auth.dart';
 import 'screens/wrapper.dart';
@@ -15,6 +16,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 200)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCube
+    ..loadingStyle = EasyLoadingStyle.light
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
 }
 
 class MyApp extends StatelessWidget {
@@ -39,12 +57,15 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: null, //required
       child: MaterialApp(
-          debugShowCheckedModeBanner: true,
-          title: MyApp.appTitle,
-          theme: ThemeData(
-            primarySwatch: MaterialColor(0xFF800000, customColors),
-          ),
-          home: const Wrapper()),
+        debugShowCheckedModeBanner: true,
+        title: MyApp.appTitle,
+        theme: ThemeData(
+          //TODO: make a custom color swatch with the rose color palette
+          primarySwatch: MaterialColor(0xFF800000, customColors),
+        ),
+        home: const Wrapper(),
+        builder: EasyLoading.init(),
+      ),
     );
   }
 }
@@ -55,8 +76,9 @@ class MyHttpOverrides extends HttpOverrides {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           ((X509Certificate cert, String host, int port) {
-        final isValidHost = host == "3.139.159.105";
-        return isValidHost;
+        // final isValidHost = host == "3.139.159.105";
+        // host varies here. need to validate this somehow??
+        return true;
       });
   }
 }

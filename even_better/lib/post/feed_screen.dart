@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:even_better/Chat/select_user.dart';
+import 'package:even_better/Search/searchpage.dart';
 import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum.dart';
 import 'package:even_better/screens/api.dart';
@@ -266,6 +267,9 @@ class _FeedScreenState extends State<FeedScreen> {
       case 0:
         child = _postHome();
         break;
+      case 1:
+        child = MySearchPage();
+        break;
       case 3:
         child = ForumListPage(Data([], [], []));
         break;
@@ -322,12 +326,8 @@ class _FeedScreenState extends State<FeedScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
-                  print('niemaaaaa1aaa');
                   await GetRequest();
-
-                  print('niemaaaaa3a');
                   setState(() {
-                    print('niemaaaaaaaaaaaaaa');
                     Posting latestpost = serverposts[serverposts.length - 1];
                     String pid = latestpost.pid;
                     int numlikes = latestpost.likes;
