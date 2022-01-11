@@ -8,8 +8,7 @@ import 'package:http/http.dart';
 
 //documentation: https://flutter.dev/docs/cookbook/networking/send-data
 //if we need to work with responses, add stuff from here ^
-String BASE_URL =
-    'http://ec2-3-137-199-220.us-east-2.compute.amazonaws.com:3000/posts/';
+String BASE_URL = 'https://api.even-better-api.com:443/posts/';
 List<Posting> serverposts = <Posting>[];
 
 void createPost(title, description, url, likes, time, username) {

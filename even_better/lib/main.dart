@@ -10,7 +10,8 @@ import 'screens/wrapper.dart';
 import 'models/user.dart';
 
 void main() async {
-  // HttpOverrides.global = MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
+
   print("running program");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
     800: const Color(0xFF96084F),
     900: const Color(0xFF96084F)
   });
+
   @override
   Widget build(BuildContext context) {
     return StreamProvider<MyUser?>.value(
@@ -68,12 +70,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// class MyHttpOverrides extends HttpOverrides {
-//   @override
-//   HttpClient createHttpClient(SecurityContext? context) {
-//     return super.createHttpClient(context)
-//       ..badCertificateCallback =
-//           (X509Certificate cert, String host, int prot) => true;
-//   }
-// }
-
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          ((X509Certificate cert, String host, int port) {
+        // final isValidHost = host == "3.139.159.105";
+        // host varies here. need to validate this somehow??
+        return true;
+      });
+  }
+}

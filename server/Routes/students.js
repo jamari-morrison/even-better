@@ -51,7 +51,8 @@ router.post('/create', (req, res) => {
 
 router.post('/checkExist', async (req, res) =>{
   var exists = await Student.find({"rose-username": req.body['rose-username']});
-  var isTaken = await User.find({"rose-username": req.body['rose-username']});
+  var isTaken = await User.find({"rose-username": req.body['rose-username'],
+ "username": {$exists: true}});
   if(exists.length > 0 && isTaken.length == 0) res.json({message: true})
   else res.json({message: false})
 })
