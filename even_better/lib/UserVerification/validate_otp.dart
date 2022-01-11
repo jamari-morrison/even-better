@@ -36,7 +36,6 @@ class _ValidateOtpState extends State<ValidateOtp> {
                       roseUsername: widget.roseUsername,
                     )));
       }
-      ;
     }).catchError((error) {
       modalErrorHandler(error, context, "database conenction error");
     });

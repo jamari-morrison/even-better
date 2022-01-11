@@ -4,7 +4,6 @@ const UserSchema = mongoose.Schema(
     {
         "username": {
             type: String,
-            required: true
         },
         "rose-username": {
             type: String,
@@ -12,6 +11,7 @@ const UserSchema = mongoose.Schema(
         },
         "verification-token": String,
         "verified": Boolean,
+        "creation-time": Number,
         "pfp-uri": String,
         "bio": String,
         "friends": [String],

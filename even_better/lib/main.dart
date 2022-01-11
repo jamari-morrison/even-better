@@ -55,8 +55,9 @@ class MyHttpOverrides extends HttpOverrides {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           ((X509Certificate cert, String host, int port) {
-        final isValidHost = host == "3.139.159.105";
-        return isValidHost;
+        // final isValidHost = host == "3.139.159.105";
+        // host varies here. need to validate this somehow??
+        return true;
       });
   }
 }
