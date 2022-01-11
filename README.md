@@ -21,7 +21,7 @@ Choose the private key and click “open”
 
 3.) do "rm server.zip" to delete the old version of the server
 
-4.) Upload that zip file using this command on git bash: "scp -i ./license-keys.pem ./server.zip ec2-user@ec2-3-137-199-220.us-east-2.compute.amazonaws.com:/home/ec2-user"
+4.) Upload that zip file using this command on git bash: "scp -i ./license-keys.pem ./server.zip ec2-user@even-better-api.com:/home/ec2-user server.zip"
 
 5.) We need to stop the current version of the server from running, so do "tmux attach -t server" to enter the session the server is running in
 
