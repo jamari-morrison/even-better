@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:even_better/forum/create_forum.dart';
 import 'package:even_better/models/forum_post.dart' as fp;
 import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/showAllTags.dart';
 import 'package:even_better/post/feed_screen.dart';
+import 'package:even_better/screens/loading.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ForumListPage extends StatefulWidget {
   Data db;
@@ -13,7 +19,9 @@ class ForumListPage extends StatefulWidget {
 }
 
 class _ForumListPageState extends State<ForumListPage> {
+  bool loading = false;
   Data db;
+  Timer? _timer;
   _ForumListPageState(this.db);
   // var topTagGroup = Container(
   //   alignment: Alignment.center,
@@ -62,6 +70,18 @@ class _ForumListPageState extends State<ForumListPage> {
   //         ],
   //       )),
   // );
+  @override
+  void initState() {
+    super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+    EasyLoading.showSuccess('Use in initState');
+    // EasyLoading.removeCallbacks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +161,7 @@ class _ForumListPageState extends State<ForumListPage> {
             horizontal: 10.0,
             vertical: 0.0,
           ),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: CompanyColors.red,
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
           ),
@@ -161,8 +181,13 @@ class _ForumListPageState extends State<ForumListPage> {
                     child: Column(
                       children: <Widget>[
                         TextButton(
-                          onPressed: () {
-                            print("showing more tags");
+                          onPressed: () async {
+                            _timer?.cancel();
+                            await EasyLoading.show(
+                              status: 'loading...',
+                              maskType: EasyLoadingMaskType.black,
+                            );
+                            print('EasyLoading show');
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -170,6 +195,7 @@ class _ForumListPageState extends State<ForumListPage> {
                                         alltags: db.tags,
                                       )),
                             );
+                            EasyLoading.dismiss();
                           },
                           child: const Text("···",
                               style: TextStyle(color: Colors.white)),
@@ -183,6 +209,8 @@ class _ForumListPageState extends State<ForumListPage> {
                         TextButton(
                           onPressed: () {
                             print("showing more tags");
+                            // sleep(Duration(seconds: 3));
+                            // setState(() => loading = false);
                           },
                           child: const Text("",
                               style: TextStyle(color: Colors.white)),

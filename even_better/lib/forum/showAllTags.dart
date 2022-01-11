@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:even_better/models/tag.dart';
+import 'package:even_better/post/feed_screen.dart';
 import 'package:flutter/material.dart';
 
 class showAllTags extends StatefulWidget {
@@ -18,7 +19,7 @@ class _showAllTagsState extends State<showAllTags> {
   Widget build(BuildContext context) {
     var a = Container(
         decoration: const BoxDecoration(
-          color: Colors.red,
+          color: CompanyColors.red,
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
         ),
         child: Column(

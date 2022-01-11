@@ -55,7 +55,7 @@ class Tag extends StatelessWidget {
                       builder: (context) => TagPage(forward, tagged_forum)),
                 );
               },
-              child: Text(tagName, style: const TextStyle(color: Colors.black)),
+              child: Text(tagName, style: const TextStyle(color: Colors.white)),
             ),
           ],
         ),
