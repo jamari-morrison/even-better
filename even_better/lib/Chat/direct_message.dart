@@ -30,6 +30,8 @@ class DirectMessage extends StatefulWidget {
 
   @override
   State<DirectMessage> createState() => _DirectMessageState();
+
+
 }
 
 
@@ -47,6 +49,7 @@ class _DirectMessageState extends State<DirectMessage> {
   //     .disableAutoConnect()  // disable auto-connection
   //     .setExtraHeaders({'foo': 'bar'}) // optional
   //     .build());
+
 
 
   void getMessageHistory() async{
@@ -162,6 +165,8 @@ class _DirectMessageState extends State<DirectMessage> {
     socket.on('fromServer', (_) => {_handleGetMessage(_.toString())});
 
   }
+
 }
+
 
 
