@@ -64,6 +64,8 @@ class ProfileAppState extends State<ProfileApp> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenwidth = MediaQuery.of(context).size.width;
+    final double screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       // backgroundColor: const Color(0xFFE0E0E0),
@@ -193,8 +195,9 @@ class ProfileAppState extends State<ProfileApp> {
                           color: Colors.white,
                           elevation: 5.0,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 8.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: screenwidth * 0.005,
+                                vertical: screenheight * 0.0001),
                             child: Row(
                               children: <Widget>[
                                 Expanded(
@@ -205,7 +208,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: 20.0,
+                                          fontSize: screenwidth / 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -216,7 +219,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         "1",
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: 18.0,
+                                          fontSize: screenwidth / 22,
                                           color: CompanyColors.red[300],
                                         ),
                                       )
@@ -232,7 +235,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: 20.0,
+                                          fontSize: screenwidth / 20.0,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -243,7 +246,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         "20",
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: 18.0,
+                                          fontSize: screenwidth / 22.0,
                                           color: CompanyColors.red[300],
                                         ),
                                       )
@@ -258,7 +261,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: 20.0,
+                                          fontSize: screenwidth / 20.0,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -269,7 +272,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         "10",
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: 18.0,
+                                          fontSize: screenwidth / 22.0,
                                           color: CompanyColors.red[300],
                                         ),
                                       )
@@ -285,7 +288,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: 20.0,
+                                          fontSize: screenwidth / 20.0,
                                         ),
                                       ),
                                       SizedBox(
@@ -295,7 +298,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         _company,
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: 18.0,
+                                          fontSize: screenwidth / 22.0,
                                           color: CompanyColors.red[300],
                                         ),
                                       ),
