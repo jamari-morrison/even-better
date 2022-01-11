@@ -164,7 +164,7 @@ router.post('/sendValidationEmail', async (req, res) => {
         subject: "Verify Your Even Better Account",
         //TODO: change to be the actual server and not local host
         // html: `<p><a href='https://load-balancer-937536547.us-east-2.elb.amazonaws.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
-        html: `<p><a href='http://192.168.1.140:3000/users/validateEmail/${key}'>click here to verify email</a></p>`
+        html: `<p><a href='https://api.even-better-api.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
