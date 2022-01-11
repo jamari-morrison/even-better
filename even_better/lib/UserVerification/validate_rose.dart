@@ -1,3 +1,4 @@
+import 'package:even_better/UserVerification/Helpers/account_creation.dart';
 import 'package:even_better/UserVerification/sign_up.dart';
 import 'package:even_better/UserVerification/validate_otp.dart';
 import 'package:flutter/material.dart';
@@ -20,25 +21,36 @@ class _ValidateRoseState extends State<ValidateRose> {
   var validEmail = true;
   late Future<AlbumSendEmail> futureAlbum;
 
-  void _registerRose(username) {
+  void _registerRose(username, resending) {
     //verify account with .csv webscraped file
-    futureAlbum = createAlbumSendEmail(username);
-    futureAlbum.then((album) {
-      //worth to check if == "false" ?
+    createAlbumValidateRose(username).then((validAlbum) {
+      print(validAlbum.message);
 
-      print(album.message);
-
-      // validEmail = album.message == "true";
       //TODO: COMMENT LINE BELOW AND UNCOMMENT LINE ABOVE
-      //Currunt config is for testing with a rose username multiple times
-      validEmail = true;
+      // validEmail = true;
 
-      if (validEmail) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ValidateOtp(roseUsername: username)));
+      if (validAlbum.message) {
+        createAlbumSendEmail(username).then((album) {
+          if (!resending) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ValidateOtp(
+                        roseUsername: username, registerRose: _registerRose)));
+          }
+        }).catchError((error) {
+          //modal!
+          modalErrorHandler(error, context, "error sending email");
+          print("error sending email: " + error);
+        });
+      } else {
+        //MODAL
+        modalErrorHandler("contact ... if this is not you", context,
+            "Rose email already in use");
       }
+    }).catchError((error) {
+      //MODAL
+      modalErrorHandler(error, context, "error validating rose email");
     });
 
 //for testing
@@ -69,19 +81,9 @@ class _ValidateRoseState extends State<ValidateRose> {
                 margin: const EdgeInsets.only(top: 40),
                 child: ElevatedButton(
                     onPressed: () {
-                      _registerRose(usernameController.text);
+                      _registerRose(usernameController.text, false);
                     },
                     child: const Text("Continue"))),
-            validEmail
-                ? Text("")
-                //must be error
-                : Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    child: const Text("Invalid Rose-Hulman email, error ",
-                        style: TextStyle(
-                          color: Colors.red,
-                        )),
-                  ),
           ],
         ),
       ),

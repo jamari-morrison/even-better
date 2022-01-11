@@ -8,9 +8,11 @@ import 'Helpers/verification_rest_api.dart';
 class ValidateOtp extends StatefulWidget {
   const ValidateOtp({
     required this.roseUsername,
+    required this.registerRose,
     Key? key,
   }) : super(key: key);
   final String roseUsername;
+  final Function registerRose;
 
   @override
   State<ValidateOtp> createState() => _ValidateOtpState();
@@ -71,6 +73,13 @@ class _ValidateOtpState extends State<ValidateOtp> {
                 child: ElevatedButton(
                     onPressed: checkEmailValidated,
                     child: const Text("Confirm Email Validation"))),
+            Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: ElevatedButton(
+                    onPressed: () {
+                      widget.registerRose(widget.roseUsername, true);
+                    },
+                    child: const Text("Resend Email"))),
           ],
         ),
       ),

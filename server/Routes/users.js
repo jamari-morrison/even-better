@@ -19,11 +19,13 @@ function deleteIncompleteAccounts() {
 
   console.log("deleting incomplete accounts");
   User.deleteMany({
-    "username" : null,
-    "creation-time": {$lt: Date.now() - deletionTimeMs}
+    "username": null,
+    "creation-time": {
+      $lt: Date.now() - deletionTimeMs
+    }
   }).then((result) => {
     console.log(result);
-    
+
   });
 }
 
@@ -62,8 +64,7 @@ router.post('/signup', async (req, res) => {
     res.json({
       message: "user account deleted or does not exist"
     })
-  }
-  else {
+  } else {
     res.json({
       message: "success"
     })
@@ -92,11 +93,9 @@ router.post('/delete', async (req, res) => {
 })
 
 router.post('/sendValidationEmail', async (req, res) => {
-
-  let testAccount = await nodemailer.createTestAccount();
-
+  // not responsible for if an account has already been created with this rose email,
+  // but is responsible if there is one in progress
   var transporter = nodemailer.createTransport({
-    //TODO: get a temporary gmail account, don't use personal one
     service: 'gmail',
     auth: {
       //made a fake gmail account for this. replace it later probably
@@ -104,6 +103,8 @@ router.post('/sendValidationEmail', async (req, res) => {
       pass: 'Password1?'
     }
   });
+
+
 
   rtg.generateKey({
     len: 16,
@@ -113,23 +114,39 @@ router.post('/sendValidationEmail', async (req, res) => {
   }, async (err, key) => {
 
     //could check to see if the key is already in use. Extremely unlikely to generate the same one twice though
-    const user = new User({
-      "rose-username": req.body['rose-username'],
-      'verification-token': key,
-      'verified': false,
-      'creation-time': Date.now()
-    });
 
-    //create a placeholder account for verification
-    user.save()
-      .then(data => {
-        res.json(data);
-      })
-      .catch(err => {
-        res.json({
-          message: err
+    //check if there is already an account creation in progress.
+    //if there is, update veriification-token for it and don't create a new user
+    //note that verified might already be true here depending on when they backed out. Set
+    //it to false to ensure the account isn't stolen after being verified
+
+    const updateStats = await User.updateOne({
+      "rose-username": req.body['rose-username'],
+      "username": null
+    }, {"verified": false, "verification-token": key, "creation-time": Date.now()})
+
+    if (updateStats.modifiedCount == 0) {
+      const user = new User({
+        "rose-username": req.body['rose-username'],
+        'verification-token': key,
+        'verified': false,
+        'creation-time': Date.now()
+      });
+
+      //create a placeholder account for verification
+      user.save()
+        .then(data => {
+          res.json(data);
         })
-      })
+        .catch(err => {
+          res.json({
+            message: err
+          })
+        })
+
+
+    }
+
 
     // var toUpdate = await User.updateOne({
     //   "rose-username": req.body['rose-username']
