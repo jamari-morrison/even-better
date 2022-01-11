@@ -8,11 +8,11 @@ To upload a new version of the server:
 
 1.) Create a zip file of the server folder
 
-2.) Connect to the server using putty. Url is "ec2-3-137-199-220.us-east-2.compute.amazonaws.com" and the user is "ec2-user" and the key is the "license-keys.pem" file inside of the "even-better" directory
+2.) Connect to the server using putty. Url is "ec2-18-217-202-114.us-east-2.compute.amazonaws.com" and the user is "ec2-user" and the key is the "license-keys.pem" file inside of the "even-better" directory
 
 ![image](https://user-images.githubusercontent.com/45301418/146040128-57ab175a-e8a6-49b8-8810-c80db3f4cfd8.png)
  
-Hose name: ec2-user@ec2-3-137-199-220.us-east-2.compute.amazonaws.com
+Hose name: ec2-user@ec2-18-217-202-114.us-east-2.compute.amazonaws.com
 
 ![image](https://user-images.githubusercontent.com/45301418/146040187-52e0f4a3-314f-4000-8432-0352b6234777.png)
 
