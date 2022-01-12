@@ -1,3 +1,4 @@
+import 'package:even_better/UserVerification/Helpers/account_creation.dart';
 import 'package:flutter/material.dart';
 
 import '../fb_services/auth.dart';
@@ -35,12 +36,25 @@ class Settings extends StatelessWidget {
                   child: Text("DELETE"),
                   onPressed: () {
                     //do the deletions!
-                    // createAlbumDeleteAccount(auth.user);
+                    print(auth.userEmail);
+                    createAlbumDeleteAccount(auth.userEmail).then((album) {
+                      auth.deleteAccount().then((value) {
+                        auth.signOut();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      }).catchError((error) {
+                        //other modal goes here
+                        print(error);
+                        modalErrorHandler(error, context,
+                            "Even Better Account Deletion Failure");
+                      });
+                    }).catchError((error) {
+                      print(error);
+                      //modal here
+                      modalErrorHandler(
+                          error, context, "Firebase Account Deletion Failure");
+                    });
                     //TODO: Error handling here
-                    auth.deleteAccount();
-                    auth.signOut();
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
                   },
                 );
 

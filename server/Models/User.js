@@ -9,7 +9,10 @@ const UserSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        "verification-token": String,
+        "verification-token": {
+            type: String,
+            required: true
+        },
         "verified": Boolean,
         "creation-time": Number,
         "pfp-uri": String,

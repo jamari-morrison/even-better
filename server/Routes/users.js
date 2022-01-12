@@ -74,20 +74,23 @@ router.post('/signup', async (req, res) => {
 })
 
 router.post('/delete', async (req, res) => {
-  console.log('deleting user ' + req.body['rose-username']);
+  console.log('deleting user ' + req.body['username']);
   const deleted = await User.deleteOne({
-    'rose-username': req.body['rose-username']
+    'username': req.body['username']
   }).catch(err => {
     res.json({
       message: err
     })
   })
   if (deleted['deletedCount'] == 1) res.json({
-    message: 'successfully deleted ' + req.body['rose-username']
+    message: 'successfully deleted ' + req.body['username']
   })
-  else res.json({
-    message: 'could not find user ' + req.body['rose-username']
+  else {
+    res.status = 500;
+    res.json({
+    message: 'could not find user ' + req.body['username']
   })
+}
 
 
 })
@@ -103,8 +106,6 @@ router.post('/sendValidationEmail', async (req, res) => {
       pass: 'Password1?'
     }
   });
-
-
 
   rtg.generateKey({
     len: 16,
@@ -163,8 +164,8 @@ router.post('/sendValidationEmail', async (req, res) => {
         to: req.body['rose-username'] + '@rose-hulman.edu',
         subject: "Verify Your Even Better Account",
         //TODO: change to be the actual server and not local host
-        // html: `<p><a href='https://load-balancer-937536547.us-east-2.elb.amazonaws.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
         html: `<p><a href='https://api.even-better-api.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
+        // html: `<p><a href='https://api.even-better-api.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {

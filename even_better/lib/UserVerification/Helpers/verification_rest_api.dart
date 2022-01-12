@@ -23,6 +23,7 @@ Future<AlbumBool> createAlbumValidateRose(roseUsername) async {
   final response = await http.post(
     Uri.parse(
         // 'https://load-balancer-937536547.us-east-2.elb.amazonaws.com:443/students/checkExist'),
+        // 'hstpsapi.even-better-api.com:443/students/checkExist'),
         'https://api.even-better-api.com:443/students/checkExist'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
