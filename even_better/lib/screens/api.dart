@@ -49,53 +49,55 @@ Future<http.Response> _createPost(
 //   GetRequest();
 // }
 
-Future<void> GetRequest() async {
-  print("Ip: get ->");
-  String ip = BASE_URL + 'all';
-  print(ip);
+// Future<List<Posting>> GetRequest() async {
+//   print("Ip: get ->");
+//   String ip = BASE_URL + 'all';
+//   print(ip);
 
-  Response response = await http.get(
-    Uri.parse(ip),
-  );
+//   Response response = await http.get(
+//     Uri.parse(ip),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//     },
+//   );
 
-  String arrayText = response.body;
-  var psJson = jsonDecode(arrayText);
-  List? ps = psJson != null ? List.from(psJson) : null;
+//   var psJson = jsonDecode(response.body);
+//   List? ps = psJson != null ? List.from(psJson) : null;
 
-  // final url = Uri.parse('$urlPrefix/posts');
-  // Response response = await get(url);
-  print('Status code: ${response.statusCode}');
-  print('Headers: ${response.headers}');
-  print('Body: ${response.body}');
-  print(">> " + ps![0]["_id"]);
-  print(">> " + ps[1]["title"]);
-  print(">> " + ps[0]["likes"].toString());
-  print(">> " + ps[1]["picture-uri"].toString());
-  for (var i = 0; i < ps.length; i++) {
-    serverposts.add(Posting(
-      // ps[i]["_id"] ?? 'shit0',
-      // ps[i]["title"] ?? 'shit1',
-      // ps[i]["description"] ?? 'shit2',
-      // ps[i]["picture-uri"] ?? 'shit3',
-      // ps[i]["likes"] ?? 0,
-      // ps[i]["poster"] ?? 'shit4',
-      // ps[i]["timestamp"] ?? 'shit5',
-      ps[i]["_id"],
-      ps[i]["title"],
-      ps[i]["description"],
-      ps[i]["picture-uri"],
-      ps[i]["likes"],
-      ps[i]["poster"],
-      ps[i]["timestamp"],
-    ));
-  }
-  // for (var i = 0; i < serverposts.length; i++) {
-  //   print(serverposts[i].likes);
-  // }
-  print('postlikes:::::::::');
-  print(serverposts[serverposts.length - 1].pid);
-  // return serverposts;
-}
+//   // final url = Uri.parse('$urlPrefix/posts');
+//   // Response response = await get(url);
+//   print('Status code: ${response.statusCode}');
+//   print('Headers: ${response.headers}');
+//   print('Body: ${response.body}');
+//   print(">> " + ps![0]["_id"]);
+//   print(">> " + ps[1]["title"]);
+//   print(">> " + ps[0]["likes"].toString());
+//   print(">> " + ps[1]["picture-uri"].toString());
+//   for (var i = 0; i < ps.length; i++) {
+//     serverposts.add(Posting(
+//       // ps[i]["_id"] ?? 't0',
+//       // ps[i]["title"] ?? 't1',
+//       // ps[i]["description"] ?? 't2',
+//       // ps[i]["picture-uri"] ?? 't3',
+//       // ps[i]["likes"] ?? 0,
+//       // ps[i]["poster"] ?? 't4',
+//       // ps[i]["timestamp"] ?? 't5',
+//       ps[i]["_id"],
+//       ps[i]["title"],
+//       ps[i]["description"],
+//       ps[i]["picture-uri"],
+//       ps[i]["likes"],
+//       ps[i]["poster"],
+//       ps[i]["timestamp"],
+//     ));
+//   }
+//   // for (var i = 0; i < serverposts.length; i++) {
+//   //   print(serverposts[i].likes);
+//   // }
+//   print('postlikes:::::::::');
+//   print(serverposts[serverposts.length - 1].pid);
+//   // return serverposts;
+// }
 
 class Posting {
   String pid;
