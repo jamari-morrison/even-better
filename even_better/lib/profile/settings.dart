@@ -1,5 +1,4 @@
 import 'package:even_better/UserVerification/Helpers/account_creation.dart';
-import 'package:even_better/profile/helpers/settings_rest_password.dart';
 import 'package:even_better/profile/password_change.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,4 @@
 import 'package:even_better/UserVerification/Helpers/account_creation.dart';
-import 'package:even_better/UserVerification/sign_up.dart';
 import 'package:even_better/UserVerification/validate_rose_email.dart';
 import 'package:flutter/material.dart';
 
@@ -21,14 +20,10 @@ class _ObtainRoseEmailState extends State<ObtainRoseEmail> {
   var validEmail = true;
   late Future<AlbumSendEmail> futureAlbum;
 
+//resending is true if the user clicked resend email to call this function
   void _registerRose(username, resending) {
     //verify account with .csv webscraped file
     createAlbumValidateRose(username).then((validAlbum) {
-      print(validAlbum.message);
-
-      //TODO: COMMENT LINE BELOW AND UNCOMMENT LINE ABOVE
-      // validEmail = true;
-
       if (validAlbum.message) {
         createAlbumSendEmail(username).then((album) {
           if (!resending) {

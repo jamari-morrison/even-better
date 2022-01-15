@@ -57,6 +57,7 @@ router.post('/signup', async (req, res) => {
     "rose-username": req.body['rose-username'],
   }, {
     "username": req.body.username,
+    "name": req.body.name
   })
 
   if (toUpdate.modifiedCount == 0) {

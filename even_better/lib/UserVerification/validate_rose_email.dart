@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 import 'Helpers/verification_rest_api.dart';
+import 'confirm_name.dart';
 
 class ValidateRoseEmail extends StatefulWidget {
   const ValidateRoseEmail({
@@ -20,7 +21,6 @@ class ValidateRoseEmail extends StatefulWidget {
 
 class _ValidateRoseEmailState extends State<ValidateRoseEmail> {
   final TextEditingController codeController = TextEditingController();
-  var validOtp = true;
   late Future<AlbumBool> futureAlbum;
 
   void checkEmailValidated() {
@@ -34,24 +34,13 @@ class _ValidateRoseEmailState extends State<ValidateRoseEmail> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => SignUp(
+                builder: (context) => ConfirmName(
                       roseUsername: widget.roseUsername,
                     )));
       }
     }).catchError((error) {
       modalErrorHandler(error, context, "database conenction error");
     });
-
-    //verify account with RoseFire
-    // futureAlbum = createAlbumValidateOtp(code);
-    // futureAlbum.then((album) => setState(() {
-    //worth to check if == "false" ?
-    validOtp = true;
-    //album.message == "true";
-
-    // }));
-
-//for testing
   }
 
   @override
