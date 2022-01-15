@@ -1,22 +1,22 @@
 import 'package:even_better/UserVerification/Helpers/account_creation.dart';
 import 'package:even_better/UserVerification/sign_up.dart';
-import 'package:even_better/UserVerification/validate_otp.dart';
+import 'package:even_better/UserVerification/validate_rose_email.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
 import 'Helpers/labeled_text_field.dart';
 import 'Helpers/verification_rest_api.dart';
 
-class ValidateRose extends StatefulWidget {
-  const ValidateRose({
+class ObtainRoseEmail extends StatefulWidget {
+  const ObtainRoseEmail({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ValidateRose> createState() => _ValidateRoseState();
+  State<ObtainRoseEmail> createState() => _ObtainRoseEmailState();
 }
 
-class _ValidateRoseState extends State<ValidateRose> {
+class _ObtainRoseEmailState extends State<ObtainRoseEmail> {
   final TextEditingController usernameController = TextEditingController();
   var validEmail = true;
   late Future<AlbumSendEmail> futureAlbum;
@@ -35,7 +35,7 @@ class _ValidateRoseState extends State<ValidateRose> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ValidateOtp(
+                    builder: (context) => ValidateRoseEmail(
                         roseUsername: username, registerRose: _registerRose)));
           }
         }).catchError((error) {

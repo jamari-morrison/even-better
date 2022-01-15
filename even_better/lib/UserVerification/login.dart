@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import 'Helpers/labeled_text_field.dart';
 import 'Helpers/account_creation.dart';
+import 'forgot_password.dart';
 
 class Login extends StatefulWidget {
   const Login({
@@ -56,6 +57,16 @@ class _LoginState extends State<Login> {
                           passwordController.text, context);
                     },
                     child: const Text("Login"))),
+            Container(
+                margin: const EdgeInsets.only(top: 40),
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPassword()));
+                    },
+                    child: const Text("Forgot Password?"))),
           ],
         ),
       ),

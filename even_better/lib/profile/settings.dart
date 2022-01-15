@@ -1,4 +1,6 @@
 import 'package:even_better/UserVerification/Helpers/account_creation.dart';
+import 'package:even_better/profile/helpers/settings_rest_password.dart';
+import 'package:even_better/profile/password_change.dart';
 import 'package:flutter/material.dart';
 
 import '../fb_services/auth.dart';
@@ -24,6 +26,35 @@ class Settings extends StatelessWidget {
         child: ListView(
           // physics: const NeverScrollableScrollPhysics(),
           children: [
+            ElevatedButton.icon(
+                icon: const Icon(Icons.person),
+                label: const Text(
+                  'logout',
+                  style: TextStyle(
+                    fontFamily: 'EB',
+                    fontSize: 25.0,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () async {
+                  await auth.signOut();
+                  Navigator.pop(context);
+                }),
+            ElevatedButton(
+                child: const Text(
+                  'change password',
+                  style: TextStyle(
+                    fontFamily: 'EB',
+                    fontSize: 25.0,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ChangePassword()));
+                }),
             ElevatedButton(
               onPressed: () {
                 Widget cancelButton = TextButton(

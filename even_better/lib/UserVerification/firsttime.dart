@@ -1,4 +1,4 @@
-import 'package:even_better/UserVerification/validate_rose.dart';
+import 'package:even_better/UserVerification/obtain_rose_email.dart';
 import 'package:flutter/material.dart';
 
 import 'Helpers/account_creation.dart';
@@ -61,7 +61,7 @@ class _FirstTimeState extends State<FirstTime> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ValidateRose()));
+                            builder: (context) => const ObtainRoseEmail()));
                   }),
               // ElevatedButton(
               //     child: const Text("Invite Friends"),

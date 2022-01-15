@@ -15,7 +15,7 @@ void modalErrorHandler(error, context, title) {
   Widget cancelButton = TextButton(
     child: const Text("DISMISS"),
     onPressed: () {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
     },
   );
 

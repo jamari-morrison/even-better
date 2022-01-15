@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import 'Helpers/verification_rest_api.dart';
 
-class ValidateOtp extends StatefulWidget {
-  const ValidateOtp({
+class ValidateRoseEmail extends StatefulWidget {
+  const ValidateRoseEmail({
     required this.roseUsername,
     required this.registerRose,
     Key? key,
@@ -15,10 +15,10 @@ class ValidateOtp extends StatefulWidget {
   final Function registerRose;
 
   @override
-  State<ValidateOtp> createState() => _ValidateOtpState();
+  State<ValidateRoseEmail> createState() => _ValidateRoseEmailState();
 }
 
-class _ValidateOtpState extends State<ValidateOtp> {
+class _ValidateRoseEmailState extends State<ValidateRoseEmail> {
   final TextEditingController codeController = TextEditingController();
   var validOtp = true;
   late Future<AlbumBool> futureAlbum;
@@ -65,7 +65,7 @@ class _ValidateOtpState extends State<ValidateOtp> {
         child: ListView(
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            Text(
+            const Text(
               "A confirmation link has been sent to your email.\nClick it to continue",
             ),
             Container(
