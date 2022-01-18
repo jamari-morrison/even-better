@@ -50,7 +50,7 @@ class _SignUpState extends State<SignUp> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             LabeledTextField(
-              label: "Username",
+              label: "Email",
               textEditingController: usernameController,
               isPassword: false,
               isSignUpPassword: false,

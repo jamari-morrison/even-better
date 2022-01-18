@@ -34,7 +34,7 @@ class _LoginState extends State<Login> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             LabeledTextField(
-              label: "Even Better Username",
+              label: "Email",
               textEditingController: usernameController,
               isPassword: false,
               isSignUpPassword: false,
@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
             Container(
               margin: const EdgeInsets.only(top: 35),
               child: LabeledTextField(
-                  label: "Even Better Password",
+                  label: "Password",
                   textEditingController: passwordController,
                   isPassword: true,
                   isSignUpPassword: false,
