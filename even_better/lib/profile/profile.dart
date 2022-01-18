@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:even_better/fb_services/auth.dart';
 import 'package:even_better/post/addpost.dart';
 import 'package:even_better/post/feed_screen.dart';
 import 'package:even_better/profile/profile_change.dart';
 import 'package:even_better/profile/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +23,8 @@ class ProfileAppState extends State<ProfileApp> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController postController = TextEditingController();
   final picker = ImagePicker();
+  Timer? _timer;
+
   bool _update = false;
   File? _image;
   String _company = ' ';
@@ -32,6 +37,19 @@ class ProfileAppState extends State<ProfileApp> {
   // SizedBox sb = _noupdateProfile();
 
   ProfileAppState();
+  @override
+  void initState() {
+    super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+    EasyLoading.showSuccess('Loading Succeed!');
+    // EasyLoading.removeCallbacks();
+  }
+
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
@@ -89,8 +107,15 @@ class ProfileAppState extends State<ProfileApp> {
               label: const Text(''),
               icon: const Icon(Icons.settings),
               onPressed: () async {
+                _timer?.cancel();
+                await EasyLoading.show(
+                  status: 'loading...',
+                  maskType: EasyLoadingMaskType.black,
+                );
+                print('EasyLoading show');
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Settings(_auth)));
+                EasyLoading.dismiss();
               })
         ],
       ),
@@ -442,14 +467,21 @@ class ProfileAppState extends State<ProfileApp> {
       width: 150.00,
       height: 45,
       child: RaisedButton(
-          onPressed: () {
+          onPressed: () async {
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
             //     builder: (_) => ProfileUpdate(),
             //   ),
             // );
+            _timer?.cancel();
+            await EasyLoading.show(
+              status: 'loading...',
+              maskType: EasyLoadingMaskType.black,
+            );
+            print('EasyLoading show');
             _awaitReturnValueFromSecondScreen(context);
+            EasyLoading.dismiss();
           },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),

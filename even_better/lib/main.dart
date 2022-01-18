@@ -21,7 +21,7 @@ void main() async {
 
 void configLoading() {
   EasyLoading.instance
-    ..displayDuration = const Duration(milliseconds: 200)
+    ..displayDuration = const Duration(milliseconds: 2000)
     ..indicatorType = EasyLoadingIndicatorType.fadingCube
     ..loadingStyle = EasyLoadingStyle.light
     ..indicatorSize = 45.0
