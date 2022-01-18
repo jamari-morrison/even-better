@@ -31,13 +31,13 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
   @override
   void initState() {
     super.initState();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.showSuccess('Loading Succeeded');
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading ucceeded');
     // EasyLoading.removeCallbacks();
   }
 
@@ -69,7 +69,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                       onTap: () async {
                         _timer?.cancel();
                         await EasyLoading.show(
-                          status: 'loading...',
+                          status: 'loading library...',
                           maskType: EasyLoadingMaskType.black,
                         );
                         print('EasyLoading show');
@@ -83,7 +83,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                     onTap: () async {
                       _timer?.cancel();
                       await EasyLoading.show(
-                        status: 'loading...',
+                        status: 'loading camera...',
                         maskType: EasyLoadingMaskType.black,
                       );
                       print('EasyLoading show');
@@ -244,11 +244,12 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                   onPressed: () async {
                     _timer?.cancel();
                     await EasyLoading.show(
-                      status: 'loading...',
+                      status: 'Creating...',
                       maskType: EasyLoadingMaskType.black,
                     );
                     print('EasyLoading show');
                     if (_image == null) {
+                      EasyLoading.dismiss();
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>

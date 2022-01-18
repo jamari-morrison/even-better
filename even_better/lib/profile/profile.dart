@@ -40,13 +40,13 @@ class ProfileAppState extends State<ProfileApp> {
   @override
   void initState() {
     super.initState();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.showSuccess('Loading Succeed!');
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Succeed!');
     // EasyLoading.removeCallbacks();
   }
 
@@ -107,15 +107,15 @@ class ProfileAppState extends State<ProfileApp> {
               label: const Text(''),
               icon: const Icon(Icons.settings),
               onPressed: () async {
-                _timer?.cancel();
-                await EasyLoading.show(
-                  status: 'loading...',
-                  maskType: EasyLoadingMaskType.black,
-                );
-                print('EasyLoading show');
+                // _timer?.cancel();
+                // await EasyLoading.show(
+                //   status: 'loading...',
+                //   maskType: EasyLoadingMaskType.black,
+                // );
+                // print('EasyLoading show');
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Settings(_auth)));
-                EasyLoading.dismiss();
+                // EasyLoading.dismiss();
               })
         ],
       ),
@@ -479,7 +479,7 @@ class ProfileAppState extends State<ProfileApp> {
               status: 'loading...',
               maskType: EasyLoadingMaskType.black,
             );
-            print('EasyLoading show');
+            print('EasyLoading show to update');
             _awaitReturnValueFromSecondScreen(context);
             EasyLoading.dismiss();
           },

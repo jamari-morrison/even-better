@@ -34,13 +34,13 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void initState() {
     super.initState();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.showSuccess('Loading Successed');
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Successed');
     // EasyLoading.removeCallbacks();
   }
 
@@ -360,17 +360,17 @@ class _FeedScreenState extends State<FeedScreen> {
                 //   });
                 // },
                 onPressed: () async {
-                  _timer?.cancel();
-                  await EasyLoading.show(
-                    status: 'loading...',
-                    maskType: EasyLoadingMaskType.black,
-                  );
-                  print('EasyLoading show');
+                  // _timer?.cancel();
+                  // await EasyLoading.show(
+                  //   status: 'loading...',
+                  //   maskType: EasyLoadingMaskType.black,
+                  // );
+                  // print('EasyLoading show');
                   final NewPost _post = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
-                  EasyLoading.dismiss();
+                  // EasyLoading.dismiss();
                   setState(() {
                     p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
                         _post.content, 'Jamari', 0, '');

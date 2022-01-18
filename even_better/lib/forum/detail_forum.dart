@@ -46,13 +46,13 @@ class _DetailedForum extends State<DetailedForum> {
   @override
   void initState() {
     super.initState();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.showSuccess('Loading Succeeded');
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Succeeded');
     // EasyLoading.removeCallbacks();
   }
 
@@ -102,19 +102,19 @@ class _DetailedForum extends State<DetailedForum> {
         actions: <Widget>[
           IconButton(
             onPressed: () async {
-              _timer?.cancel();
-              await EasyLoading.show(
-                status: 'loading...',
-                maskType: EasyLoadingMaskType.black,
-              );
-              print('EasyLoading show');
+              // _timer?.cancel();
+              // await EasyLoading.show(
+              //   status: 'loading...',
+              //   maskType: EasyLoadingMaskType.black,
+              // );
+              // print('EasyLoading show');
               // TODO: press to enter the create post page
               print("add comments");
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => commentForum(post)),
               );
-              EasyLoading.dismiss();
+              // EasyLoading.dismiss();
             },
             color: Colors.transparent,
             icon: const Icon(

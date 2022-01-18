@@ -49,12 +49,12 @@ class _DirectMessageState extends State<DirectMessage> {
   //     .build());
 
   void getMessageHistory() async {
-    _timer?.cancel();
-    await EasyLoading.show(
-      status: 'loading...',
-      maskType: EasyLoadingMaskType.black,
-    );
-    print('EasyLoading getMessageHistory');
+    // _timer?.cancel();
+    // await EasyLoading.show(
+    //   status: 'loading...',
+    //   maskType: EasyLoadingMaskType.black,
+    // );
+    // print('EasyLoading getMessageHistory');
     final uri = Uri.http('10.0.2.2:3000', '/messages/conversation',
         {'sender': widget.currentStudent, 'recipient': widget.recipient});
 
@@ -63,7 +63,7 @@ class _DirectMessageState extends State<DirectMessage> {
     });
     print('got in');
     print(response.body);
-    EasyLoading.dismiss();
+    // EasyLoading.dismiss();
 
     Map<String, dynamic> responseList = jsonDecode(response.body);
 
@@ -156,6 +156,6 @@ class _DirectMessageState extends State<DirectMessage> {
         _timer?.cancel();
       }
     });
-    EasyLoading.showSuccess('Loading Succeeded');
+    EasyLoading.showSuccess('Chat Created');
   }
 }

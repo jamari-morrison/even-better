@@ -36,7 +36,7 @@ class _SelectUserState extends State<SelectUser> {
         _timer?.cancel();
       }
     });
-    EasyLoading.showSuccess('Loading Succeeded');
+    EasyLoading.showSuccess('All Alumnis Loaded');
     // EasyLoading.removeCallbacks();
   }
 

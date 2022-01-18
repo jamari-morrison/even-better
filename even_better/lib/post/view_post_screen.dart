@@ -20,13 +20,13 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
   @override
   void initState() {
     super.initState();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.showSuccess('Loading Succeeded');
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Succeeded');
     // EasyLoading.removeCallbacks();
   }
 
@@ -106,14 +106,14 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                               iconSize: 30.0,
                               color: Colors.black,
                               onPressed: () async {
-                                _timer?.cancel();
-                                await EasyLoading.show(
-                                  status: 'loading...',
-                                  maskType: EasyLoadingMaskType.black,
-                                );
-                                print('EasyLoading show');
+                                // _timer?.cancel();
+                                // await EasyLoading.show(
+                                //   status: 'loading...',
+                                //   maskType: EasyLoadingMaskType.black,
+                                // );
+                                // print('EasyLoading show');
                                 Navigator.pop(context);
-                                EasyLoading.dismiss();
+                                // EasyLoading.dismiss();
                               },
                             ),
                             Container(

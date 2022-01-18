@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
+import 'package:even_better/post/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -21,13 +22,13 @@ class _commentForumState extends State<commentForum> {
   @override
   void initState() {
     super.initState();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.showSuccess('Loading Successed');
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Successed');
     // EasyLoading.removeCallbacks();
   }
 
@@ -35,7 +36,7 @@ class _commentForumState extends State<commentForum> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.red[400],
+          backgroundColor: CompanyColors.red,
           elevation: 0.0,
           title: const Text('What do you think?'),
         ),
@@ -67,7 +68,7 @@ class _commentForumState extends State<commentForum> {
                           // TODO: implement submit comment
                           _timer?.cancel();
                           await EasyLoading.show(
-                            status: 'loading...',
+                            status: 'Commenting...',
                             maskType: EasyLoadingMaskType.black,
                           );
                           print('EasyLoading show');
