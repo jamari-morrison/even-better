@@ -7,9 +7,11 @@ import 'Helpers/account_creation.dart';
 class SignUp extends StatefulWidget {
   const SignUp({
     required this.roseUsername,
+    required this.name,
     Key? key,
   }) : super(key: key);
 
+  final String name;
   final String roseUsername;
 
   @override
@@ -48,7 +50,7 @@ class _SignUpState extends State<SignUp> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             LabeledTextField(
-              label: "Username",
+              label: "Email",
               textEditingController: usernameController,
               isPassword: false,
               isSignUpPassword: false,
@@ -96,6 +98,7 @@ class _SignUpState extends State<SignUp> {
                                 usernameController.text,
                                 widget.roseUsername,
                                 passwordController.text,
+                                widget.name,
                                 context);
                             //save the rose email here!!
                           }

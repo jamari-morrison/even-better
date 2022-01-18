@@ -86,21 +86,8 @@ class ProfileAppState extends State<ProfileApp> {
         brightness: Brightness.dark,
         actions: <Widget>[
           FlatButton.icon(
-              icon: Icon(Icons.person),
-              label: const Text(
-                'logout',
-                style: TextStyle(
-                  fontFamily: 'EB',
-                  fontSize: 25.0,
-                  color: Colors.black87,
-                ),
-              ),
-              onPressed: () async {
-                await _auth.signOut();
-              }),
-          FlatButton.icon(
               label: const Text(''),
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               onPressed: () async {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Settings(_auth)));
@@ -189,7 +176,7 @@ class ProfileAppState extends State<ProfileApp> {
                           height: 10.0,
                         ),
                         Card(
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               horizontal: 10.0, vertical: 0.0),
                           clipBehavior: Clip.antiAlias,
                           color: Colors.white,
@@ -212,7 +199,7 @@ class ProfileAppState extends State<ProfileApp> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 2.0,
                                       ),
                                       Text(
@@ -239,7 +226,7 @@ class ProfileAppState extends State<ProfileApp> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 2.0,
                                       ),
                                       Text(
@@ -265,7 +252,7 @@ class ProfileAppState extends State<ProfileApp> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 2.0,
                                       ),
                                       Text(
@@ -291,7 +278,7 @@ class ProfileAppState extends State<ProfileApp> {
                                           fontSize: screenwidth / 20.0,
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 2.0,
                                       ),
                                       Text(
@@ -494,7 +481,7 @@ class ProfileAppState extends State<ProfileApp> {
 }
 
 Widget _noupdateProfile() {
-  return SizedBox(
+  return const SizedBox(
     width: 200.00,
   );
 }

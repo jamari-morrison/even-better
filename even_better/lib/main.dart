@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: true,
         title: MyApp.appTitle,
         theme: ThemeData(
-          //TODO: make a custom color swatch with the rose color palette
+          //DONE: make a custom color swatch with the rose color palette
           primarySwatch: MaterialColor(0xFF800000, customColors),
         ),
         home: const Wrapper(),

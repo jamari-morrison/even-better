@@ -13,6 +13,7 @@ import 'package:even_better/post/addpost.dart';
 import 'package:even_better/post/view_post_screen.dart';
 import 'package:like_button/like_button.dart';
 
+//https://stackoverflow.com/questions/50945526/flutter-get-data-from-a-list-of-json
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
@@ -321,21 +322,36 @@ class _FeedScreenState extends State<FeedScreen> {
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 color: Color(0xFFF8BBD0),
+                // onPressed: () async {
+                //   final NewPost _post = await Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => ImageFromGalleryEx()));
+                //   // await GetRequest();
+                //   //TODO: Post real data
+                //   setState(() {
+                //     // Posting latestpost = serverposts[serverposts.length - 1];
+                //     // String pid = latestpost.pid;
+                //     // int numlikes = latestpost.likes;
+
+                //     // int l = serverposts.length - 1;
+                //     // Posting p_more = serverposts[];
+                //     p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
+                //         _post.content, _post.username, 0, pid);
+                //     SinglePost sp = SinglePost(pid, numlikes, p);
+                //     ps.add(sp);
+                //     l = getPostWidgets();
+                //   });
+                // },
                 onPressed: () async {
                   final NewPost _post = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
-                  await GetRequest();
                   setState(() {
-                    Posting latestpost = serverposts[serverposts.length - 1];
-                    String pid = latestpost.pid;
-                    int numlikes = latestpost.likes;
-                    // int l = serverposts.length - 1;
-                    // Posting p_more = serverposts[];
                     p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                        _post.content, _post.username, 0, pid);
-                    SinglePost sp = SinglePost(pid, numlikes, p);
+                        _post.content, 'Jamari', 0, '');
+                    SinglePost sp = SinglePost('', 0, p);
                     ps.add(sp);
                     l = getPostWidgets();
                   });

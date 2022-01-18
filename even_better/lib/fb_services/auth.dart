@@ -23,8 +23,8 @@ class AuthService {
   //  returns: User object when signs in,
   //           null when signs out.
 
-  get currentUser {
-    return _auth.currentUser;
+  String? get userEmail {
+    return _auth.currentUser?.email;
   }
 
   Stream<MyUser?> get user {

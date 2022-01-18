@@ -12,23 +12,22 @@ class Album {
   });
 
   factory Album.fromJson(Map<String, dynamic> json) {
-    // print(json['message']);
+    print(json['message']);
     return Album(
       //for whatever reason dynamic makes this parse directly to a boolean :(
-      message: json['message'] ? "true" : "false",
+      message: json['message'],
     );
   }
 }
 
 //make this private but still usable in test case??
-Future<Album> createAlbumDeleteAccount(roseUsername) async {
+Future<Album> createAlbumDeleteAccount(ebUsername) async {
   final response = await http.post(
-    Uri.parse(
-        'http://ec2-3-137-199-220.us-east-2.compute.amazonaws.com:3000/users/delete'),
+    Uri.parse('https://api.even-better-api.com:443/users/delete'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
-    body: jsonEncode(<String, String>{'rose-username': roseUsername}),
+    body: jsonEncode(<String, String>{'username': ebUsername}),
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     Album output = Album.fromJson(jsonDecode(response.body));
@@ -36,6 +35,6 @@ Future<Album> createAlbumDeleteAccount(roseUsername) async {
     return output;
   } else {
     print("status code: " + response.statusCode.toString());
-    throw Exception('failed to create album');
+    throw Exception('bad response');
   }
 }

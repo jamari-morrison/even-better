@@ -2,6 +2,7 @@ import 'package:even_better/fb_services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../confirm_name.dart';
 import "./verification_rest_api.dart";
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,7 +16,7 @@ void modalErrorHandler(error, context, title) {
   Widget cancelButton = TextButton(
     child: const Text("DISMISS"),
     onPressed: () {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
     },
   );
 
@@ -59,8 +60,8 @@ void requestLoginEB(String username, String password, context) async {
   });
 }
 
-void requestSignUpEB(
-    String username, String roseUsername, String password, context) async {
+void requestSignUpEB(String username, String roseUsername, String password,
+    name, context) async {
   //verify account with our FireBase
   AuthService fbAuth = AuthService();
 
@@ -68,11 +69,13 @@ void requestSignUpEB(
       .createUserWithEmailAndPassword(email: username, password: password)
       .then((val) {
     if (val.user?.email == username) {
-      createAlbumSignUpEB(username, roseUsername).then((value) {
+      createAlbumSignUpEB(username, roseUsername, name).then((value) {
         //pop to the homescreen
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
+        Navigator.pop(context);
+        //push the name confirm page
       }).catchError((error) {
         //delete the the account that fb created since we can't connect to the
         //database to finish creating the account

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import 'Helpers/labeled_text_field.dart';
 import 'Helpers/account_creation.dart';
+import 'forgot_password.dart';
 
 class Login extends StatefulWidget {
   const Login({
@@ -33,7 +34,7 @@ class _LoginState extends State<Login> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             LabeledTextField(
-              label: "Even Better Username",
+              label: "Email",
               textEditingController: usernameController,
               isPassword: false,
               isSignUpPassword: false,
@@ -42,7 +43,7 @@ class _LoginState extends State<Login> {
             Container(
               margin: const EdgeInsets.only(top: 35),
               child: LabeledTextField(
-                  label: "Even Better Password",
+                  label: "Password",
                   textEditingController: passwordController,
                   isPassword: true,
                   isSignUpPassword: false,
@@ -56,6 +57,16 @@ class _LoginState extends State<Login> {
                           passwordController.text, context);
                     },
                     child: const Text("Login"))),
+            Container(
+                margin: const EdgeInsets.only(top: 40),
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPassword()));
+                    },
+                    child: const Text("Forgot Password?"))),
           ],
         ),
       ),

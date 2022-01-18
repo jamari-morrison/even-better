@@ -1,1 +1,2 @@
-scp -i ./license-keys.pem ./server.zip  ec2-user@18.217.202.114:/home/ec2-user
+scp -i ./license-keys.pem ./server.zip ec2-user@even-better-api.com:/home/ec2-user
+
