@@ -125,14 +125,14 @@ Future<AlbumSignUp> createAlbumSignUpEB(username, roseUsername, name) async {
 }
 
 class AlbumConfirmName {
-  final message;
+  final name;
 
   AlbumConfirmName({
-    required this.message,
+    required this.name,
   });
 
   factory AlbumConfirmName.fromJson(Map<String, dynamic> json) {
-    return AlbumConfirmName(message: json['message']);
+    return AlbumConfirmName(name: json['message']['name']);
   }
 }
 
@@ -140,7 +140,7 @@ Future<AlbumConfirmName> createAlbumConfirmName(roseUsername) async {
   //note: this get endpoint returns the entire user object. We only need to use the name
 
   final response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/students/studentFromName'),
+    Uri.parse('https://api.even-better-api.com:443/students/studentFromEmail'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
