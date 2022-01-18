@@ -35,7 +35,7 @@ router.get('/list', async (req, res) => {
   }
 })
 
-router.get('/studentFromEmail', async (req, res) => {
+router.post('/studentFromEmail', async (req, res) => {
   try {
     var student = await Student.findOne({
       "rose-username": req.body['rose-username']

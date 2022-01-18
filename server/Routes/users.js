@@ -25,8 +25,28 @@ function deleteIncompleteAccounts() {
     }
   }).then((result) => {
     console.log(result);
-
+  }).catch(err => {
+    console.log("error with  deleting incomplete accounts");
   });
+
+
+  //remove the verification token fields from any users who still have one
+  User.updateMany({
+    "creation-time": {
+      $lt: Date.now() - deletionTimeMs
+    },
+    "verification-token": {
+      $exists: true
+    }
+  }, {
+    $unset: {
+      "verification-token": null
+    }
+
+  })
+
+
+
 }
 
 //every hour
@@ -89,9 +109,9 @@ router.post('/delete', async (req, res) => {
   else {
     res.status = 500;
     res.json({
-    message: 'could not find user ' + req.body['username']
-  })
-}
+      message: 'could not find user ' + req.body['username']
+    })
+  }
 
 
 })
@@ -125,7 +145,11 @@ router.post('/sendValidationEmail', async (req, res) => {
     const updateStats = await User.updateOne({
       "rose-username": req.body['rose-username'],
       "username": null
-    }, {"verified": false, "verification-token": key, "creation-time": Date.now()})
+    }, {
+      "verified": false,
+      "verification-token": key,
+      "creation-time": Date.now()
+    })
 
     if (updateStats.modifiedCount == 0) {
       const user = new User({
@@ -202,24 +226,16 @@ router.get('/validateEmail/:token', async (req, res) => {
       "verification-token": req.params.token
     }, {
       verified: true,
-      $unset: {
-        "verification-token": null
-      }
+
     });
-    if (updateStats.modifiedCount == 1) {
-      res.json({
-        message: 'Successfully verified user'
-      });
-
+    if (updateStats.matchedCount >= 1) {
+      res.sendFile('/Webpages/emailValidate/success.html', {root: "./"});
     } else {
-      res.json({
-        message: 'no user to verify for the given token'
-      });
-
-
+      res.sendFile('/Webpages/emailValidate/failure.html', {root: "./"});
     }
   }
-})
+});
+
 router.get('/emailValidated/:username', async (req, res) => {
 
   console.log(req.params.token);

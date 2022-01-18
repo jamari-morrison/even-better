@@ -74,6 +74,7 @@ void requestSignUpEB(String username, String roseUsername, String password,
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
+        Navigator.pop(context);
         //push the name confirm page
       }).catchError((error) {
         //delete the the account that fb created since we can't connect to the

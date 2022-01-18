@@ -1,3 +1,4 @@
+import 'package:even_better/UserVerification/Helpers/account_creation.dart';
 import 'package:even_better/UserVerification/Helpers/labeled_text_field.dart';
 import 'package:even_better/UserVerification/sign_up.dart';
 import 'package:flutter/material.dart';
@@ -14,15 +15,22 @@ class ConfirmName extends StatefulWidget {
 
 class _ConfirmNameState extends State<ConfirmName> {
   TextEditingController nameController = TextEditingController();
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     createAlbumConfirmName(widget.roseUsername).then((value) {
       //hopefully this makes the widget rebuild
       //does this work?
-      nameController.text = value.message.name;
+      nameController.text = value.name;
     }).catchError((err) {
+      modalErrorHandler(err, context, "difficulty obtaining name");
       //what to do if there's an error here?
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(MyApp.appTitle),
@@ -33,7 +41,7 @@ class _ConfirmNameState extends State<ConfirmName> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             LabeledTextField(
-                label: "What should people call you?",
+                label: "What name do you go by?",
                 textEditingController: nameController,
                 isPassword: false,
                 isSignUpPassword: false,
