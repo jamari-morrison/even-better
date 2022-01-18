@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:even_better/models/comment_model.dart';
 import 'package:even_better/models/post_model.dart';
 import 'package:even_better/screens/api.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ViewPostScreen extends StatefulWidget {
   final Post post;
@@ -13,6 +16,20 @@ class ViewPostScreen extends StatefulWidget {
 }
 
 class _ViewPostScreenState extends State<ViewPostScreen> {
+  Timer? _timer;
+  @override
+  void initState() {
+    super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+    EasyLoading.showSuccess('Loading Succeeded');
+    // EasyLoading.removeCallbacks();
+  }
+
   Widget _buildComment(int index) {
     return Padding(
       padding: EdgeInsets.all(10.0),
@@ -88,7 +105,16 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                               icon: Icon(Icons.arrow_back),
                               iconSize: 30.0,
                               color: Colors.black,
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () async {
+                                _timer?.cancel();
+                                await EasyLoading.show(
+                                  status: 'loading...',
+                                  maskType: EasyLoadingMaskType.black,
+                                );
+                                print('EasyLoading show');
+                                Navigator.pop(context);
+                                EasyLoading.dismiss();
+                              },
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width * 0.8,

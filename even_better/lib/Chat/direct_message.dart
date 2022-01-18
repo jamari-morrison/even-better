@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:even_better/post/feed_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -38,6 +40,7 @@ class _DirectMessageState extends State<DirectMessage> {
     'transports': ['websocket'],
     'autoConnect': false
   });
+  Timer? _timer;
 
   // IO.Socket socket = IO.io('http://10.0.2.2:3000', OptionBuilder()
   //     .setTransports(['websocket']) // for Flutter or Dart VM
@@ -46,6 +49,12 @@ class _DirectMessageState extends State<DirectMessage> {
   //     .build());
 
   void getMessageHistory() async {
+    _timer?.cancel();
+    await EasyLoading.show(
+      status: 'loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    print('EasyLoading getMessageHistory');
     final uri = Uri.http('10.0.2.2:3000', '/messages/conversation',
         {'sender': widget.currentStudent, 'recipient': widget.recipient});
 
@@ -54,6 +63,7 @@ class _DirectMessageState extends State<DirectMessage> {
     });
     print('got in');
     print(response.body);
+    EasyLoading.dismiss();
 
     Map<String, dynamic> responseList = jsonDecode(response.body);
 
@@ -110,7 +120,7 @@ class _DirectMessageState extends State<DirectMessage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.recipient),
-        backgroundColor: Colors.purple,
+        backgroundColor: CompanyColors.red,
       ),
       body: SafeArea(
         bottom: false,
@@ -140,5 +150,12 @@ class _DirectMessageState extends State<DirectMessage> {
     //TODO: get timestamp from server, don't make own
     //TODO: upload message id to server so they're the same (?)
     socket.on('fromServer', (_) => {_handleGetMessage(_.toString())});
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+    EasyLoading.showSuccess('Loading Succeeded');
   }
 }
