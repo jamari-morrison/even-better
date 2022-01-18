@@ -1,1 +1,1 @@
-scp -i ./license-keys.pem ./server.zip  ec2-user@ec2-3-137-199-220.us-east-2.compute.amazonaws.com:/home/ec2-user
+scp -i ./license-keys.pem ./server.zip  ec2-user@18.217.202.114:/home/ec2-user
