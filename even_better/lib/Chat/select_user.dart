@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:even_better/Invite/invite_year.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -22,6 +25,21 @@ class _SelectUserState extends State<SelectUser> {
   Map<Widget, String> nameMap = {};
   String searchString = "";
   Icon searchIcon = Icon(Icons.search);
+  Timer? _timer;
+  @override
+  void initState() {
+    super.initState();
+    getItemData();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+    EasyLoading.showSuccess('All Alumnis Loaded');
+    // EasyLoading.removeCallbacks();
+  }
+
   Widget customSearchBar = const Text(
     'Find friends',
     style: TextStyle(
@@ -46,7 +64,13 @@ class _SelectUserState extends State<SelectUser> {
       Widget toAdd = Visibility(
         child: ElevatedButton(
             child: Text(student['name']),
-            onPressed: () {
+            onPressed: () async {
+              _timer?.cancel();
+              await EasyLoading.show(
+                status: 'loading...',
+                maskType: EasyLoadingMaskType.black,
+              );
+              print('EasyLoading show');
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -54,6 +78,7 @@ class _SelectUserState extends State<SelectUser> {
                             currentStudent: widget.currentStudent,
                             recipient: student['name'],
                           )));
+              EasyLoading.dismiss();
             }),
         visible: student['name'].contains(searchString),
       );
@@ -148,11 +173,5 @@ class _SelectUserState extends State<SelectUser> {
                     }))
           ],
         )));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getItemData();
   }
 }

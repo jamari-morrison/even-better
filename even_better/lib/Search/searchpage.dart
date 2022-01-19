@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:even_better/UserVerification/Helpers/verification_rest_api.dart';
 import 'package:even_better/models/allusers.dart';
 import 'package:even_better/post/feed_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:search_page/search_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,6 +35,7 @@ class MySearchPage extends StatefulWidget {
 //   ];
 class _MySearchPageState extends State<MySearchPage> {
   List<User> _users = <User>[];
+  Timer? _timer;
 
   @override
   Widget build(BuildContext context) {
@@ -138,8 +141,17 @@ class _MySearchPageState extends State<MySearchPage> {
 
   @override
   void initState() {
+    super.initState();
     fetchUsers().then((value) {
       _users.addAll(value);
     });
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+    EasyLoading.showSuccess('Seach Loaded');
+    // EasyLoading.removeCallbacks();
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum%20copy.dart';
 import 'package:even_better/models/forum_post.dart';
@@ -5,6 +7,7 @@ import 'package:even_better/models/tag.dart';
 import 'package:even_better/models/tag.dart' as tagg;
 import 'package:even_better/post/feed_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class createForum extends StatefulWidget {
   Data db;
@@ -20,7 +23,21 @@ class _createForumState extends State<createForum> {
   List<Tag> addtags = [];
   String newTag = '';
   Data db;
+  Timer? _timer;
+
   _createForumState(this.db);
+  @override
+  void initState() {
+    super.initState();
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Succeeded');
+    // EasyLoading.removeCallbacks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,11 +187,18 @@ class _createForumState extends State<createForum> {
                                   var newpost = Forum_Post("Jamari Morrison",
                                       "forum6", title, content, [], []);
                                   // TODO: implement submit comment
+                                  _timer?.cancel();
+                                  await EasyLoading.show(
+                                    status: 'loading...',
+                                    maskType: EasyLoadingMaskType.black,
+                                  );
+                                  print('EasyLoading show');
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ForumListPage2(
                                               Data([], [], []), newpost)));
+                                  EasyLoading.dismiss();
                                 }
                               }),
                         ]))))));

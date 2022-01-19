@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:even_better/fb_services/auth.dart';
 import 'package:even_better/post/feed_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:even_better/screens/api.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:even_better/screens/api.dart';
@@ -23,12 +25,20 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
   final picker = ImagePicker();
   final username = "Jamari Morrison";
   File? _image;
-
+  Timer? _timer;
   ImageFromGalleryExState();
 
   @override
   void initState() {
     super.initState();
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading ucceeded');
+    // EasyLoading.removeCallbacks();
   }
 
   @override
@@ -56,16 +66,30 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                   ListTile(
                       leading: const Icon(Icons.photo_library),
                       title: const Text('Photo Library'),
-                      onTap: () {
+                      onTap: () async {
+                        _timer?.cancel();
+                        await EasyLoading.show(
+                          status: 'loading library...',
+                          maskType: EasyLoadingMaskType.black,
+                        );
+                        print('EasyLoading show');
                         _imgFromGallery();
                         Navigator.of(context).pop();
+                        EasyLoading.dismiss();
                       }),
                   ListTile(
                     leading: const Icon(Icons.photo_camera),
                     title: const Text('Camera'),
-                    onTap: () {
+                    onTap: () async {
+                      _timer?.cancel();
+                      await EasyLoading.show(
+                        status: 'loading camera...',
+                        maskType: EasyLoadingMaskType.black,
+                      );
+                      print('EasyLoading show');
                       _imgFromCamera();
                       Navigator.of(context).pop();
+                      EasyLoading.dismiss();
                     },
                   ),
                 ],
@@ -217,8 +241,15 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       ))),
-                  onPressed: () {
+                  onPressed: () async {
+                    _timer?.cancel();
+                    await EasyLoading.show(
+                      status: 'Creating...',
+                      maskType: EasyLoadingMaskType.black,
+                    );
+                    print('EasyLoading show');
                     if (_image == null) {
+                      EasyLoading.dismiss();
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>
@@ -236,7 +267,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                           300,
                           formattedDate,
                           username);
-                    
+
                       Navigator.pop(
                           context,
                           NewPost(
@@ -245,6 +276,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                               titleController.text.replaceAll('\n', ' '),
                               postController.text.trim(),
                               username));
+                      EasyLoading.dismiss();
                     }
                   },
                 ),

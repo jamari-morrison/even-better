@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:even_better/forum/add_comment.dart';
 import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:even_better/models/forum_answer.dart' as fa;
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class DetailedForum extends StatefulWidget {
   List<Forum_Answer> comments;
@@ -37,8 +40,22 @@ var tag_Work = Tag("Work", "");
 class _DetailedForum extends State<DetailedForum> {
   List<Forum_Answer> comments;
   Forum_Post post;
+  Timer? _timer;
 
   _DetailedForum(this.comments, this.post);
+  @override
+  void initState() {
+    super.initState();
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Succeeded');
+    // EasyLoading.removeCallbacks();
+  }
+
   @override
   Widget build(BuildContext context) {
     var questionSection = Padding(
@@ -84,13 +101,20 @@ class _DetailedForum extends State<DetailedForum> {
             )),
         actions: <Widget>[
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              // _timer?.cancel();
+              // await EasyLoading.show(
+              //   status: 'loading...',
+              //   maskType: EasyLoadingMaskType.black,
+              // );
+              // print('EasyLoading show');
               // TODO: press to enter the create post page
               print("add comments");
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => commentForum(post)),
               );
+              // EasyLoading.dismiss();
             },
             color: Colors.transparent,
             icon: const Icon(

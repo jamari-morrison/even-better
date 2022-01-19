@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:even_better/Chat/select_user.dart';
 import 'package:even_better/Questionaire/questionaire.dart';
@@ -6,6 +7,7 @@ import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum.dart';
 import 'package:even_better/screens/api.dart';
 import 'package:even_better/screens/my_flutter_app_icons.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:meta/meta.dart';
 import 'package:even_better/profile/profile.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,20 @@ class _FeedScreenState extends State<FeedScreen> {
   List<SinglePost> ps = <SinglePost>[];
   Widget l = _noaddNewPosts();
   // List<Posting> now_ps = <Posting>[];
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Successed');
+    // EasyLoading.removeCallbacks();
+  }
 
   Image getAvatorImage() {
     return Image(
@@ -345,10 +361,17 @@ class _FeedScreenState extends State<FeedScreen> {
                 //   });
                 // },
                 onPressed: () async {
+                  // _timer?.cancel();
+                  // await EasyLoading.show(
+                  //   status: 'loading...',
+                  //   maskType: EasyLoadingMaskType.black,
+                  // );
+                  // print('EasyLoading show');
                   final NewPost _post = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
+                  // EasyLoading.dismiss();
                   setState(() {
                     p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
                         _post.content, 'Jamari', 0, '');
@@ -413,7 +436,13 @@ class _FeedScreenState extends State<FeedScreen> {
                     child: IconButton(
                       icon: const Icon(Icons.send),
                       iconSize: 30.0,
-                      onPressed: () {
+                      onPressed: () async {
+                        _timer?.cancel();
+                        await EasyLoading.show(
+                          status: 'loading...',
+                          maskType: EasyLoadingMaskType.black,
+                        );
+                        print('EasyLoading show');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -421,6 +450,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                 SelectUser(currentStudent: "Jamari Morrison"),
                           ),
                         );
+                        EasyLoading.dismiss();
                       }
 
                       // => print('Direct Messages')

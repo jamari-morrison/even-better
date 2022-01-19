@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:even_better/post/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:even_better/screens/api.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ProfileUpdate extends StatefulWidget {
   String _company = '';
@@ -37,6 +40,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   bool se;
   bool ds;
   // Prof profile = new Prof();
+  Timer? _timer;
 
   ProfileUpdateState(
       this._company, this._name, this._bio, this.cs, this.se, this.ds) {
@@ -49,6 +53,13 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   @override
   void initState() {
     super.initState();
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Loading Succeeded');
   }
 
   @override
@@ -132,8 +143,15 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       ))),
-                  onPressed: () {
+                  onPressed: () async {
+                    _timer?.cancel();
+                    await EasyLoading.show(
+                      status: 'updating...',
+                      maskType: EasyLoadingMaskType.black,
+                    );
+                    print('EasyLoading updating profile');
                     _sendDataBack(context);
+                    EasyLoading.dismiss();
                   },
                 ),
               ),
