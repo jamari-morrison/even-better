@@ -61,7 +61,7 @@ void requestLoginEB(String username, String password, context) async {
 }
 
 void requestSignUpEB(String username, String roseUsername, String password,
-    name, context) async {
+    String name, context) async {
   //verify account with our FireBase
   AuthService fbAuth = AuthService();
 
