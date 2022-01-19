@@ -34,7 +34,7 @@ class _DirectMessageState extends State<DirectMessage> {
   List<types.Message> _messages = [];
   final _user = const types.User(id: 'currentStudent');
   final _recipient = const types.User(id: 'recipient');
-  Socket socket = io('http://10.0.2.2:3000', <String, dynamic>{
+  Socket socket = io('http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000', <String, dynamic>{
     'transports': ['websocket'],
     'autoConnect': false
   });
@@ -46,7 +46,7 @@ class _DirectMessageState extends State<DirectMessage> {
   //     .build());
 
   void getMessageHistory() async {
-    final uri = Uri.http('10.0.2.2:3000', '/messages/conversation',
+    final uri = Uri.http('ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000', '/messages/conversation',
         {'sender': widget.currentStudent, 'recipient': widget.recipient});
 
     final response = await http.get(uri, headers: <String, String>{

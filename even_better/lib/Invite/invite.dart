@@ -157,7 +157,7 @@ class _ButtonWidgetState extends State<ButtonWidget> {
 
                                       final response = await http.post(
                                         Uri.parse(
-                                            'http://ec2-3-137-199-220.us-east-2.compute.amazonaws.com/students/invite'),
+                                            'http://ec2-3-137-199-220.us-east-2.compute.amazonaws.com:3000/students/invite'),
                                         headers: <String, String>{
                                           'Content-Type': 'application/json; charset=UTF-8',
                                         },
