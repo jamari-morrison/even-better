@@ -24,7 +24,7 @@ class _InviteState extends State<Invite> {
   void  getItemData() async {
 
     final uri =
-    Uri.http('ec2-3-137-199-220.us-east-2.compute.amazonaws.com:3000', '/students/list', {'year': widget.year.toString()});
+    Uri.http('ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000', '/students/list', {'year': widget.year.toString()});
 
     final response = await http.get(uri, headers: <String, String>{
          'Content-Type': 'application/json; charset=UTF-8',
@@ -155,19 +155,19 @@ class _ButtonWidgetState extends State<ButtonWidget> {
 
 
 
-                                      final response = await http.post(
-                                        Uri.parse(
-                                            'http://ec2-3-137-199-220.us-east-2.compute.amazonaws.com:3000/students/invite'),
-                                        headers: <String, String>{
-                                          'Content-Type': 'application/json; charset=UTF-8',
-                                        },
-                                        body: jsonEncode(<String, String>{
-                                          'inviter': widget.currentStudent,
-                                          'name':  widget.data['name'],
-                                          'rose-username': widget.data['rose-username'],
-                                        }),
-                                      );
-                                      print(response);
+                                      // final response = await http.post(
+                                      //   Uri.parse(
+                                      //       'http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000:3000/students/invite'),
+                                      //   headers: <String, String>{
+                                      //     'Content-Type': 'application/json; charset=UTF-8',
+                                      //   },
+                                      //   body: jsonEncode(<String, String>{
+                                      //     'inviter': widget.currentStudent,
+                                      //     'name':  widget.data['name'],
+                                      //     'rose-username': widget.data['rose-username'],
+                                      //   }),
+                                      // );
+                                      // print(response);
 
                                       _clicked = true;
                                       setState((){});
