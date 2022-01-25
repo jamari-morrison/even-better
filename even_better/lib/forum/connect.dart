@@ -6,15 +6,18 @@ import 'dart:convert';
 //https://stackoverflow.com/questions/49914136/how-to-integrate-flutter-app-with-node-js
 //https://medium.com/flutter/some-options-for-deserializing-json-with-flutter-7481325a4450
 
-const String serverURL = "https://api.even-better-api.com:443";
+const String serverURL =
+    "http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000";
 
 // ----------------------------------------------------------------
 // create post
+@override
 void createForum(title, poster, content, time, tags) {
   _createForum(title, poster, content, time, tags);
   print("creating forum [connect]");
 }
 
+@override
 Future<http.Response> _createForum(title, poster, content, time, tags) {
   return http.post(
     Uri.parse(serverURL + "/forums/create"),

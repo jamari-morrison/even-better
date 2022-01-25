@@ -57,7 +57,7 @@ class _commentForumState extends State<commentForum> {
                         setState(() => text = val);
                       }),
                   RaisedButton(
-                      color: Colors.red[400],
+                      color: CompanyColors.red,
                       child: const Text(
                         'Comment',
                         style: TextStyle(color: Colors.white),

@@ -81,6 +81,7 @@ class _DetailedForum extends State<DetailedForum> {
               ],
             ),
           ),
+          Text(post.details),
           const Divider()
         ],
       ),

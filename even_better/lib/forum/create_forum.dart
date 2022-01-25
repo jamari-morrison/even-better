@@ -188,14 +188,12 @@ class _createForumState extends State<createForum> {
                                   Navigator.pop(context);
                                   /* TODO: get current User Here to pass in and create forum  */
 
-                                  DateTime now =
-                                      DateTime.utc(1989, DateTime.november, 9);
-                                  now = DateTime.now();
-                                  String formattedDate =
+                                  DateTime now = DateTime.now();
+                                  String now_string =
                                       DateFormat('yyyy-MM-dd kk:mm')
                                           .format(now);
-                                  connect.createForum(
-                                      "Ainsley Liu", title, content, now, []);
+                                  connect.createForum(title, "Ainsley Liu",
+                                      content, now_string, "");
                                   // TODO: implement submit comment
                                   _timer?.cancel();
                                   await EasyLoading.show(
