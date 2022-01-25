@@ -263,7 +263,7 @@ router.get('/emailValidated/:username', async (req, res) => {
 
 
 
-router.post('/update', async (req, res) => {
+router.post('/update/', async (req, res) => {
   console.log('updating user')
   console.log(req.body)
 

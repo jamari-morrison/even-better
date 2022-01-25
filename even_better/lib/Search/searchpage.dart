@@ -50,8 +50,8 @@ class _MySearchPageState extends State<MySearchPage> {
         itemBuilder: (context, index) {
           final User person = _users[index];
           return ListTile(
-              title: Text(person.username),
-              subtitle: Text(person.roseusername),
+              title: Text(person.name),
+              subtitle: Text(person.username),
               // trailing: Text('${person.age} yo'),
               trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
                 Icon(
@@ -70,7 +70,7 @@ class _MySearchPageState extends State<MySearchPage> {
             items: _users,
             searchLabel: 'Search people',
             suggestion: Center(
-              child: Text('Filter people by username'),
+              child: Text('Filter people by name'),
             ),
             failure: Center(
               child: Text('No person found :('),
@@ -78,11 +78,12 @@ class _MySearchPageState extends State<MySearchPage> {
             filter: (person) => [
               person.username,
               person.roseusername,
-              // person.age.toString(),
+              person.name,
+              //person.age.toString(),
             ],
             builder: (person) => ListTile(
-              title: Text(person.username),
-              subtitle: Text(person.roseusername),
+              title: Text(person.name),
+              subtitle: Text(person.username),
               // trailing: Text('${person.age} yo'),
               trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
                 Icon(
@@ -118,25 +119,6 @@ class _MySearchPageState extends State<MySearchPage> {
     } else {
       print("status code: " + response.statusCode.toString());
       throw Exception('failed to get all user info');
-    }
-  }
-
-//TODO: check current user ID
-  Future<AlbumBool> addUserExist(email) async {
-    final response = await http.get(
-      //query parameters!
-      Uri.parse(
-          'https://api.even-better-api.com:443/users/emailValidated/' + email),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      AlbumBool output = AlbumBool.fromJson(jsonDecode(response.body));
-      return output;
-    } else {
-      print("status code: " + response.statusCode.toString());
-      throw Exception('failed to create album');
     }
   }
 
