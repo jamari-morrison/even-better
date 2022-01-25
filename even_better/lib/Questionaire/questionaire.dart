@@ -18,58 +18,60 @@ class Questionaire extends StatefulWidget {
 class _QuestionaireState extends State<Questionaire> {
   int tag = 1;
   List<String> users = [
-    'News', 'Entertainment', 'Politics',
-    'Automotive', 'Sports', 'Education',
-    'Fashion', 'Travel', 'Food', 'Tech',
+    'News',
+    'Entertainment',
+    'Politics',
+    'Automotive',
+    'Sports',
+    'Education',
+    'Fashion',
+    'Travel',
+    'Food',
+    'Tech',
     'Science',
   ];
 
-
-
   @override
   Widget build(BuildContext context) {
-    return(MultiSelect(
-        titleText: "What frameworks do you use?",
-        validator: (value) {
-          if (value == null) {
-            return 'Please select one or more option(s)';
-          }
+    return (MultiSelect(
+      titleText: "What frameworks do you use?",
+      validator: (value) {
+        if (value == null) {
+          return 'Please select one or more option(s)';
+        }
+      },
+      errorText: 'Please select one or more option(s)',
+      dataSource: [
+        {
+          "display": "F",
+          "value": 1,
         },
-        errorText: 'Please select one or more option(s)',
-        dataSource: [
-          {
-            "display": "F",
-            "value": 1,
-          },
-          {
-            "display": "Canada",
-            "value": 2,
-          },
-          {
-            "display": "India",
-            "value": 3,
-          },
-          {
-            "display": "United States",
-            "value": 4,
-          }
-        ],
-        textField: 'display',
-        valueField: 'value',
-        filterable: false,
-        required: true,
-        value: null,
-        onSaved: (value) {
-          print('The saved values are $value');
+        {
+          "display": "Canada",
+          "value": 2,
         },
-
-    )
-    );
+        {
+          "display": "India",
+          "value": 3,
+        },
+        {
+          "display": "United States",
+          "value": 4,
+        }
+      ],
+      textField: 'display',
+      valueField: 'value',
+      filterable: false,
+      required: true,
+      value: null,
+      onSaved: (value) {
+        print('The saved values are $value');
+      },
+    ));
   }
 
   @override
   void initState() {
     super.initState();
-
   }
 }

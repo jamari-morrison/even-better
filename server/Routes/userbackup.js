@@ -25,28 +25,8 @@ function deleteIncompleteAccounts() {
     }
   }).then((result) => {
     console.log(result);
-  }).catch(err => {
-    console.log("error with  deleting incomplete accounts");
+
   });
-
-
-  //remove the verification token fields from any users who still have one
-  User.updateMany({
-    "creation-time": {
-      $lt: Date.now() - deletionTimeMs
-    },
-    "verification-token": {
-      $exists: true
-    }
-  }, {
-    $unset: {
-      "verification-token": null
-    }
-
-  })
-
-
-
 }
 
 //every hour
@@ -77,7 +57,6 @@ router.post('/signup', async (req, res) => {
     "rose-username": req.body['rose-username'],
   }, {
     "username": req.body.username,
-    "name": req.body.name
   })
 
   if (toUpdate.modifiedCount == 0) {
@@ -95,23 +74,20 @@ router.post('/signup', async (req, res) => {
 })
 
 router.post('/delete', async (req, res) => {
-  console.log('deleting user ' + req.body['username']);
+  console.log('deleting user ' + req.body['rose-username']);
   const deleted = await User.deleteOne({
-    'username': req.body['username']
+    'rose-username': req.body['rose-username']
   }).catch(err => {
     res.json({
       message: err
     })
   })
   if (deleted['deletedCount'] == 1) res.json({
-    message: 'successfully deleted ' + req.body['username']
+    message: 'successfully deleted ' + req.body['rose-username']
   })
-  else {
-    res.status = 500;
-    res.json({
-      message: 'could not find user ' + req.body['username']
-    })
-  }
+  else res.json({
+    message: 'could not find user ' + req.body['rose-username']
+  })
 
 
 })
@@ -127,6 +103,8 @@ router.post('/sendValidationEmail', async (req, res) => {
       pass: 'Password1?'
     }
   });
+
+
 
   rtg.generateKey({
     len: 16,
@@ -145,11 +123,7 @@ router.post('/sendValidationEmail', async (req, res) => {
     const updateStats = await User.updateOne({
       "rose-username": req.body['rose-username'],
       "username": null
-    }, {
-      "verified": false,
-      "verification-token": key,
-      "creation-time": Date.now()
-    })
+    }, {"verified": false, "verification-token": key, "creation-time": Date.now()})
 
     if (updateStats.modifiedCount == 0) {
       const user = new User({
@@ -189,8 +163,8 @@ router.post('/sendValidationEmail', async (req, res) => {
         to: req.body['rose-username'] + '@rose-hulman.edu',
         subject: "Verify Your Even Better Account",
         //TODO: change to be the actual server and not local host
+        // html: `<p><a href='https://load-balancer-937536547.us-east-2.elb.amazonaws.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
         html: `<p><a href='https://api.even-better-api.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
-        // html: `<p><a href='https://api.even-better-api.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
@@ -226,16 +200,24 @@ router.get('/validateEmail/:token', async (req, res) => {
       "verification-token": req.params.token
     }, {
       verified: true,
-
+      $unset: {
+        "verification-token": null
+      }
     });
-    if (updateStats.matchedCount >= 1) {
-      res.sendFile('/Webpages/emailValidate/success.html', {root: "./"});
+    if (updateStats.modifiedCount == 1) {
+      res.json({
+        message: 'Successfully verified user'
+      });
+
     } else {
-      res.sendFile('/Webpages/emailValidate/failure.html', {root: "./"});
+      res.json({
+        message: 'no user to verify for the given token'
+      });
+
+
     }
   }
-});
-
+})
 router.get('/emailValidated/:username', async (req, res) => {
 
   console.log(req.params.token);
@@ -260,7 +242,59 @@ router.get('/emailValidated/:username', async (req, res) => {
 
 })
 
+//https://stackoverflow.com/questions/53069041/nodejs-mongodb-follow-unfollow-request
+router.post("/:user_id/follow-user",  passport.authenticate("jwt", { session:false}), (req,res) => {
 
+  // check if the requested user and :user_id is same if same then 
+
+  if (req.user.id === req.params.user_id) {
+      return res.status(400).json({ alreadyfollow : "You cannot follow yourself"})
+  } 
+
+  User.findById(req.params.user_id)
+      .then(user => {
+
+          // check if the requested user is already in follower list of other user then 
+
+          if(user.followers.filter(follower => 
+              follower.user.toString() === req.user.id ).length > 0){
+              return res.status(400).json({ alreadyfollow : "You already followed the user"})
+          }
+
+          user.followers.unshift({user:req.user.id});
+          user.save()
+          User.findOne({ "rose-username": req.params.username })
+              .then(user => {
+                  user.following.unshift({user:req.params.user_id});
+                  user.save().then(user => res.json(user))
+              })
+              .catch(err => res.status(404).json({alradyfollow:"you already followed the user"}))
+      })
+})
+
+
+
+// const express = require('express');
+// const router = express.Router();
+// const { ensureAuthenticated } = require('../config/auth');
+// const mongoose = require('mongoose');
+const User=require('../models/User');
+
+router.post('/', (req, res) => {
+  updateRecord(req,res);
+  res.redirect('/profile');
+
+});
+
+function updateRecord(req, res) {
+User.findOne({"rose-username": req.body['rose-username']},(err,doc)=>{
+//this will give you the document what you want to update.. then 
+doc.name = req.body.name;
+doc.save(function(err,doc){
+
+});
+
+});}
 
 
 router.post('/update', async (req, res) => {
@@ -269,7 +303,7 @@ router.post('/update', async (req, res) => {
 
   //add the username to the placeholder accnt to "create" the accnt
   var toUpdate = await User.updateOne({
-    "username": req.body['username'],
+    "rose-username": req.body['rose-username'],
   }, {
     "name": req.body.name,
   })

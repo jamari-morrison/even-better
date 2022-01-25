@@ -41,6 +41,7 @@ class _MySearchPageState extends State<MySearchPage> {
   Widget build(BuildContext context) {
     print(_users.length);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Search Page'),
       ),
