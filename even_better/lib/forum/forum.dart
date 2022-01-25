@@ -1,98 +1,100 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:even_better/forum/create_forum.dart';
 import 'package:even_better/models/forum_post.dart' as fp;
 import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/showAllTags.dart';
+import 'package:even_better/models/forum_post.dart';
+import 'package:even_better/models/tag.dart';
 import 'package:even_better/post/feed_screen.dart';
 import 'package:even_better/screens/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'dart:io';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ForumListPage extends StatefulWidget {
-  Data db;
-  ForumListPage(this.db);
+  // Data db;
+  ForumListPage();
   @override
-  _ForumListPageState createState() => _ForumListPageState(db);
+  _ForumListPageState createState() => _ForumListPageState();
 }
 
 class _ForumListPageState extends State<ForumListPage> {
+  List<Forum_Post> forumPosts = [];
   bool loading = false;
-  Data db;
+  // Data db;
+  List<Tag> tags = [
+    Tag("Framework", "1"),
+    Tag("Company", "1"),
+    Tag("Project", "1"),
+    Tag("OO Design", "1")
+  ];
   Timer? _timer;
-  _ForumListPageState(this.db);
-  // var topTagGroup = Container(
-  //   alignment: Alignment.center,
-  //   decoration: const BoxDecoration(
-  //     color: Colors.white,
-  //     borderRadius: BorderRadius.all(Radius.circular(15.0)),
-  //   ),
-  //   child: Container(
-  //       alignment: Alignment.bottomCenter,
-  //       margin: const EdgeInsets.symmetric(
-  //         horizontal: 10.0,
-  //         vertical: 0.0,
-  //       ),
-  //       decoration: const BoxDecoration(
-  //         color: Colors.red,
-  //         borderRadius: BorderRadius.all(Radius.circular(30.0)),
-  //       ),
-  //       child: Column(
-  //         children: <Widget>[
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             crossAxisAlignment: CrossAxisAlignment.center,
-  //             children: <Widget>[Tag1, Tag("Company", ""), Tag("Project", "")],
-  //           ),
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             crossAxisAlignment: CrossAxisAlignment.center,
-  //             children: <Widget>[
-  //               Tag("OO Design", ""),
-  //               Tag("Java", ""),
-  //               Container(
-  //                 child: Column(
-  //                   children: <Widget>[
-  //                     TextButton(
-  //                       onPressed: () {
-  //                         print("showing more tags");
-  //                       },
-  //                       child: const Text("···",
-  //                           style: TextStyle(color: Colors.white)),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //         ],
-  //       )),
-  // );
+  _ForumListPageState();
+
   @override
   void initState() {
     super.initState();
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Loading Succeeded!');
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+    EasyLoading.showSuccess('Forums Loaded');
     // EasyLoading.removeCallbacks();
+  }
+
+  void getallForums() async {
+    List<Forum_Post> listItems = [];
+    final uri = Uri.http(
+        'ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000',
+        '/forums/all', {});
+    final response = await http.get(uri, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    List<dynamic> reslist = jsonDecode(response.body);
+    for (var forum in reslist) {
+      // print("------Trying new" + forum);
+      String tempPoster = forum['poster'];
+      // print("poster is " + tempPoster);
+      String tempTitle = forum['title'];
+      String tempContent = forum['content'];
+      // print(forum['content']);
+      /* TODO: enable tags here*/
+      // List<> tempTags = forum['tags'];
+      // List<Tag> passInTags = [];
+      // for (var t in tempTags) {
+      //   Tag temp = Tag(t, "1");
+      //   passInTags.add(temp);
+      // }
+      Forum_Post tempFP =
+          Forum_Post(tempPoster, tempTitle, tempContent, [], []);
+      // print(tempFP);
+      listItems.add(tempFP);
+    }
+    setState(() {
+      forumPosts = listItems;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    db = db.createdb();
+    // db = db.createdb();
+    getallForums();
+    // print("all the posts =");
+    // print(forumPosts);
+    // print("---");
     var listpage = Container(
         padding: const EdgeInsets.all(2.0),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) =>
-              fp.ForumPost(db.posts[index]),
-          itemCount: db.posts.length,
+              fp.ForumPost(forumPosts[index]),
+          itemCount: forumPosts.length,
           shrinkWrap: true,
         ));
     var topTagGroup = Container(
@@ -116,13 +118,13 @@ class _ForumListPageState extends State<ForumListPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[db.tags[0], db.tags[1], db.tags[2]],
+                children: <Widget>[tags[0], tags[1], tags[2]],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  db.tags[3],
+                  tags[3],
                   Container(
                     child: Column(
                       children: <Widget>[
@@ -138,7 +140,7 @@ class _ForumListPageState extends State<ForumListPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => showAllTags(
-                                        alltags: db.tags,
+                                        alltags: tags,
                                       )),
                             );
                             EasyLoading.dismiss();
@@ -206,7 +208,7 @@ class _ForumListPageState extends State<ForumListPage> {
   void _onDotsPressed() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => createForum(db)),
+      MaterialPageRoute(builder: (context) => createForum()),
     );
   }
 
@@ -215,7 +217,7 @@ class _ForumListPageState extends State<ForumListPage> {
     print('add new post');
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => createForum(db)),
+      MaterialPageRoute(builder: (context) => createForum()),
     );
   }
 }

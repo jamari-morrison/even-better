@@ -2,18 +2,21 @@ import 'dart:async';
 
 import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum%20copy.dart';
+import 'package:even_better/forum/forum.dart';
 import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
 import 'package:even_better/models/tag.dart' as tagg;
 import 'package:even_better/post/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:even_better/forum/connect.dart' as connect;
+import 'package:intl/intl.dart';
 
 class createForum extends StatefulWidget {
-  Data db;
-  createForum(this.db);
+  // Data db;
+  createForum();
   @override
-  _createForumState createState() => _createForumState(db);
+  _createForumState createState() => _createForumState();
 }
 
 class _createForumState extends State<createForum> {
@@ -22,21 +25,20 @@ class _createForumState extends State<createForum> {
   String content = '';
   List<Tag> addtags = [];
   String newTag = '';
-  Data db;
+  // Data db;
   Timer? _timer;
+  //TODO: get all tags
+  List<Tag> tags = [
+    Tag("Framework", "1"),
+    Tag("Company", "1"),
+    Tag("Project", "1"),
+    Tag("OO Design", "1")
+  ];
 
-  _createForumState(this.db);
+  _createForumState();
   @override
   void initState() {
     super.initState();
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Loading Succeeded');
-    // EasyLoading.removeCallbacks();
   }
 
   @override
@@ -89,18 +91,14 @@ class _createForumState extends State<createForum> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Tag.changeColor(db.tags[0]),
-                                  db.tags[1],
-                                  db.tags[2]
-                                ],
+                                children: <Widget>[tags[0], tags[1], tags[2]],
                               ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  db.tags[3],
+                                  tags[3],
                                   TextButton(
                                     onPressed: () => showDialog(
                                         context: context,
@@ -176,28 +174,41 @@ class _createForumState extends State<createForum> {
                             ],
                           )),
                           RaisedButton(
-                              color: Colors.red[400],
+                              color: CompanyColors.red,
                               child: const Text(
                                 'Comment',
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
+                                print(
+                                    "--------------------Create pressed------------------");
                                 if (_formKey.currentState!.validate()) {
                                   print(title);
-                                  var newpost = Forum_Post("Jamari Morrison",
-                                      "forum6", title, content, [], []);
+                                  print(content);
+                                  Navigator.pop(context);
+                                  /* TODO: get current User Here to pass in and create forum  */
+
+                                  DateTime now =
+                                      DateTime.utc(1989, DateTime.november, 9);
+                                  now = DateTime.now();
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd kk:mm')
+                                          .format(now);
+                                  connect.createForum(
+                                      "Ainsley Liu", title, content, now, []);
                                   // TODO: implement submit comment
                                   _timer?.cancel();
                                   await EasyLoading.show(
-                                    status: 'loading...',
+                                    status: 'creating...',
                                     maskType: EasyLoadingMaskType.black,
                                   );
                                   print('EasyLoading show');
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ForumListPage2(
-                                              Data([], [], []), newpost)));
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => ForumListPage2(
+                                  //             Data([], [], []), newpost)));
+
                                   EasyLoading.dismiss();
                                 }
                               }),
