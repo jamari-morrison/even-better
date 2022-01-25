@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -37,4 +38,34 @@ Future<Album> createAlbumDeleteAccount(ebUsername) async {
     print("status code: " + response.statusCode.toString());
     throw Exception('bad response');
   }
+}
+
+class AlbumUpdate {
+  final String fname;
+
+  AlbumUpdate({
+    required this.fname,
+  });
+
+  factory AlbumUpdate.fromJson(Map<String, dynamic> json) {
+    return AlbumUpdate(fname: json['fname'].toString());
+  }
+}
+
+void createAlbumUpdate(name, context) async {
+  final user = FirebaseAuth.instance.currentUser;
+  String? email = user!.email;
+  if (email != null) {
+    final response = await http.post(
+      Uri.parse('https://api.even-better-api.com:443/users/update'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': email,
+        'name': name,
+      }),
+    );
+  }
+  ;
 }

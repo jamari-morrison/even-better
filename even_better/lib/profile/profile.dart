@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:even_better/fb_services/auth.dart';
 import 'package:even_better/post/addpost.dart';
 import 'package:even_better/post/feed_screen.dart';
@@ -5,6 +7,8 @@ import 'package:even_better/profile/profile_change.dart';
 import 'package:even_better/profile/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -33,8 +37,11 @@ class ProfileAppState extends State<ProfileApp> {
   String? email;
   String? name;
   String _bio = ' ';
+  Timer? _timer;
 
   // SizedBox sb = _noupdateProfile();
+
+  //ProfileAppState();
   @override
   void initState() {
     super.initState();
@@ -180,7 +187,7 @@ class ProfileAppState extends State<ProfileApp> {
                               "Username: " + _username,
                               style: TextStyle(
                                 fontFamily: 'EB',
-                                fontSize: 22.0,
+                                fontSize: screenwidth * 0.055,
                                 color: Colors.white,
                               ),
                             ),
