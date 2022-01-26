@@ -45,6 +45,7 @@ Choose the private key and click “open”
 ### To Test Server
 
 host the server locally by running "npm start" in the server directory and change the url in flutter to "10.0.2.2:3000"
+change "https" to "http"
 
 eg: https://api.even-better-api.com:443/users/update to http://10.0.2.2:3000/users/update
 
