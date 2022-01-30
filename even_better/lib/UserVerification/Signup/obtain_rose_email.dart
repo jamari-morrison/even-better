@@ -1,10 +1,10 @@
 import 'package:even_better/UserVerification/Helpers/account_creation.dart';
-import 'package:even_better/UserVerification/validate_rose_email.dart';
+import 'package:even_better/UserVerification/Signup/validate_rose_email.dart';
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-import 'Helpers/labeled_text_field.dart';
-import 'Helpers/verification_rest_api.dart';
+import '../../main.dart';
+import '../Helpers/labeled_text_field.dart';
+import '../Helpers/verification_rest_api.dart';
 
 class ObtainRoseEmail extends StatefulWidget {
   const ObtainRoseEmail({

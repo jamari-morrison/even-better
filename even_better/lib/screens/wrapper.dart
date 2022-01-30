@@ -40,7 +40,7 @@ class _WrapperState extends State<Wrapper> {
     // return const FirstTime();
     if (user == null) {
       print('first time page [Wrapper]');
-      return FirstTime();
+      return FirstTime(mainContext: context);
     } else {
       print('home page [Wrapper]');
 
