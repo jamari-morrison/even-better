@@ -4,14 +4,17 @@ import 'package:even_better/forum/add_comment.dart';
 import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
+import 'package:even_better/report_content/report_content.dart';
 import 'package:flutter/material.dart';
 import 'package:even_better/models/forum_answer.dart' as fa;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class DetailedForum extends StatefulWidget {
   List<Forum_Answer> comments;
+  final String postId;
   Forum_Post post;
   DetailedForum({
+    required this.postId,
     required this.comments,
     required this.post,
     Key? key,
@@ -101,6 +104,26 @@ class _DetailedForum extends State<DetailedForum> {
               fontSize: 30.0,
             )),
         actions: <Widget>[
+          IconButton(
+            onPressed: () async {
+              print("report content");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReportContent(
+                          contentId: post.postId,
+                          contentType: "forumPost",
+                        )),
+              );
+            },
+            color: Colors.transparent,
+            icon: const Icon(
+              Icons.report,
+              size: 35.0,
+              color: Colors.white,
+            ),
+            padding: EdgeInsets.only(right: 10.0),
+          ),
           IconButton(
             onPressed: () async {
               // _timer?.cancel();
