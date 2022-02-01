@@ -9,7 +9,8 @@ const router = express.Router();
 //output: object telling you if you should show popup.  If so, then it contains question data
 router.get('/nextQuestion', async (req, res) => {
     try{
-        console.log('made it to getting next question')
+
+        console.log('made it to getting next question for ' + req.query['rose-username'] )
         const unstrung = await User.findOne({'rose-username': req.query['rose-username']});
         const user = JSON.parse(JSON.stringify(unstrung))
         console.log(unstrung)
@@ -19,7 +20,9 @@ router.get('/nextQuestion', async (req, res) => {
 
             
             console.log( user['_id']);
-            const updateResult = await User.updateOne({"_id": unstrung['_id']}, {lastpopupdate:Date.now()}).catch(err => {
+
+            //should update to Date.now(), but for testing im using a good number
+            const updateResult = await User.updateOne({"_id": unstrung['_id']}, {lastpopupdate:123}).catch(err => {
                 res.json({
                   message: err
                 })
@@ -35,7 +38,7 @@ router.get('/nextQuestion', async (req, res) => {
         for(q in questions){
             
             if(questions[q].currentAnswers < questions[q].quota)  {
-                res.json({message: 'has question', questions: questions[q]});
+                res.json({message: 'has question', question: questions[q]});
                 return;
             }
         }

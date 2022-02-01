@@ -9,7 +9,7 @@ import 'fb_services/auth.dart';
 import 'screens/wrapper.dart';
 import 'models/user.dart';
 import 'Questionaire/SingleNotifier.dart';
-import 'Questionaire/MultipleNotifier.dart';
+import 'Questionaire/multiple_notifier.dart';
 
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
