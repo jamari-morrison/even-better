@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'fb_services/auth.dart';
 import 'screens/wrapper.dart';
 import 'models/user.dart';
+import 'Questionaire/SingleNotifier.dart';
+import 'Questionaire/multiple_notifier.dart';
 
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
@@ -15,8 +17,17 @@ void main() async {
   print("running program");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
-  configLoading();
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SingleNotifier>(
+          create: (_) => SingleNotifier(),
+        ),
+        ChangeNotifierProvider<MultipleNotifier>(
+          create: (_) => MultipleNotifier([]),
+        )
+      ],
+    child: MyApp(),
+  ));  configLoading();
 }
 
 void configLoading() {

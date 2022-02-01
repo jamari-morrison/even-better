@@ -447,7 +447,7 @@ class _FeedScreenState extends State<FeedScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (_) =>
-                                SelectUser(currentStudent: "Jamari Morrison"),
+                                Questionaire(currentStudent: "morrisjj"),
                           ),
                         );
                         EasyLoading.dismiss();

@@ -13,6 +13,7 @@ class Forum_Post {
   // .year, .month, .day, .hour, .minute
   String title;
   String details;
+  // String id;
   List<Tag> tags;
   List<Forum_Answer> answers;
 
