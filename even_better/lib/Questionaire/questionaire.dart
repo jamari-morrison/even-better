@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_multiselect/flutter_multiselect.dart';
+import 'package:provider/provider.dart';
+
+import 'MultipleNotifier.dart';
+import 'SingleNotifier.dart';
 
 class Questionaire extends StatefulWidget {
   const Questionaire({
@@ -74,4 +78,87 @@ class _QuestionaireState extends State<Questionaire> {
   void initState() {
     super.initState();
   }
+
+  _showMessageDialog(BuildContext context) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Are you sure"),
+          content: Text("Do you want to delete these items?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Yes"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+
+  _showSingleChoiceDialog(BuildContext context) => showDialog(
+      context: context,
+      builder: (context) {
+        var _singleNotifier = Provider.of<SingleNotifier>(context);
+        return AlertDialog(
+            title: Text("Select one country"),
+            content: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: countries
+                      .map((e) => RadioListTile(
+                            title: Text(e),
+                            value: e,
+                            groupValue: _singleNotifier.currentCountry,
+                            selected: _singleNotifier.currentCountry == e,
+                            onChanged: (value) {
+                              if (value != _singleNotifier.currentCountry) {
+                                _singleNotifier.updateCountry(value.toString());
+                                Navigator.of(context).pop();
+                              }
+                            },
+                          ))
+                      .toList(),
+                ),
+              ),
+            ));
+      });
+
+  _showMultiChoiceDialog(BuildContext context) => showDialog(
+        context: context,
+        builder: (context) {
+          final _multipleNotifier = Provider.of<MultipleNotifier>(context);
+          return AlertDialog(
+            title: Text("What frameworks do you use? (select all that apply)"),
+            content: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: countries
+                      .map((e) => CheckboxListTile(
+                            title: Text(e),
+                            value: _multipleNotifier.isHaveItem(e),
+                            onChanged: (value) {
+                              value!
+                                  ? _multipleNotifier.addItem(e)
+                                  : _multipleNotifier.removeItem(e);
+                            },
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
+            actions: [
+              FlatButton(
+                child: Text("Submit"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
 }

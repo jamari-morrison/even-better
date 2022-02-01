@@ -2,11 +2,14 @@ import 'package:even_better/UserVerification/Helpers/account_creation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-import 'Helpers/labeled_text_field.dart';
+import '../../main.dart';
+import '../Helpers/labeled_text_field.dart';
+
+GlobalKey _scaffold = GlobalKey();
 
 class ForgotPassword extends StatelessWidget {
-  ForgotPassword({Key? key}) : super(key: key);
+  final BuildContext mainContext;
+  ForgotPassword({Key? key, required this.mainContext}) : super(key: key);
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final TextEditingController usernameController = TextEditingController();
@@ -18,6 +21,7 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffold,
       appBar: AppBar(
         title: const Text(MyApp.appTitle),
       ),
@@ -43,8 +47,12 @@ class ForgotPassword extends StatelessWidget {
                     onPressed: () {
                       resetPassword(usernameController.text).then((value) {
                         print("reset successful");
-                        Navigator.pop(context);
+                        Navigator.of(context).pop();
                         //inform the user of success!
+                        modalErrorHandler(
+                            "Check your email for a link to change your password",
+                            mainContext,
+                            "Email Sent");
                       }).catchError((err) {
                         modalErrorHandler(
                             err, context, "failed to send reset email");

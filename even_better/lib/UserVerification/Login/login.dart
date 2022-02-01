@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-import 'Helpers/labeled_text_field.dart';
-import 'Helpers/account_creation.dart';
+import '../../main.dart';
+import '../Helpers/labeled_text_field.dart';
+import '../Helpers/account_creation.dart';
 import 'forgot_password.dart';
 
 class Login extends StatefulWidget {
+  final BuildContext mainContext;
   const Login({
+    required this.mainContext,
     Key? key,
   }) : super(key: key);
 
@@ -64,7 +66,8 @@ class _LoginState extends State<Login> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ForgotPassword()));
+                              builder: (context) => ForgotPassword(
+                                  mainContext: widget.mainContext)));
                     },
                     child: const Text("Forgot Password?"))),
           ],

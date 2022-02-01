@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-import './Helpers/labeled_text_field.dart';
-import 'Helpers/account_creation.dart';
+import '../../main.dart';
+import '../Helpers/labeled_text_field.dart';
+import '../Helpers/account_creation.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({

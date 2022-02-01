@@ -1,9 +1,9 @@
 import 'package:even_better/UserVerification/Helpers/account_creation.dart';
 import 'package:even_better/UserVerification/Helpers/labeled_text_field.dart';
-import 'package:even_better/UserVerification/sign_up.dart';
+import 'package:even_better/UserVerification/Signup/sign_up.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
-import 'Helpers/verification_rest_api.dart';
+import '../../main.dart';
+import '../Helpers/verification_rest_api.dart';
 
 class ConfirmName extends StatefulWidget {
   final String roseUsername;

@@ -38,6 +38,9 @@ class _ForumListPageState extends State<ForumListPage> {
   @override
   void initState() {
     super.initState();
+    //moved line below to init state. If it's in build, it gets called each time
+    //the widget rebuilds on a setState() call
+    getallForums();
     EasyLoading.addStatusCallback((status) {
       print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {
@@ -57,6 +60,7 @@ class _ForumListPageState extends State<ForumListPage> {
       'Content-Type': 'application/json; charset=UTF-8',
     });
     List<dynamic> reslist = jsonDecode(response.body);
+    print("reslist is: " + reslist.toString());
     for (var forum in reslist) {
       // print("------Trying new" + forum);
       String id = forum['_id'];
@@ -65,6 +69,7 @@ class _ForumListPageState extends State<ForumListPage> {
       String tempTitle = forum['title'];
       // print("title is " + tempTitle);
       String tempContent = forum['content'];
+      // String id = forum['_id'];
       // print(forum['content']);
       /* TODO: enable tags here*/
       // List<> tempTags = forum['tags'];
@@ -74,7 +79,7 @@ class _ForumListPageState extends State<ForumListPage> {
       //   passInTags.add(temp);
       // }
       Forum_Post tempFP =
-          Forum_Post(tempPoster, tempTitle, tempContent, id, [], []);
+          Forum_Post(id, tempPoster, tempTitle, tempContent, [], []);
       // print(tempFP);
       listItems.add(tempFP);
     }
@@ -86,7 +91,6 @@ class _ForumListPageState extends State<ForumListPage> {
   @override
   Widget build(BuildContext context) {
     // db = db.createdb();
-    getallForums();
     // print("all the posts =");
     // print(forumPosts);
     // print("---");
