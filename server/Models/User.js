@@ -18,6 +18,7 @@ const UserSchema = mongoose.Schema(
         "pfp-uri": String,
         "bio": String,
         "friends": [String],
+        "lastpopupdate": Number
     })
 
 module.exports = mongoose.model('UserModel', UserSchema)
