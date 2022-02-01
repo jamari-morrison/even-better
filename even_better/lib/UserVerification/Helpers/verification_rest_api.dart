@@ -103,6 +103,7 @@ class AlbumSignUp {
 }
 
 Future<AlbumSignUp> createAlbumSignUpEB(username, roseUsername, name) async {
+  print(name);
   final response = await http.post(
     Uri.parse('https://api.even-better-api.com:443/users/signup'),
     headers: <String, String>{

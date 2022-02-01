@@ -289,7 +289,7 @@ class _FeedScreenState extends State<FeedScreen> {
         child = MySearchPage();
         break;
       case 3:
-        child = ForumListPage(Data([], [], []));
+        child = ForumListPage();
         break;
       case 4:
         child = ProfileApp();

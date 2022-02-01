@@ -2,7 +2,7 @@ import 'package:even_better/fb_services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../confirm_name.dart';
+import '../Signup/confirm_name.dart';
 import "./verification_rest_api.dart";
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -61,7 +61,7 @@ void requestLoginEB(String username, String password, context) async {
 }
 
 void requestSignUpEB(String username, String roseUsername, String password,
-    name, context) async {
+    String name, context) async {
   //verify account with our FireBase
   AuthService fbAuth = AuthService();
 

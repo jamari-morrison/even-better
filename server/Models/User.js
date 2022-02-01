@@ -14,6 +14,10 @@ const UserSchema = mongoose.Schema(
             required: true
         },
         "verified": Boolean,
+        "name": {
+            type:String, 
+            required: true
+        },
         "creation-time": Number,
         "pfp-uri": String,
         "bio": String,

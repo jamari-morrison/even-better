@@ -19,6 +19,7 @@ class Questionaire extends StatefulWidget {
 }
 
 class _QuestionaireState extends State<Questionaire> {
+<<<<<<< HEAD
 
   final List<String> countries = ['React', 'Flutter', 'Node.js', 'Express', 'Vue', 'Mongoose', 'Angular'];
 
@@ -65,12 +66,65 @@ class _QuestionaireState extends State<Questionaire> {
           //   onTap: () => _showMultiChoiceDialog(context),
           // )
     ]).toList())));
+=======
+  int tag = 1;
+  List<String> users = [
+    'News',
+    'Entertainment',
+    'Politics',
+    'Automotive',
+    'Sports',
+    'Education',
+    'Fashion',
+    'Travel',
+    'Food',
+    'Tech',
+    'Science',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return (MultiSelect(
+      titleText: "What frameworks do you use?",
+      validator: (value) {
+        if (value == null) {
+          return 'Please select one or more option(s)';
+        }
+      },
+      errorText: 'Please select one or more option(s)',
+      dataSource: [
+        {
+          "display": "F",
+          "value": 1,
+        },
+        {
+          "display": "Canada",
+          "value": 2,
+        },
+        {
+          "display": "India",
+          "value": 3,
+        },
+        {
+          "display": "United States",
+          "value": 4,
+        }
+      ],
+      textField: 'display',
+      valueField: 'value',
+      filterable: false,
+      required: true,
+      value: null,
+      onSaved: (value) {
+        print('The saved values are $value');
+      },
+    ));
+>>>>>>> 570d4820bbf3556875e3caeff6b3cded29e396e5
   }
 
   @override
   void initState() {
     super.initState();
-
   }
 
 

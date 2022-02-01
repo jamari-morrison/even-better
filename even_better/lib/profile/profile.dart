@@ -5,7 +5,9 @@ import 'package:even_better/post/addpost.dart';
 import 'package:even_better/post/feed_screen.dart';
 import 'package:even_better/profile/profile_change.dart';
 import 'package:even_better/profile/settings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:io';
 
@@ -23,33 +25,43 @@ class ProfileAppState extends State<ProfileApp> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController postController = TextEditingController();
   final picker = ImagePicker();
-  Timer? _timer;
-
+  final user = FirebaseAuth.instance.currentUser;
   bool _update = false;
   File? _image;
   String _company = ' ';
   bool cs = true;
   bool se = false;
   bool ds = false;
-  String _name = 'Jamari Morrison';
+  String _username = "";
+  String _name = "";
+  String? email;
+  String? name;
   String _bio = ' ';
+  Timer? _timer;
 
   // SizedBox sb = _noupdateProfile();
 
-  ProfileAppState();
+  //ProfileAppState();
   @override
   void initState() {
     super.initState();
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Loading Succeed!');
-    // EasyLoading.removeCallbacks();
+    initialName();
   }
 
+  // final FirebaseAuth _fireauth = FirebaseAuth.instance;
+  initialName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      _username = email!;
+    }
+    name = user?.displayName;
+    if (name != null) {
+      _name = name!;
+    }
+  }
+
+  ProfileAppState();
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
@@ -107,15 +119,8 @@ class ProfileAppState extends State<ProfileApp> {
               label: const Text(''),
               icon: const Icon(Icons.settings),
               onPressed: () async {
-                // _timer?.cancel();
-                // await EasyLoading.show(
-                //   status: 'loading...',
-                //   maskType: EasyLoadingMaskType.black,
-                // );
-                // print('EasyLoading show');
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Settings(_auth)));
-                // EasyLoading.dismiss();
               })
         ],
       ),
@@ -177,12 +182,12 @@ class ProfileAppState extends State<ProfileApp> {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
+                          children: <Widget>[
                             Text(
-                              "Username: Jamari Morrison",
+                              "Username: " + _username,
                               style: TextStyle(
                                 fontFamily: 'EB',
-                                fontSize: 22.0,
+                                fontSize: screenwidth * 0.055,
                                 color: Colors.white,
                               ),
                             ),
@@ -424,7 +429,7 @@ class ProfileAppState extends State<ProfileApp> {
         MaterialPageRoute(
           builder: (context) => ProfileUpdate(
             _company,
-            _name,
+            _username,
             _bio,
             cs,
             se,
@@ -435,7 +440,7 @@ class ProfileAppState extends State<ProfileApp> {
     // after the SecondScreen result comes back update the Text widget with it
     setState(() {
       _company = _r.company!;
-      _name = _r.name!;
+      _username = _r.name!;
       _bio = _r.bio!;
       cs = _r.cs!;
       se = _r.se!;
@@ -467,21 +472,14 @@ class ProfileAppState extends State<ProfileApp> {
       width: 150.00,
       height: 45,
       child: RaisedButton(
-          onPressed: () async {
+          onPressed: () {
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
             //     builder: (_) => ProfileUpdate(),
             //   ),
             // );
-            _timer?.cancel();
-            await EasyLoading.show(
-              status: 'loading...',
-              maskType: EasyLoadingMaskType.black,
-            );
-            print('EasyLoading show to update');
             _awaitReturnValueFromSecondScreen(context);
-            EasyLoading.dismiss();
           },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),

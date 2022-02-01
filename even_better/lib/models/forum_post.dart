@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 class Forum_Post {
   final String uid; // auther
-  final String fid; // forum_id
+  final String postId;
+  // final String fid; // forum_id
   DateTime post_time = DateTime.utc(1989, DateTime.november, 9);
   // DateTime _now = DateTime.now();
   // .year, .month, .day, .hour, .minute
@@ -15,10 +16,10 @@ class Forum_Post {
   List<Tag> tags;
   List<Forum_Answer> answers;
 
-  Forum_Post(
-      this.uid, this.fid, this.title, this.details, this.tags, this.answers) {
+  Forum_Post(this.postId, this.uid, this.title, this.details, this.tags,
+      this.answers) {
     post_time = DateTime.now();
-    print('created a new forum post [Forum_Post]');
+    // print('created a new forum post [Forum_Post]');
   }
 
   List<Tag> get tag => tags;
@@ -71,6 +72,7 @@ class ForumPost extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => DetailedForum(
+                      postId: entry.postId,
                       comments: entry.answer,
                       post: entry,
                     )),

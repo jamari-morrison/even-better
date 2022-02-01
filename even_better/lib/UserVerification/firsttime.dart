@@ -1,14 +1,15 @@
-import 'package:even_better/UserVerification/obtain_rose_email.dart';
+import 'package:even_better/UserVerification/Signup/obtain_rose_email.dart';
 import 'package:flutter/material.dart';
 
 import 'Helpers/account_creation.dart';
-import 'login.dart';
+import 'Login/login.dart';
 import '../main.dart';
-import 'sign_up.dart';
+import 'Signup/sign_up.dart';
 import 'Helpers/verification_rest_api.dart';
 
 class FirstTime extends StatefulWidget {
-  const FirstTime({Key? key}) : super(key: key);
+  final BuildContext mainContext;
+  const FirstTime({required this.mainContext, Key? key}) : super(key: key);
 
   @override
   State<FirstTime> createState() => _FirstTimeState();
@@ -37,8 +38,11 @@ class _FirstTimeState extends State<FirstTime> {
             children: <Widget>[
               ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Login()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Login(mainContext: widget.mainContext)));
                   },
                   child: const Text(
                     "Login",
