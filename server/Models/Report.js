@@ -7,6 +7,10 @@ const ReportSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        "content-id": {
+            type: String,
+            required: true
+        },
         "reason": String,
         "timestamp": {
             type: String,

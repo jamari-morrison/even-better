@@ -26,6 +26,7 @@ router.post('/submit', async (req, res) => {
     const report = new Report({
         "reason": reason,
         "content-type": contentType,
+        "content-id" : req.body["content-id"],
         "timestamp": Date.now(),
     });
     report.save()
