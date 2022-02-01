@@ -24,7 +24,7 @@ Future<AlbumBool> createAlbumReportContent(
   print("reason: " + reason);
   // if (contentType == "post") {
   response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/reporst/submit'),
+    Uri.parse('https://api.even-better-api.com:443/reports/submit'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
