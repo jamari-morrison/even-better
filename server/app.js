@@ -68,10 +68,10 @@ io.on('connection', (socket) => {
 const userRoute = require('./Routes/users');
 const postRoute = require('./Routes/posts');
 const studentRoute = require('./Routes/students');
-const rosefireRoute = require('./Routes/rosefire');
 const commentsRoute = require('./Routes/comments');
 const forumsRoute = require('./Routes/forums');
 const messagesRoute = require('./Routes/messages')
+const reportsRoute = require('./Routes/reports')
 
 
 app.use('/messages', messagesRoute);
@@ -79,9 +79,9 @@ app.use('/messages', messagesRoute);
 app.use('/users', userRoute);
 app.use('/posts', postRoute);
 app.use('/students', studentRoute);
-app.use('/rosefire', rosefireRoute);
 app.use('/comments', commentsRoute);
 app.use('/forums', forumsRoute);
+app.use('/reports', reportsRoute);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
