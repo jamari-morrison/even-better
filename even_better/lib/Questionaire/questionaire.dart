@@ -20,7 +20,11 @@ class Questionaire extends StatefulWidget {
 }
 
 class _QuestionaireState extends State<Questionaire> {
+<<<<<<< HEAD
   List<dynamic> countries = [
+=======
+  final List<String> countries = [
+>>>>>>> 2c74c42b74c5e98eafad9d3a4b4766eb5bf13dd3
     'React',
     'Flutter',
     'Node.js',
@@ -29,6 +33,7 @@ class _QuestionaireState extends State<Questionaire> {
     'Mongoose',
     'Angular'
   ];
+<<<<<<< HEAD
   String questionTitle = 'Original';
   String questionID = 'empty';
 
@@ -80,16 +85,25 @@ void sendPopupData(List<String> selections) async{
 
 }
 
+=======
+>>>>>>> 2c74c42b74c5e98eafad9d3a4b4766eb5bf13dd3
 
   @override
   Widget build(BuildContext context) {
     final _multipleNotifier = Provider.of<MultipleNotifier>(context);
 
     return (Center(
+<<<<<<< HEAD
         child: true ? ListView(
             children: ListTile.divideTiles(context: context, tiles: [
       AlertDialog(
         title: Text(questionTitle),
+=======
+        child: ListView(
+            children: ListTile.divideTiles(context: context, tiles: [
+      AlertDialog(
+        title: Text("What frameworks do you use? (select all that apply)"),
+>>>>>>> 2c74c42b74c5e98eafad9d3a4b4766eb5bf13dd3
         content: SingleChildScrollView(
           child: Container(
             width: double.infinity,
@@ -113,7 +127,10 @@ void sendPopupData(List<String> selections) async{
           FlatButton(
             child: Text("Submit"),
             onPressed: () {
+<<<<<<< HEAD
               sendPopupData(_multipleNotifier.selectedItems);
+=======
+>>>>>>> 2c74c42b74c5e98eafad9d3a4b4766eb5bf13dd3
               Navigator.of(context).pop();
             },
           ),
@@ -123,7 +140,11 @@ void sendPopupData(List<String> selections) async{
       //   title: Text('Single choice Dialog'),
       //   onTap: () => _showMultiChoiceDialog(context),
       // )
+<<<<<<< HEAD
     ]).toList()) : Text('joe')));
+=======
+    ]).toList())));
+>>>>>>> 2c74c42b74c5e98eafad9d3a4b4766eb5bf13dd3
   }
 
   @override
@@ -131,8 +152,11 @@ void sendPopupData(List<String> selections) async{
     super.initState();
     getPopupData();
 
+<<<<<<< HEAD
   }
 
+=======
+>>>>>>> 2c74c42b74c5e98eafad9d3a4b4766eb5bf13dd3
   _showMessageDialog(BuildContext context) => showDialog(
         context: context,
         builder: (context) => AlertDialog(

@@ -105,6 +105,11 @@ class _DetailedForum extends State<DetailedForum> {
             )),
         actions: <Widget>[
           IconButton(
+              onPressed: () {
+                print("Trying to delete");
+              },
+              icon: const Icon(Icons.delete)),
+          IconButton(
             onPressed: () async {
               print("report content");
               Navigator.push(

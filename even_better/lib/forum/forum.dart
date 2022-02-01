@@ -63,11 +63,13 @@ class _ForumListPageState extends State<ForumListPage> {
     print("reslist is: " + reslist.toString());
     for (var forum in reslist) {
       // print("------Trying new" + forum);
-      String tempPoster = forum['poster'];
-      // print("poster is " + tempPoster);
-      String tempTitle = forum['title'];
-      String tempContent = forum['content'];
       String id = forum['_id'];
+      // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!id == " + id);
+      String tempPoster = forum['poster'];
+      String tempTitle = forum['title'];
+      // print("title is " + tempTitle);
+      String tempContent = forum['content'];
+      // String id = forum['_id'];
       // print(forum['content']);
       /* TODO: enable tags here*/
       // List<> tempTags = forum['tags'];
