@@ -12,10 +12,12 @@ class Forum_Post {
   // .year, .month, .day, .hour, .minute
   String title;
   String details;
+  String id;
   List<Tag> tags;
   List<Forum_Answer> answers;
 
-  Forum_Post(this.uid, this.title, this.details, this.tags, this.answers) {
+  Forum_Post(
+      this.uid, this.title, this.details, this.id, this.tags, this.answers) {
     post_time = DateTime.now();
     // print('created a new forum post [Forum_Post]');
   }

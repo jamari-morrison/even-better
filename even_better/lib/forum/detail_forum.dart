@@ -102,6 +102,11 @@ class _DetailedForum extends State<DetailedForum> {
             )),
         actions: <Widget>[
           IconButton(
+              onPressed: () {
+                print("Trying to delete");
+              },
+              icon: const Icon(Icons.delete)),
+          IconButton(
             onPressed: () async {
               // _timer?.cancel();
               // await EasyLoading.show(

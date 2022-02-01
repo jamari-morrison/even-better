@@ -195,11 +195,11 @@ class _createForumState extends State<createForum> {
                                   connect.createForum(title, "Ainsley Liu",
                                       content, now_string, "");
                                   // TODO: implement submit comment
-                                  _timer?.cancel();
-                                  await EasyLoading.show(
-                                    status: 'creating...',
-                                    maskType: EasyLoadingMaskType.black,
-                                  );
+                                  // _timer?.cancel();
+                                  // await EasyLoading.show(
+                                  //   status: 'creating...',
+                                  //   maskType: EasyLoadingMaskType.black,
+                                  // );
                                   print('EasyLoading show');
                                   // Navigator.push(
                                   //     context,
@@ -207,7 +207,7 @@ class _createForumState extends State<createForum> {
                                   //         builder: (context) => ForumListPage2(
                                   //             Data([], [], []), newpost)));
 
-                                  EasyLoading.dismiss();
+                                  // EasyLoading.dismiss();
                                 }
                               }),
                         ]))))));

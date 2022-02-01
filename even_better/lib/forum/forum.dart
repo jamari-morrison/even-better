@@ -59,9 +59,11 @@ class _ForumListPageState extends State<ForumListPage> {
     List<dynamic> reslist = jsonDecode(response.body);
     for (var forum in reslist) {
       // print("------Trying new" + forum);
+      String id = forum['_id'];
+      // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!id == " + id);
       String tempPoster = forum['poster'];
-      // print("poster is " + tempPoster);
       String tempTitle = forum['title'];
+      // print("title is " + tempTitle);
       String tempContent = forum['content'];
       // print(forum['content']);
       /* TODO: enable tags here*/
@@ -72,7 +74,7 @@ class _ForumListPageState extends State<ForumListPage> {
       //   passInTags.add(temp);
       // }
       Forum_Post tempFP =
-          Forum_Post(tempPoster, tempTitle, tempContent, [], []);
+          Forum_Post(tempPoster, tempTitle, tempContent, id, [], []);
       // print(tempFP);
       listItems.add(tempFP);
     }
