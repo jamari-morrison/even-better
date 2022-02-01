@@ -151,13 +151,14 @@ class _ButtonWidgetState extends State<ButtonWidget> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     print('entering onpress');
-                                    if(widget.data['status'] == 'invite' && !_clicked){
+                                    print(widget.data['status']);
+                                    if(widget.data['status'] == 'Invite' && !_clicked){
 
 
-
+      print('pong');
                                       final response = await http.post(
                                         Uri.parse(
-                                            'http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000:3000/students/invite'),
+                                            'http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000/students/invite'),
                                         headers: <String, String>{
                                           'Content-Type': 'application/json; charset=UTF-8',
                                         },
