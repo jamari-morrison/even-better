@@ -20,58 +20,58 @@ class Questionaire extends StatefulWidget {
 }
 
 class _QuestionaireState extends State<Questionaire> {
-  int tag = 1;
-  List<String> users = [
-    'News',
-    'Entertainment',
-    'Politics',
-    'Automotive',
-    'Sports',
-    'Education',
-    'Fashion',
-    'Travel',
-    'Food',
-    'Tech',
-    'Science',
+  final List<String> countries = [
+    'React',
+    'Flutter',
+    'Node.js',
+    'Express',
+    'Vue',
+    'Mongoose',
+    'Angular'
   ];
 
   @override
   Widget build(BuildContext context) {
-    return (MultiSelect(
-      titleText: "What frameworks do you use?",
-      validator: (value) {
-        if (value == null) {
-          return 'Please select one or more option(s)';
-        }
-      },
-      errorText: 'Please select one or more option(s)',
-      dataSource: [
-        {
-          "display": "F",
-          "value": 1,
-        },
-        {
-          "display": "Canada",
-          "value": 2,
-        },
-        {
-          "display": "India",
-          "value": 3,
-        },
-        {
-          "display": "United States",
-          "value": 4,
-        }
-      ],
-      textField: 'display',
-      valueField: 'value',
-      filterable: false,
-      required: true,
-      value: null,
-      onSaved: (value) {
-        print('The saved values are $value');
-      },
-    ));
+    final _multipleNotifier = Provider.of<MultipleNotifier>(context);
+
+    return (Center(
+        child: ListView(
+            children: ListTile.divideTiles(context: context, tiles: [
+      AlertDialog(
+        title: Text("What frameworks do you use? (select all that apply)"),
+        content: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: countries
+                  .map((e) => CheckboxListTile(
+                        title: Text(e),
+                        value: _multipleNotifier.isHaveItem(e),
+                        onChanged: (value) {
+                          value!
+                              ? _multipleNotifier.addItem(e)
+                              : _multipleNotifier.removeItem(e);
+                        },
+                      ))
+                  .toList(),
+            ),
+          ),
+        ),
+        actions: [
+          FlatButton(
+            child: Text("Submit"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      )
+      // ListTile(
+      //   title: Text('Single choice Dialog'),
+      //   onTap: () => _showMultiChoiceDialog(context),
+      // )
+    ]).toList())));
   }
 
   @override
