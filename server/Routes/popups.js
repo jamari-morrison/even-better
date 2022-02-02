@@ -22,7 +22,7 @@ router.get('/nextQuestion', async (req, res) => {
             console.log( user['_id']);
 
             //should update to Date.now(), but for testing im using a good number
-            const updateResult = await User.updateOne({"_id": unstrung['_id']}, {lastpopupdate:123}).catch(err => {
+            const updateResult = await User.updateOne({"_id": unstrung['_id']}, {lastpopupdate:Date.now()}).catch(err => {
                 res.json({
                   message: err
                 })
@@ -60,12 +60,48 @@ router.get('/nextQuestion', async (req, res) => {
  */
 router.post('/answer', async (req, res) => {
     try{
-        console.log(req.body)
+        // const updateResult = await PopupQuestion.findOneAndUpdate({"_id": req.aborted.questionID}, {$inc: {'currentAnswers':1}}).catch(err => {
+        //     res.json({
+        //       message: err
+        //     })
+        //   })
+        // console.log(updateResult)
+
+        const question = await PopupQuestion.findOne({"_id": req.body.questionID}).catch(err => {
+            res.json({
+              message: err
+            })
+          })
+        console.log(question)
+
+        if(question.quota <= 1+question.currentAnswers){
+
+            //quota is filled
+            console.log('filled quota')
+            console.log
+            const updateResult = await PopupQuestion.updateOne({"_id": req.body.questionID}, {currentAnswers:question.currentAnswers+1, priority:9999}).catch(err => {
+                res.json({
+                  message: err
+                })
+              })
+            console.log(updateResult)
+        }else{
+
+            //quota isn't filled
+            console.log('not yet filled quota')
+            const updateResult = await PopupQuestion.updateOne({"_id": req.body.questionID}, {currentAnswers:question.currentAnswers+1}).catch(err => {
+                res.json({
+                  message: err
+                })
+              })
+            console.log(updateResult)
+        }
+
         const newAnswer = new PopupAnswer(
             {questionID: req.body.questionID,
             answerer: req.body.answerer,
             timestamp: Date.now(),
-            answer: req.body.answer
+            answer: JSON.parse(req.body.answer)
             }
 
         );
