@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AlbumBool {
-  final bool message;
+  final String message;
 
   AlbumBool({
     required this.message,
@@ -21,33 +21,38 @@ Future<AlbumBool> createAlbumReportContent(
   var response;
   print("content type: " + contentType);
   print("content id: " + contentId);
-  if (contentType == "post") {
-    response = await http.post(
-      Uri.parse('https://api.even-better-api.com:443/posts/reportPost'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{'post-id': contentId}),
-    );
-  }
-  if (contentType == "comment") {
-    response = await http.post(
-      Uri.parse('https://api.even-better-api.com:443/comments/reportComment'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{'comment-id': contentId}),
-    );
-  }
-  if (contentType == "forumPost") {
-    response = await http.post(
-      Uri.parse('https://api.even-better-api.com:443/forum/reportForum'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{'forum-id': contentId}),
-    );
-  }
+  print("reason: " + reason);
+  // if (contentType == "post") {
+  response = await http.post(
+    Uri.parse('https://api.even-better-api.com:443/reports/submit'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'content-id': contentId,
+      'content-type': contentType,
+      'reason': reason
+    }),
+  );
+  // }
+  // if (contentType == "comment") {
+  //   response = await http.post(
+  //     Uri.parse('https://api.even-better-api.com:443/comments/reportComment'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String, String>{'comment-id': contentId}),
+  //   );
+  // }
+  // if (contentType == "forumPost") {
+  //   response = await http.post(
+  //     Uri.parse('https://api.even-better-api.com:443/forum/reportForum'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String, String>{'forum-id': contentId}),
+  //   );
+  // }
   if (response.statusCode == 200 || response.statusCode == 201) {
     AlbumBool output = AlbumBool.fromJson(jsonDecode(response.body));
     return output;

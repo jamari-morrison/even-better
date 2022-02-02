@@ -11,13 +11,20 @@ class ReportContent extends StatelessWidget {
       : super(key: key);
 
   void submitReport(context) {
-    createAlbumReportContent(contentId, contentType, reportTextController.text)
-        .then((value) {
-      print("Report successful");
-    }).catchError((err) {
-      print("Report failed");
-      modalErrorHandler(err, context, "failed to submit error report");
-    });
+    if (reportTextController.text.trim() != "") {
+      createAlbumReportContent(
+              contentId, contentType, reportTextController.text)
+          .then((value) {
+        print("Report successful");
+        Navigator.pop(context);
+      }).catchError((err) {
+        print("Report failed");
+        modalErrorHandler(err, context, "failed to submit error report");
+      });
+    } else {
+      modalErrorHandler(
+          "please add a reason", context, "no reason for reporting provided");
+    }
   }
 
   final TextEditingController reportTextController = TextEditingController();
