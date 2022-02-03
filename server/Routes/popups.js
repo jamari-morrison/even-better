@@ -7,27 +7,37 @@ const router = express.Router();
 
 //input: username
 //output: object telling you if you should show popup.  If so, then it contains question data
+router.get('/shouldQuestion', async (req, res) => {
+  try{
+    console.log('made it to getting next question for ' + req.query['rose-username'] )
+    const unstrung = await User.findOne({'rose-username': req.query['rose-username']});
+    const user = JSON.parse(JSON.stringify(unstrung))
+    console.log(unstrung)
+    console.log(user["lastpopupdate"])
+    if(Date.now() - user['lastpopupdate'] > 172800000){
+        res.json({message: 'true'})
+    }else{
+      res.json({message: 'false'})
+    }
+
+  }
+  catch(err){
+    console.log(err)
+    res.json({message: "Error!"})
+}
+})
+
 router.get('/nextQuestion', async (req, res) => {
     try{
 
         console.log('made it to getting next question for ' + req.query['rose-username'] )
         const unstrung = await User.findOne({'rose-username': req.query['rose-username']});
-        const user = JSON.parse(JSON.stringify(unstrung))
-        console.log(unstrung)
-        console.log(user["lastpopupdate"])
-        if(Date.now() - user['lastpopupdate'] > 172800000){
-            //update the time when the user has most recently seen a popup
-
-            
-            console.log( user['_id']);
-
-            //should update to Date.now(), but for testing im using a good number
-            const updateResult = await User.updateOne({"_id": unstrung['_id']}, {lastpopupdate:Date.now()}).catch(err => {
-                res.json({
-                  message: err
+                const updateResult = await User.updateOne({"_id": unstrung['_id']}, {lastpopupdate:Date.now()}).catch(err => {
+                  res.json({
+                    message: err
+                  })
                 })
-              })
-            console.log(updateResult)
+              console.log(updateResult)
 
 
             //get the popup information and return it
@@ -43,9 +53,7 @@ router.get('/nextQuestion', async (req, res) => {
             }
         }
         
-        res.json({message: 'has question', questions: questions});
-        return;
-        }
+        
         res.json({message: 'no question'});
         
     } catch(err){
@@ -60,12 +68,7 @@ router.get('/nextQuestion', async (req, res) => {
  */
 router.post('/answer', async (req, res) => {
     try{
-        // const updateResult = await PopupQuestion.findOneAndUpdate({"_id": req.aborted.questionID}, {$inc: {'currentAnswers':1}}).catch(err => {
-        //     res.json({
-        //       message: err
-        //     })
-        //   })
-        // console.log(updateResult)
+                
 
         const question = await PopupQuestion.findOne({"_id": req.body.questionID}).catch(err => {
             res.json({
@@ -103,7 +106,6 @@ router.post('/answer', async (req, res) => {
             timestamp: Date.now(),
             answer: JSON.parse(req.body.answer)
             }
-
         );
             console.log(newAnswer)
         newAnswer.save()
