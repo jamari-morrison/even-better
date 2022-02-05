@@ -22,24 +22,6 @@ class Questionaire extends StatefulWidget {
 
 class _QuestionaireState extends State<Questionaire> {
   List<dynamic> countries = [
-<<<<<<< HEAD
-
-  ];
-  String questionTitle = '';
-  String questionID = 'empty';
-
-  void getPopupData() async {
-
-    final uri = Uri.http('10.0.2.2:3000', '/popups/nextQuestion',
-        {'rose-username': widget.currentStudent.toString()});
-
-    final response = await http.get(uri, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
-
-    print(response.body);
-
-=======
     'React',
     'Flutter',
     'Node.js',
@@ -61,7 +43,6 @@ class _QuestionaireState extends State<Questionaire> {
 
     print(response.body);
 
->>>>>>> 5bf4b81b91b6363d7c551b36dc6919041eba5584
     final responseData = jsonDecode(response.body);
     print(responseData['message']);
     if (responseData['message'] == 'has question') {
@@ -72,29 +53,16 @@ class _QuestionaireState extends State<Questionaire> {
       });
     } else {
       //redirect to dm's here :D
-<<<<<<< HEAD
-      print('nothing to show');
-=======
->>>>>>> 5bf4b81b91b6363d7c551b36dc6919041eba5584
     }
   }
 
   void sendPopupData(List<String> selections) async {
-<<<<<<< HEAD
-
-    print(jsonEncode(<String, String>{
-      'questionID': widget.currentStudent,
-      'answerer': widget.currentStudent.toString(),
-      'answer': jsonEncode(selections),
-    }).toString());
-=======
     print(jsonEncode(selections));
     print(jsonEncode(<String, String>{
       'questionID': widget.currentStudent,
       'answerer': widget.currentStudent.toString(),
       'answer': selections.toString(),
     }.toString()));
->>>>>>> 5bf4b81b91b6363d7c551b36dc6919041eba5584
     final response = await http.post(
       Uri.parse('http://10.0.2.2:3000/popups/answer'),
       headers: <String, String>{
@@ -103,11 +71,7 @@ class _QuestionaireState extends State<Questionaire> {
       body: jsonEncode(<String, String>{
         'questionID': widget.currentStudent,
         'answerer': widget.currentStudent.toString(),
-<<<<<<< HEAD
-        'answer': jsonEncode(selections),
-=======
         'answer': selections.toString(),
->>>>>>> 5bf4b81b91b6363d7c551b36dc6919041eba5584
       }),
     );
     print(response.body);

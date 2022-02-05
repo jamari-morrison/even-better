@@ -9,6 +9,10 @@ const UserSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        "moderator": {
+            type: Boolean,
+            required: true
+        },
         "verification-token": {
             type: String,
             required: true
@@ -16,7 +20,6 @@ const UserSchema = mongoose.Schema(
         "verified": Boolean,
         "name": {
             type:String, 
-            required: true
         },
         "creation-time": Number,
         "pfp-uri": String,

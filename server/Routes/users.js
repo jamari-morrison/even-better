@@ -148,6 +148,7 @@ router.post('/sendValidationEmail', async (req, res) => {
     }, {
       "verified": false,
       "verification-token": key,
+      "moderator": false,   //could set this based on graduation year if we want to differentiate between alums and students
       "creation-time": Date.now()
     })
 
