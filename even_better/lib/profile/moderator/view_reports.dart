@@ -38,26 +38,18 @@ class _ViewReportsState extends State<ViewReports> {
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
+
     List<dynamic> reslist = jsonDecode(response.body);
     print("reslist is: " + reslist.toString());
     for (var report in reslist) {
-      // print("------Trying new" + forum);
       String id = report['_id'];
-      // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!id == " + id);
       String reason = report['reason'];
       String timestamp = report['timestamp'];
-      // print("title is " + tempTitle);
-      // String id = forum['_id'];
-      // print(forum['content']);
-      /* TODO: enable tags here*/
-      // List<> tempTags = forum['tags'];
-      // List<Tag> passInTags = [];
-      // for (var t in tempTags) {
-      //   Tag temp = Tag(t, "1");
-      //   passInTags.add(temp);
-      // }
-      Report tempFP = Report(id, reason, timestamp);
-      // print(tempFP);
+      String contentType = report['content-type'];
+      String contentId = report['content-id'];
+      print(contentType);
+
+      Report tempFP = Report(contentId, contentType, id, reason, timestamp);
       listItems.add(tempFP);
     }
     setState(() {
