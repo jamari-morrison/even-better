@@ -1,6 +1,7 @@
 # even-better
 Senior project for 2021-2022 team 11
 
+Note: we need to move all information for connections (like URLS and passwords) to a .env file
 
 Get a private key from: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html
 

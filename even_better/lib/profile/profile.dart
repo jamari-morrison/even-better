@@ -13,6 +13,8 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 
+import 'moderator/moderator.dart';
+
 class ProfileApp extends StatefulWidget {
   const ProfileApp({Key? key}) : super(key: key);
 
@@ -117,11 +119,18 @@ class ProfileAppState extends State<ProfileApp> {
         actions: <Widget>[
           FlatButton.icon(
               label: const Text(''),
+              icon: const Icon(Icons.admin_panel_settings),
+              onPressed: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Moderator()));
+              }),
+          FlatButton.icon(
+              label: const Text(''),
               icon: const Icon(Icons.settings),
               onPressed: () async {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Settings(_auth)));
-              })
+              }),
         ],
       ),
       body: SingleChildScrollView(

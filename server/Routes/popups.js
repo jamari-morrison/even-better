@@ -7,24 +7,37 @@ const router = express.Router();
 
 //input: username
 //output: object telling you if you should show popup.  If so, then it contains question data
+router.get('/shouldQuestion', async (req, res) => {
+  try{
+    console.log('made it to getting next question for ' + req.query['rose-username'] )
+    const unstrung = await User.findOne({'rose-username': req.query['rose-username']});
+    const user = JSON.parse(JSON.stringify(unstrung))
+    console.log(unstrung)
+    console.log(user["lastpopupdate"])
+    if(Date.now() - user['lastpopupdate'] > 172800000){
+        res.json({message: 'true'})
+    }else{
+      res.json({message: 'false'})
+    }
+
+  }
+  catch(err){
+    console.log(err)
+    res.json({message: "Error!"})
+}
+})
+
 router.get('/nextQuestion', async (req, res) => {
     try{
-        console.log('made it to getting next question')
-        const unstrung = await User.findOne({'rose-username': req.query['rose-username']});
-        const user = JSON.parse(JSON.stringify(unstrung))
-        console.log(unstrung)
-        console.log(user["lastpopupdate"])
-        if(Date.now() - user['lastpopupdate'] > 172800000){
-            //update the time when the user has most recently seen a popup
 
-            
-            console.log( user['_id']);
-            const updateResult = await User.updateOne({"_id": unstrung['_id']}, {lastpopupdate:Date.now()}).catch(err => {
-                res.json({
-                  message: err
+        console.log('made it to getting next question for ' + req.query['rose-username'] )
+        const unstrung = await User.findOne({'rose-username': req.query['rose-username']});
+                const updateResult = await User.updateOne({"_id": unstrung['_id']}, {lastpopupdate:Date.now()}).catch(err => {
+                  res.json({
+                    message: err
+                  })
                 })
-              })
-            console.log(updateResult)
+              console.log(updateResult)
 
 
             //get the popup information and return it
@@ -35,14 +48,12 @@ router.get('/nextQuestion', async (req, res) => {
         for(q in questions){
             
             if(questions[q].currentAnswers < questions[q].quota)  {
-                res.json({message: 'has question', questions: questions[q]});
+                res.json({message: 'has question', question: questions[q]});
                 return;
             }
         }
         
-        res.json({message: 'has question', questions: questions});
-        return;
-        }
+        
         res.json({message: 'no question'});
         
     } catch(err){
@@ -57,14 +68,44 @@ router.get('/nextQuestion', async (req, res) => {
  */
 router.post('/answer', async (req, res) => {
     try{
-        console.log(req.body)
+                
+
+        const question = await PopupQuestion.findOne({"_id": req.body.questionID}).catch(err => {
+            res.json({
+              message: err
+            })
+          })
+        console.log(question)
+
+        if(question.quota <= 1+question.currentAnswers){
+
+            //quota is filled
+            console.log('filled quota')
+            console.log
+            const updateResult = await PopupQuestion.updateOne({"_id": req.body.questionID}, {currentAnswers:question.currentAnswers+1, priority:9999}).catch(err => {
+                res.json({
+                  message: err
+                })
+              })
+            console.log(updateResult)
+        }else{
+
+            //quota isn't filled
+            console.log('not yet filled quota')
+            const updateResult = await PopupQuestion.updateOne({"_id": req.body.questionID}, {currentAnswers:question.currentAnswers+1}).catch(err => {
+                res.json({
+                  message: err
+                })
+              })
+            console.log(updateResult)
+        }
+
         const newAnswer = new PopupAnswer(
             {questionID: req.body.questionID,
             answerer: req.body.answerer,
             timestamp: Date.now(),
-            answer: req.body.answer
+            answer: JSON.parse(req.body.answer)
             }
-
         );
             console.log(newAnswer)
         newAnswer.save()

@@ -94,6 +94,7 @@ class _ForumListPageState extends State<ForumListPage> {
     // print("all the posts =");
     // print(forumPosts);
     // print("---");
+
     var listpage = Container(
         padding: const EdgeInsets.all(2.0),
         child: ListView.builder(
@@ -193,21 +194,17 @@ class _ForumListPageState extends State<ForumListPage> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: <Widget>[SizedBox(height: 5.0), topTagGroup, listpage],
-
-              // <Widget>[
-              //   Row(
-              //     children: <Widget>[topTagGroup],
-              //   ),
-              //   // Expanded(
-              //   //   child: listpage,
-              //   // )
-              // ],
+        //this didn't scroll but now it does!
+        body: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[topTagGroup],
             ),
-          ),
+            Expanded(
+              child: listpage,
+            )
+          ],
         ));
   }
 
