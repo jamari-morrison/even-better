@@ -21,10 +21,7 @@ class AlbumBool {
 //make this private but still usable in test case??
 Future<AlbumBool> createAlbumValidateRose(roseUsername) async {
   final response = await http.post(
-    Uri.parse(
-        // 'https://load-balancer-937536547.us-east-2.elb.amazonaws.com:443/students/checkExist'),
-        // 'hstpsapi.even-better-api.com:443/students/checkExist'),
-        'https://api.even-better-api.com:443/students/checkExist'),
+    Uri.parse('https://api.even-better-api.com:443/students/checkExist'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -35,11 +32,10 @@ Future<AlbumBool> createAlbumValidateRose(roseUsername) async {
     return output;
   } else {
     print("status code: " + response.statusCode.toString());
-    throw Exception('failed to create album');
+    throw Exception('failed to create album checkExistFailed');
   }
 }
 
-//TODO: implement me!!
 Future<AlbumBool> createAlbumIsEmailValidated(email) async {
   final response = await http.get(
     //query parameters!
@@ -72,7 +68,7 @@ Future<AlbumSendEmail> createAlbumSendEmail(email) async {
     return output;
   } else {
     print("status code: " + response.statusCode.toString());
-    throw Exception('failed to create album');
+    throw Exception('failed to create album sendValidationEmail');
   }
 }
 
