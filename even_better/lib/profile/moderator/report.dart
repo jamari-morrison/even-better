@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'detailed_report.dart';
+
 class Report extends StatelessWidget {
   final String id;
   final String reason;
   final String timestamp;
-  const Report(this.id, this.reason, this.timestamp, {Key? key})
+  final String contentType;
+  final String contentId;
+  const Report(
+      this.contentId, this.contentType, this.id, this.reason, this.timestamp,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -17,32 +23,24 @@ class Report extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
       ),
       child: ListTile(
-        title: Text(id),
+        title: Text(DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp))
+            .toLocal()
+            .toString()), //format this timestamp
         subtitle: Text(reason),
         leading: Icon(
           Icons.dashboard,
           color: Colors.red[500],
         ),
-        // trailing: Row(
-        //   verticalDirection: VerticalDirection.up,
-        //   children: <Widget>[
-        //     Tag("Framework", "1"),
-        //     Tag("Company", "1"),
-        //     Tag("Project", "1")
-        //   ],
-        // ),
+
         onTap: () {
 // go to the post reported
 
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => DetailedForum(
-          //             postId: entry.postId,
-          //             comments: entry.answer,
-          //             post: entry,
-          //           )),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailedReport(
+                    id: id, contentType: contentType, contentId: contentId)),
+          );
         },
       ),
     );
