@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:even_better/UserVerification/Helpers/verification_rest_api.dart';
 import 'package:even_better/models/allusers.dart';
 import 'package:even_better/post/feed_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+// import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:search_page/search_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,9 +33,10 @@ class MySearchPage extends StatefulWidget {
 //     Person('Annette', 'Brooks', 39),
 //   ];
 class _MySearchPageState extends State<MySearchPage> {
-  List<User> _users = <User>[];
+  List<UserI> _users = <UserI>[];
   Timer? _timer;
-
+  String _username = "";
+  String? email;
   @override
   Widget build(BuildContext context) {
     print(_users.length);
@@ -48,15 +48,32 @@ class _MySearchPageState extends State<MySearchPage> {
       body: ListView.builder(
         itemCount: _users.length,
         itemBuilder: (context, index) {
-          final User person = _users[index];
+          final UserI person = _users[index];
           return ListTile(
               title: Text(person.name),
               subtitle: Text(person.username),
               // trailing: Text('${person.age} yo'),
               trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                Icon(
-                  Icons.add_circle_outline_sharp,
-                  color: CompanyColors.red,
+                IconButton(
+                  icon: const Icon(
+                    Icons.add_circle_outline_sharp,
+                    color: CompanyColors.red,
+                  ),
+                  onPressed: () {
+                    if (_username == person.username) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildSelfDialog(context),
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildPopupDialog(context),
+                      );
+                    }
+                  },
                 )
               ]));
         },
@@ -65,7 +82,7 @@ class _MySearchPageState extends State<MySearchPage> {
         tooltip: 'Search people',
         onPressed: () => showSearch(
           context: context,
-          delegate: SearchPage<User>(
+          delegate: SearchPage<UserI>(
             onQueryUpdate: (s) => print(s),
             items: _users,
             searchLabel: 'Search people',
@@ -86,9 +103,26 @@ class _MySearchPageState extends State<MySearchPage> {
               subtitle: Text(person.username),
               // trailing: Text('${person.age} yo'),
               trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                Icon(
-                  Icons.add_circle_outline_sharp,
-                  color: CompanyColors.red,
+                IconButton(
+                  icon: const Icon(
+                    Icons.add_circle_outline_sharp,
+                    color: CompanyColors.red,
+                  ),
+                  onPressed: () {
+                    if (_username == person.username) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildSelfDialog(context),
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildPopupDialog(context),
+                      );
+                    }
+                  },
                 )
               ]),
             ),
@@ -99,9 +133,9 @@ class _MySearchPageState extends State<MySearchPage> {
     );
   }
 
-  Future<List<User>> fetchUsers() async {
+  Future<List<UserI>> fetchUsers() async {
     // var users = List<User>();
-    List<User> users = <User>[];
+    List<UserI> users = <UserI>[];
     var url = 'https://api.even-better-api.com:443/users/all';
     var response = await http.get(
       Uri.parse(url),
@@ -112,8 +146,7 @@ class _MySearchPageState extends State<MySearchPage> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonMembers = json.decode(response.body);
       setState(() {
-        users =
-            jsonMembers.map<User>((json) => new User.fromJson(json)).toList();
+        users = jsonMembers.map<UserI>((json) => UserI.fromJson(json)).toList();
       });
       return users;
     } else {
@@ -125,16 +158,87 @@ class _MySearchPageState extends State<MySearchPage> {
   @override
   void initState() {
     super.initState();
+    User? user = FirebaseAuth.instance.currentUser;
     fetchUsers().then((value) {
       _users.addAll(value);
     });
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.showSuccess('Seach Loaded');
+    email = user?.email;
+    if (email != null) {
+      _username = email!;
+    }
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Seach Loaded');
     // EasyLoading.removeCallbacks();
   }
+}
+
+Widget _buildPopupDialog(BuildContext context) {
+  return AlertDialog(
+    title: const Text('Friend'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const <Widget>[
+        Text("Followed"),
+      ],
+    ),
+    actions: <Widget>[
+      FlatButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        textColor: Theme.of(context).primaryColor,
+        child: const Text('Ok'),
+      ),
+    ],
+  );
+}
+
+Widget _buildSelfDialog(BuildContext context) {
+  return AlertDialog(
+    title: const Text('Sorry'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const <Widget>[
+        Text("You can't follow yourself"),
+      ],
+    ),
+    actions: <Widget>[
+      FlatButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        textColor: Theme.of(context).primaryColor,
+        child: const Text('Close'),
+      ),
+    ],
+  );
+}
+
+Widget _buildFriendDialog(BuildContext context) {
+  return AlertDialog(
+    title: const Text('Sorry'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const <Widget>[
+        Text("Can't follow the friend again!"),
+      ],
+    ),
+    actions: <Widget>[
+      FlatButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        textColor: Theme.of(context).primaryColor,
+        child: const Text('Close'),
+      ),
+    ],
+  );
 }
