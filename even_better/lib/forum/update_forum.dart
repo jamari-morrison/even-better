@@ -89,6 +89,8 @@ class _updateForumState extends State<updateForum> {
                                   String now_string =
                                       DateFormat('yyyy-MM-dd kk:mm')
                                           .format(now);
+                                  print(title);
+                                  print(content);
                                   // connect.updateForum(title, "Ainsley Liu",
                                   //     content, now_string, "");
                                 }
