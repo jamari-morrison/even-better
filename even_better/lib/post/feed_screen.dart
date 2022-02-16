@@ -7,6 +7,7 @@ import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum.dart';
 import 'package:even_better/screens/api.dart';
 import 'package:even_better/screens/my_flutter_app_icons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:meta/meta.dart';
 import 'package:even_better/profile/profile.dart';
@@ -31,10 +32,15 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget l = _noaddNewPosts();
   // List<Posting> now_ps = <Posting>[];
   Timer? _timer;
+  String _username = "";
+  String _name = "";
+  String? email;
+  String? name;
 
   @override
   void initState() {
     super.initState();
+    initialName();
     // EasyLoading.addStatusCallback((status) {
     //   print('EasyLoading Status $status');
     //   if (status == EasyLoadingStatus.dismiss) {
@@ -43,6 +49,18 @@ class _FeedScreenState extends State<FeedScreen> {
     // });
     // EasyLoading.showSuccess('Loading Successed');
     // EasyLoading.removeCallbacks();
+  }
+
+  initialName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      _username = email!;
+    }
+    name = user?.displayName;
+    if (name != null) {
+      _name = name!;
+    }
   }
 
   Image getAvatorImage() {
@@ -375,7 +393,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   if (_post != null) {
                     setState(() {
                       p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                          _post.content, 'Jamari', 0, '');
+                          _post.content, _username, 0, '');
                       SinglePost sp = SinglePost('', 0, p);
                       ps.add(sp);
                       l = getPostWidgets();

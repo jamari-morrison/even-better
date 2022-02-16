@@ -38,6 +38,8 @@ class _MySearchPageState extends State<MySearchPage> {
   Timer? _timer;
   String _username = "";
   String? email;
+  List<String> friends = <String>[];
+
   @override
   Widget build(BuildContext context) {
     print(_users.length);
@@ -61,11 +63,19 @@ class _MySearchPageState extends State<MySearchPage> {
                     color: CompanyColors.red,
                   ),
                   onPressed: () {
+                    bool ifcontain = friends.contains(person.username);
+                    print(ifcontain);
                     if (_username == person.username) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>
                             _buildSelfDialog(context),
+                      );
+                    } else if (ifcontain) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildFriendDialog(context),
                       );
                     } else {
                       createAddFriend(person.username);
@@ -113,11 +123,19 @@ class _MySearchPageState extends State<MySearchPage> {
                     color: CompanyColors.red,
                   ),
                   onPressed: () {
+                    bool ifcontain = friends.contains(person.username);
+                    print(ifcontain);
                     if (_username == person.username) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>
                             _buildSelfDialog(context),
+                      );
+                    } else if (ifcontain) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildFriendDialog(context),
                       );
                     } else {
                       showDialog(
@@ -159,6 +177,32 @@ class _MySearchPageState extends State<MySearchPage> {
     }
   }
 
+  void fetchFriends(email) async {
+    print("email: " + email);
+    var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
+    var response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonMembers = json.decode(response.body);
+      print(response.body);
+      print(jsonMembers);
+      if (jsonMembers != null) {
+        setState(() {
+          friends = (jsonMembers as List).map((e) => e as String).toList();
+        });
+
+        print("ffffffffffffffffff" + friends.length.toString());
+      }
+    } else {
+      print("status code: " + response.statusCode.toString());
+      throw Exception('failed to get all user info');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -170,6 +214,9 @@ class _MySearchPageState extends State<MySearchPage> {
     if (email != null) {
       _username = email!;
     }
+    print("fffffff" + _username);
+    fetchFriends(_username);
+    print("fffff" + friends.length.toString());
     // EasyLoading.addStatusCallback((status) {
     //   print('EasyLoading Status $status');
     //   if (status == EasyLoadingStatus.dismiss) {
