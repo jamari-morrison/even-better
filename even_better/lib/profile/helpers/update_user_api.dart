@@ -1,23 +1,27 @@
+import 'package:even_better/models/allusers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<User> getUserInfo() async {
+Future<UserI> getUserInfo() async {
   final user = FirebaseAuth.instance.currentUser;
   String? email = user!.email;
   if (email != null) {
     print("email: " + email);
   }
   final response = await http.get(
-    Uri.parse(
-        'http://10.0.2.2:3000/users/getUser'), //http://10.0.2.2:3000/users/update
+    Uri.parse('http://10.0.2.2:3000/users/getUser/' +
+        email!), //http://10.0.2.2:3000/users/update
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     var user = json.decode(response.body);
-    return user;
+    wholeUser u = wholeUser.fromJson(user);
+    print(u.useri.avatar);
+    // print(user.toString());
+    return u.useri;
   } else {
     print("status code: " + response.statusCode.toString());
     throw Exception('failed to load user');
@@ -54,8 +58,8 @@ void createBooleanUpdate(bool cs, bool se, bool ds) async {
   final user = FirebaseAuth.instance.currentUser;
   String? email = user!.email;
   if (email != null) {
-    print("emailbool: " + email);
-    print("bool: " + cs.toString() + se.toString() + ds.toString());
+    // print("emailbool: " + email);
+    // print("bool: " + cs.toString() + se.toString() + ds.toString());
     final response = await http.post(
       Uri.parse('http://10.0.2.2:3000/users/updatebool/' +
           email), //http://10.0.2.2:3000/users/update
@@ -73,7 +77,7 @@ void createBooleanUpdate(bool cs, bool se, bool ds) async {
   ;
 }
 
-void createAvatarUpdate(ava, email) async {
+void createAvatarUpdate(ava) async {
   final user = FirebaseAuth.instance.currentUser;
   String? email = user!.email;
   if (email != null) {

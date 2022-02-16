@@ -367,18 +367,20 @@ class _FeedScreenState extends State<FeedScreen> {
                   //   maskType: EasyLoadingMaskType.black,
                   // );
                   // print('EasyLoading show');
-                  final NewPost _post = await Navigator.push(
+                  var _post = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
                   // EasyLoading.dismiss();
-                  setState(() {
-                    p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                        _post.content, 'Jamari', 0, '');
-                    SinglePost sp = SinglePost('', 0, p);
-                    ps.add(sp);
-                    l = getPostWidgets();
-                  });
+                  if (_post != null) {
+                    setState(() {
+                      p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
+                          _post.content, 'Jamari', 0, '');
+                      SinglePost sp = SinglePost('', 0, p);
+                      ps.add(sp);
+                      l = getPostWidgets();
+                    });
+                  }
                 },
                 child: const Icon(
                   Icons.add,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:even_better/models/allusers.dart';
 import 'package:even_better/post/feed_screen.dart';
+import 'package:even_better/profile/helpers/add_friend_api.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -67,6 +68,7 @@ class _MySearchPageState extends State<MySearchPage> {
                             _buildSelfDialog(context),
                       );
                     } else {
+                      createAddFriend(person.username);
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>
@@ -96,6 +98,8 @@ class _MySearchPageState extends State<MySearchPage> {
               person.username,
               person.roseusername,
               person.name,
+              person.companyname,
+              person.bio,
               //person.age.toString(),
             ],
             builder: (person) => ListTile(
@@ -184,7 +188,7 @@ Widget _buildPopupDialog(BuildContext context) {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const <Widget>[
-        Text("Followed"),
+        Text("Added"),
       ],
     ),
     actions: <Widget>[

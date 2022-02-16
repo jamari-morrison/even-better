@@ -495,7 +495,7 @@ class ProfileAppState extends State<ProfileApp> {
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
-        createAvatarUpdate(_image!.path, context);
+        createAvatarUpdate(_image!.path);
       });
     }
   }
@@ -505,7 +505,7 @@ class ProfileAppState extends State<ProfileApp> {
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
-        createAvatarUpdate(_image!.path, context);
+        createAvatarUpdate(_image!.path);
       });
     }
   }

@@ -13,35 +13,19 @@ const UserSchema = mongoose.Schema(
             type: Boolean,
             required: true
         },
-        "name":{
-            type:String,
+        "name": {
+            type: String,
             // required:true
         },
-        "companyname":{
-            type:String,
+        "companyname": {
+            type: String,
             // required:true
             default: "N/A"
         },
-        "avatar":{
-            type:String,
+        "avatar": {
+            type: String,
+            default: "N/A"
         },
-        following: [
-            {
-                user:{ 
-                    type: mongoose.Schema.ObjectId, 
-                    ref: 'User' 
-                },
-            }
-    
-        ],
-        followers: [
-            {
-                user:{ 
-                    type: mongoose.Schema.ObjectId, 
-                    ref: 'User' 
-                },
-            }
-        ],
         "verification-token": {
             type: String,
             required: true
@@ -49,14 +33,29 @@ const UserSchema = mongoose.Schema(
         "verified": Boolean,
         "creation-time": Number,
         "pfp-uri": String,
-        "bio": String,
+        "bio": {
+            type: String,
+            default: "N/A"
+        },
         "friends": [String],
+        // "friendscount":Int32Array,
         "lastpopupdate": Number,
-        "cs":Boolean,
+        "cs": {
+            type: Boolean,
+            default: false
+        },
 
-        "se":Boolean,
+        "se": {
+            type: Boolean,
+            default: false
+        },
 
-        "ds":Boolean,
+
+        "ds": {
+            type: Boolean,
+            default: false
+        },
+
     })
 
 module.exports = mongoose.model('UserModel', UserSchema)
