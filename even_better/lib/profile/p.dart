@@ -1,20 +1,17 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:even_better/fb_services/auth.dart';
-import 'package:even_better/post/addpost.dart';
 import 'package:even_better/post/feed_screen.dart';
-import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:even_better/profile/profile_change.dart';
 import 'package:even_better/profile/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:even_better/models/allusers.dart';
 import 'dart:io';
-
 import 'package:image_picker/image_picker.dart';
 
-import 'moderator/moderator.dart';
+import 'helpers/update_user_api.dart';
 
 class ProfileApp extends StatefulWidget {
   const ProfileApp({Key? key}) : super(key: key);
@@ -29,10 +26,11 @@ class ProfileAppState extends State<ProfileApp> {
   final TextEditingController postController = TextEditingController();
   final picker = ImagePicker();
   final user = FirebaseAuth.instance.currentUser;
+  List<UserI> _users = <UserI>[];
   bool _update = false;
   File? _image;
   String _company = ' ';
-  bool cs = true;
+  bool cs = false;
   bool se = false;
   bool ds = false;
   String _username = "";
@@ -43,11 +41,36 @@ class ProfileAppState extends State<ProfileApp> {
   Timer? _timer;
 
   // SizedBox sb = _noupdateProfile();
+  ProfileAppState();
+  Future<List<UserI>> fetchUsers() async {
+    // var users = List<User>();
+    List<UserI> users = <UserI>[];
+    var url = 'http://10.0.2.2:3000/users/all';
+    var response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonMembers = json.decode(response.body);
+      setState(() {
+        users = jsonMembers.map<UserI>((json) => UserI.fromJson(json)).toList();
+      });
+      return users;
+    } else {
+      print("status code: " + response.statusCode.toString());
+      throw Exception('failed to get all user info');
+    }
+  }
 
   //ProfileAppState();
   @override
   void initState() {
     super.initState();
+    fetchUsers().then((value) {
+      _users.addAll(value);
+    });
     initialName();
   }
 
@@ -58,13 +81,26 @@ class ProfileAppState extends State<ProfileApp> {
     if (email != null) {
       _username = email!;
     }
-    name = user?.displayName;
-    if (name != null) {
-      _name = name!;
+  }
+
+  void getUser() {
+    for (var uuu in _users) {
+      if (uuu.username == _username) {
+        setState(() {
+          _name = uuu.name;
+          cs = uuu.cs;
+          ds = uuu.ds;
+          se = uuu.se;
+          _company = uuu.companyname;
+          _bio = uuu.bio;
+          if (uuu.avatar != "") {
+            _image = File(uuu.avatar);
+          }
+        });
+      }
     }
   }
 
-  ProfileAppState();
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
@@ -77,14 +113,14 @@ class ProfileAppState extends State<ProfileApp> {
                       leading: const Icon(Icons.photo_library),
                       title: const Text('Photo Library'),
                       onTap: () {
-                        _imgFromGallery();
+                        _imgFromGallery(context);
                         Navigator.of(context).pop();
                       }),
                   ListTile(
                     leading: const Icon(Icons.photo_camera),
                     title: const Text('Camera'),
                     onTap: () {
-                      _imgFromCamera();
+                      _imgFromCamera(context);
                       Navigator.of(context).pop();
                     },
                   ),
@@ -97,6 +133,8 @@ class ProfileAppState extends State<ProfileApp> {
 
   @override
   Widget build(BuildContext context) {
+    fetchUsers();
+    getUser();
     final double screenwidth = MediaQuery.of(context).size.width;
     final double screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -120,18 +158,11 @@ class ProfileAppState extends State<ProfileApp> {
         actions: <Widget>[
           FlatButton.icon(
               label: const Text(''),
-              icon: const Icon(Icons.admin_panel_settings),
-              onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Moderator()));
-              }),
-          FlatButton.icon(
-              label: const Text(''),
               icon: const Icon(Icons.settings),
               onPressed: () async {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Settings(_auth)));
-              }),
+              })
         ],
       ),
       body: SingleChildScrollView(
@@ -224,7 +255,7 @@ class ProfileAppState extends State<ProfileApp> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: screenwidth * 0.005,
-                                vertical: screenheight * 0.007),
+                                vertical: screenheight * 0.0001),
                             child: Row(
                               children: <Widget>[
                                 Expanded(
@@ -439,7 +470,7 @@ class ProfileAppState extends State<ProfileApp> {
         MaterialPageRoute(
           builder: (context) => ProfileUpdate(
             _company,
-            _username,
+            _name,
             _bio,
             cs,
             se,
@@ -450,7 +481,7 @@ class ProfileAppState extends State<ProfileApp> {
     // after the SecondScreen result comes back update the Text widget with it
     setState(() {
       _company = _r.company!;
-      _username = _r.name!;
+      _name = _r.name!;
       _bio = _r.bio!;
       cs = _r.cs!;
       se = _r.se!;
@@ -459,23 +490,23 @@ class ProfileAppState extends State<ProfileApp> {
     });
   }
 
-  _imgFromCamera() async {
+  _imgFromCamera(context) async {
     final pickedImage = await picker.getImage(source: ImageSource.camera);
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
+        createAvatarUpdate(_image!.path, context);
       });
-      createAvatarUpdate(_image!.path, _name);
     }
   }
 
-  Future<void> _imgFromGallery() async {
+  _imgFromGallery(context) async {
     final pickedImage = await picker.getImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
+        createAvatarUpdate(_image!.path, context);
       });
-      createAvatarUpdate(_image!.path, _name);
     }
   }
 
@@ -485,13 +516,20 @@ class ProfileAppState extends State<ProfileApp> {
       height: 45,
       child: RaisedButton(
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (_) => ProfileUpdate(),
-            //   ),
-            // );
-            _awaitReturnValueFromSecondScreen(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProfileUpdate(
+                  _company,
+                  _name,
+                  _bio,
+                  cs,
+                  se,
+                  ds,
+                ),
+              ),
+            );
+            // _awaitReturnValueFromSecondScreen(context);
           },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),

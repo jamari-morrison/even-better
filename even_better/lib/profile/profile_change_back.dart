@@ -1,10 +1,6 @@
-import 'dart:async';
-
 import 'package:even_better/post/feed_screen.dart';
-import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:flutter/material.dart';
 import 'package:even_better/screens/api.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ProfileUpdate extends StatefulWidget {
   String _company = '';
@@ -41,7 +37,6 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   bool se;
   bool ds;
   // Prof profile = new Prof();
-  Timer? _timer;
 
   ProfileUpdateState(
       this._company, this._name, this._bio, this.cs, this.se, this.ds) {
@@ -54,13 +49,6 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   @override
   void initState() {
     super.initState();
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Loading Succeeded');
   }
 
   @override
@@ -73,8 +61,6 @@ class ProfileUpdateState extends State<ProfileUpdate> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenwidth = MediaQuery.of(context).size.width;
-    final double screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -146,15 +132,8 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       ))),
-                  onPressed: () async {
-                    _timer?.cancel();
-                    await EasyLoading.show(
-                      status: 'updating...',
-                      maskType: EasyLoadingMaskType.black,
-                    );
-                    print('EasyLoading updating profile');
+                  onPressed: () {
                     _sendDataBack(context);
-                    EasyLoading.dismiss();
                   },
                 ),
               ),
@@ -246,8 +225,6 @@ class ProfileUpdateState extends State<ProfileUpdate> {
     String company = companyController.text;
     String name = nameController.text;
     String bio = bioController.text;
-    createBooleanUpdate(cs, se, ds);
-    createStringUpdate(name, company, bio);
     Navigator.pop(context, Prof(company, name, bio, cs, se, ds));
   }
 }

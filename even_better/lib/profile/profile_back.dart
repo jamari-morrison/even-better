@@ -1,20 +1,11 @@
-import 'dart:async';
-
 import 'package:even_better/fb_services/auth.dart';
 import 'package:even_better/post/addpost.dart';
 import 'package:even_better/post/feed_screen.dart';
-import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:even_better/profile/profile_change.dart';
-import 'package:even_better/profile/settings.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-
-import 'moderator/moderator.dart';
 
 class ProfileApp extends StatefulWidget {
   const ProfileApp({Key? key}) : super(key: key);
@@ -28,41 +19,16 @@ class ProfileAppState extends State<ProfileApp> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController postController = TextEditingController();
   final picker = ImagePicker();
-  final user = FirebaseAuth.instance.currentUser;
   bool _update = false;
   File? _image;
   String _company = ' ';
   bool cs = true;
   bool se = false;
   bool ds = false;
-  String _username = "";
-  String _name = "";
-  String? email;
-  String? name;
+  String _name = 'Doris Chen';
   String _bio = ' ';
-  Timer? _timer;
 
   // SizedBox sb = _noupdateProfile();
-
-  //ProfileAppState();
-  @override
-  void initState() {
-    super.initState();
-    initialName();
-  }
-
-  // final FirebaseAuth _fireauth = FirebaseAuth.instance;
-  initialName() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    email = user?.email;
-    if (email != null) {
-      _username = email!;
-    }
-    name = user?.displayName;
-    if (name != null) {
-      _name = name!;
-    }
-  }
 
   ProfileAppState();
   void _showPicker(context) {
@@ -119,19 +85,18 @@ class ProfileAppState extends State<ProfileApp> {
         brightness: Brightness.dark,
         actions: <Widget>[
           FlatButton.icon(
-              label: const Text(''),
-              icon: const Icon(Icons.admin_panel_settings),
+              icon: Icon(Icons.person),
+              label: const Text(
+                'logout',
+                style: TextStyle(
+                  fontFamily: 'EB',
+                  fontSize: 25.0,
+                  color: Colors.black87,
+                ),
+              ),
               onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Moderator()));
-              }),
-          FlatButton.icon(
-              label: const Text(''),
-              icon: const Icon(Icons.settings),
-              onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Settings(_auth)));
-              }),
+                await _auth.signOut();
+              })
         ],
       ),
       body: SingleChildScrollView(
@@ -192,12 +157,12 @@ class ProfileAppState extends State<ProfileApp> {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
+                          children: const <Widget>[
                             Text(
-                              "Username: " + _username,
+                              "chen@qq.com",
                               style: TextStyle(
                                 fontFamily: 'EB',
-                                fontSize: screenwidth * 0.055,
+                                fontSize: 22.0,
                                 color: Colors.white,
                               ),
                             ),
@@ -213,18 +178,17 @@ class ProfileAppState extends State<ProfileApp> {
                           ],
                         ),
                         const SizedBox(
-                          height: 10.0,
+                          height: 4.0,
                         ),
                         Card(
-                          margin: const EdgeInsets.symmetric(
+                          margin: EdgeInsets.symmetric(
                               horizontal: 10.0, vertical: 0.0),
                           clipBehavior: Clip.antiAlias,
                           color: Colors.white,
                           elevation: 5.0,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: screenwidth * 0.005,
-                                vertical: screenheight * 0.007),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 2.0),
                             child: Row(
                               children: <Widget>[
                                 Expanded(
@@ -235,18 +199,18 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: screenwidth / 20,
+                                          fontSize: 19.0,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const SizedBox(
+                                      SizedBox(
                                         height: 2.0,
                                       ),
                                       Text(
-                                        "1",
+                                        "0",
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: screenwidth / 22,
+                                          fontSize: 18.0,
                                           color: CompanyColors.red[300],
                                         ),
                                       )
@@ -262,18 +226,18 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: screenwidth / 20.0,
+                                          fontSize: 19.0,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const SizedBox(
+                                      SizedBox(
                                         height: 2.0,
                                       ),
                                       Text(
-                                        "20",
+                                        "0",
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: screenwidth / 22.0,
+                                          fontSize: 18.0,
                                           color: CompanyColors.red[300],
                                         ),
                                       )
@@ -288,18 +252,18 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: screenwidth / 20.0,
+                                          fontSize: 19.0,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const SizedBox(
+                                      SizedBox(
                                         height: 2.0,
                                       ),
                                       Text(
-                                        "10",
+                                        "1",
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: screenwidth / 22.0,
+                                          fontSize: 18.0,
                                           color: CompanyColors.red[300],
                                         ),
                                       )
@@ -315,17 +279,17 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: screenwidth / 20.0,
+                                          fontSize: 19.0,
                                         ),
                                       ),
-                                      const SizedBox(
+                                      SizedBox(
                                         height: 2.0,
                                       ),
                                       Text(
                                         _company,
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: screenwidth / 22.0,
+                                          fontSize: 18.0,
                                           color: CompanyColors.red[300],
                                         ),
                                       ),
@@ -439,7 +403,7 @@ class ProfileAppState extends State<ProfileApp> {
         MaterialPageRoute(
           builder: (context) => ProfileUpdate(
             _company,
-            _username,
+            _name,
             _bio,
             cs,
             se,
@@ -450,7 +414,7 @@ class ProfileAppState extends State<ProfileApp> {
     // after the SecondScreen result comes back update the Text widget with it
     setState(() {
       _company = _r.company!;
-      _username = _r.name!;
+      _name = _r.name!;
       _bio = _r.bio!;
       cs = _r.cs!;
       se = _r.se!;
@@ -465,7 +429,6 @@ class ProfileAppState extends State<ProfileApp> {
       setState(() {
         _image = File(pickedImage.path);
       });
-      createAvatarUpdate(_image!.path, _name);
     }
   }
 
@@ -475,7 +438,6 @@ class ProfileAppState extends State<ProfileApp> {
       setState(() {
         _image = File(pickedImage.path);
       });
-      createAvatarUpdate(_image!.path, _name);
     }
   }
 
@@ -523,7 +485,7 @@ class ProfileAppState extends State<ProfileApp> {
 }
 
 Widget _noupdateProfile() {
-  return const SizedBox(
+  return SizedBox(
     width: 200.00,
   );
 }

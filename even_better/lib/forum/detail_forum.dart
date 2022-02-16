@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:even_better/forum/add_comment.dart';
+import 'package:even_better/forum/connect.dart';
 import 'package:even_better/forum/update_forum.dart';
 import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
@@ -138,6 +139,10 @@ class _DetailedForum extends State<DetailedForum> {
                     child: Text("DELETE"),
                     onPressed: () {
                       print("Trying to delete");
+                      deleteForum(post.postId);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
                     },
                   );
                   // set up the AlertDialog

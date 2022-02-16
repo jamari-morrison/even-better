@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field, prefer_final_fields
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -9,11 +11,12 @@ import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
 import 'package:even_better/post/feed_screen.dart';
 import 'package:even_better/screens/loading.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ForumListPage extends StatefulWidget {
   // Data db;
@@ -24,15 +27,19 @@ class ForumListPage extends StatefulWidget {
 
 class _ForumListPageState extends State<ForumListPage> {
   List<Forum_Post> forumPosts = [];
-  bool loading = false;
-  // Data db;
-  List<Tag> tags = [
-    Tag("Framework", "1"),
-    Tag("Company", "1"),
-    Tag("Project", "1"),
-    Tag("OO Design", "1")
-  ];
-  Timer? _timer;
+  static const int PAGE_SIZE = 10;
+  bool loaded = true;
+  bool _enablePullup = true;
+  bool loading = true;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
+  // List<Tag> tags = [
+  //   Tag("Framework", "1"),
+  //   Tag("Company", "1"),
+  //   Tag("Project", "1"),
+  //   Tag("OO Design", "1")
+  // ];
+  // Timer? _timer;
   _ForumListPageState();
 
   @override
@@ -41,14 +48,26 @@ class _ForumListPageState extends State<ForumListPage> {
     //moved line below to init state. If it's in build, it gets called each time
     //the widget rebuilds on a setState() call
     getallForums();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
+  }
+
+  void _onRefresh() async {
+    print("trying to refresh");
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getallForums();
     });
-    EasyLoading.showSuccess('Forums Loaded');
-    // EasyLoading.removeCallbacks();
+    // await Future.delayed(Duration(milliseconds: 2000));
+    // getallForums();
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    print("trying to refresh from bottom");
+    // await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getallForums();
+    });
+    // await Future.delayed(Duration(milliseconds: 2000));
+    _refreshController.loadComplete();
   }
 
   void getallForums() async {
@@ -59,44 +78,87 @@ class _ForumListPageState extends State<ForumListPage> {
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
-    List<dynamic> reslist = jsonDecode(response.body);
-    print("reslist is: " + reslist.toString());
-    for (var forum in reslist) {
-      // print("------Trying new" + forum);
-      String id = forum['_id'];
-      // print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!id == " + id);
-      String tempPoster = forum['poster'];
-      String tempTitle = forum['title'];
-      // print("title is " + tempTitle);
-      String tempContent = forum['content'];
-      // String id = forum['_id'];
-      // print(forum['content']);
-      /* TODO: enable tags here*/
-      // List<> tempTags = forum['tags'];
-      // List<Tag> passInTags = [];
-      // for (var t in tempTags) {
-      //   Tag temp = Tag(t, "1");
-      //   passInTags.add(temp);
-      // }
-      Forum_Post tempFP =
-          Forum_Post(id, tempPoster, tempTitle, tempContent, [], []);
-      // print(tempFP);
-      listItems.add(tempFP);
+    if (response != null && response.statusCode == HttpStatus.ok) {
+      List<dynamic> reslist = jsonDecode(response.body);
+      print("reslist is: " + reslist.toString());
+      for (var forum in reslist) {
+        String id = forum['_id'];
+        String tempPoster = forum['poster'];
+        String tempTitle = forum['title'];
+        String tempContent = forum['content'];
+        /* TODO: enable tags here*/
+        // List<> tempTags = forum['tags'];
+        // List<Tag> passInTags = [];
+        // for (var t in tempTags) {
+        //   Tag temp = Tag(t, "1");
+        //   passInTags.add(temp);
+        // }
+        Forum_Post tempFP =
+            Forum_Post(id, tempPoster, tempTitle, tempContent, [], []);
+        // print(tempFP);
+        listItems.add(tempFP);
+      }
+      setState(() {
+        forumPosts = listItems;
+      });
+    } else {
+      print("Loading Forum DB Error!!!!!");
     }
-    setState(() {
-      forumPosts = listItems;
-    });
   }
+
+  //loading widget
+  // Widget _getMoreForums() {
+  //   if (loading) {
+  //     return Center(
+  //         child: Padding(
+  //             padding: EdgeInsets.all(10.0),
+  //             child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: <Widget>[
+  //                   Text(
+  //                     'Loading',
+  //                     style: TextStyle(fontSize: 16.0),
+  //                   ),
+  //                   CircularProgressIndicator(
+  //                     strokeWidth: 1.0,
+  //                   )
+  //                 ])));
+  //   } else {
+  //     return Center(
+  //       child: Text("------------------------"),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // db = db.createdb();
-    // print("all the posts =");
-    // print(forumPosts);
-    // print("---");
-
-    var listpage = Container(
-        padding: const EdgeInsets.all(2.0),
+    var listpage = SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: false,
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        // onLoading: _onLoading,
+        header: WaterDropHeader(),
+        // footer: CustomFooter(builder: (context, mode) {
+        //   Widget body;
+        //   if (mode == LoadStatus.idle) {
+        //     body = Text("pull up load");
+        //   } else if (mode == LoadStatus.loading) {
+        //     body = CupertinoActivityIndicator();
+        //   } else if (mode == LoadStatus.failed) {
+        //     body = Text("Load Failed!Click retry!");
+        //   } else if (mode == LoadStatus.canLoading) {
+        //     body = Text("release to load more");
+        //   } else {
+        //     body = Text("No more Data");
+        //   }
+        //   return Container(
+        //     height: 55.0,
+        //     child: Center(child: body),
+        //   );
+        // }
+        // ),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) =>
@@ -104,80 +166,10 @@ class _ForumListPageState extends State<ForumListPage> {
           itemCount: forumPosts.length,
           shrinkWrap: true,
         ));
-    var topTagGroup = Container(
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-      ),
-      child: Container(
-          alignment: Alignment.bottomCenter,
-          margin: const EdgeInsets.symmetric(
-            horizontal: 10.0,
-            vertical: 0.0,
-          ),
-          decoration: const BoxDecoration(
-            color: CompanyColors.red,
-            borderRadius: BorderRadius.all(Radius.circular(30.0)),
-          ),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[tags[0], tags[1], tags[2]],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  tags[3],
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        TextButton(
-                          onPressed: () async {
-                            _timer?.cancel();
-                            await EasyLoading.show(
-                              status: 'loading...',
-                              maskType: EasyLoadingMaskType.black,
-                            );
-                            print('EasyLoading show');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => showAllTags(
-                                        alltags: tags,
-                                      )),
-                            );
-                            EasyLoading.dismiss();
-                          },
-                          child: const Text("···",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            print("showing more tags");
-                            // sleep(Duration(seconds: 3));
-                            // setState(() => loading = false);
-                          },
-                          child: const Text("",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ],
-          )),
-    );
+    //  Container(
+    //     padding: const EdgeInsets.all(2.0),
+    //     child: );
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
@@ -197,10 +189,10 @@ class _ForumListPageState extends State<ForumListPage> {
         //this didn't scroll but now it does!
         body: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[topTagGroup],
-            ),
+            // Row( // for tag area
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: <Widget>[],
+            // ),
             Expanded(
               child: listpage,
             )
@@ -224,3 +216,109 @@ class _ForumListPageState extends State<ForumListPage> {
     );
   }
 }
+
+
+// code in init
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Forums Loaded');
+    // EasyLoading.removeCallbacks();
+    
+// code in build
+// var topTagGroup = Container(
+// alignment: Alignment.center,
+// decoration: const BoxDecoration(
+//   color: Colors.white,
+//   borderRadius: BorderRadius.all(Radius.circular(15.0)),
+// ),
+// child: Container(
+//     alignment: Alignment.bottomCenter,
+//     margin: const EdgeInsets.symmetric(
+//       horizontal: 10.0,
+//       vertical: 0.0,
+//     ),
+//     decoration: const BoxDecoration(
+//       color: CompanyColors.red,
+//       borderRadius: BorderRadius.all(Radius.circular(30.0)),
+//     ),
+//     child: Column(
+//       children: <Widget>[
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//   children: <Widget>[tags[0], tags[1], tags[2]],
+// ),
+// Row(
+//   mainAxisAlignment: MainAxisAlignment.spaceAround,
+//   crossAxisAlignment: CrossAxisAlignment.center,
+//   children: <Widget>[
+//     tags[3],
+//     Container(
+//       child: Column(
+//         children: <Widget>[
+//           TextButton(
+//             onPressed: () async {
+//               _timer?.cancel();
+//         await EasyLoading.show(
+//           status: 'loading...',
+//           maskType: EasyLoadingMaskType.black,
+//         );
+//         print('EasyLoading show');
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(
+//               builder: (context) => showAllTags(
+//                     alltags: tags,
+//                   )),
+//         );
+//         EasyLoading.dismiss();
+//       },
+//       child: const Text("···",
+//           style: TextStyle(color: Colors.white)),
+//     ),
+//   ],
+// ),
+//               ),
+//               Container(
+//                 child: Column(
+//                   children: <Widget>[
+//                     TextButton(
+//                       onPressed: () {
+//                         print("showing more tags");
+//                         // sleep(Duration(seconds: 3));
+//                         // setState(() => loading = false);
+//                       },
+//                       child: const Text("",
+//                           style: TextStyle(color: Colors.white)),
+//                     ),
+//                   ],
+//                 ),
+//               )
+//             ],
+//           ),
+//         ],
+//       )),
+// );
+
+// body: forumPosts.length == 0 ? _getMoreForums():RefreshIndicator(
+        //   onRefresh: () {return _onRefresh();},
+        //   child:ListView.builder(
+        //     controller:_scrollController,
+        //     itemCount: forumPosts.length,
+        //     // itemBuilder: (context, index) =>{
+        //     //   // // Widget tip = Text("");
+        //     //   // // if (index == forumPosts.length - 1){
+        //     //   // //   tip = _getmoreForums();
+        //     //   // // }
+        //     //   // return Column(
+        //     //   //   children:<Widget>[
+        //     //   //     ListTile(
+        //     //   //       Title: Text("HiHi", maxLines: 1,)
+        //     //   //     ),])
+        //     // },
+        //   ),
+        // ),
