@@ -56,13 +56,11 @@ class _ForumListPageState extends State<ForumListPage> {
       getallForums();
     });
     // await Future.delayed(Duration(milliseconds: 2000));
-    // getallForums();
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
     print("trying to refresh from bottom");
-    // await Future.delayed(Duration(milliseconds: 2000));
     await Future.delayed(Duration(milliseconds: 1000), () {
       getallForums();
     });
@@ -95,7 +93,6 @@ class _ForumListPageState extends State<ForumListPage> {
         // }
         Forum_Post tempFP =
             Forum_Post(id, tempPoster, tempTitle, tempContent, [], []);
-        // print(tempFP);
         listItems.add(tempFP);
       }
       setState(() {
@@ -106,59 +103,33 @@ class _ForumListPageState extends State<ForumListPage> {
     }
   }
 
-  //loading widget
-  // Widget _getMoreForums() {
-  //   if (loading) {
-  //     return Center(
-  //         child: Padding(
-  //             padding: EdgeInsets.all(10.0),
-  //             child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 crossAxisAlignment: CrossAxisAlignment.center,
-  //                 children: <Widget>[
-  //                   Text(
-  //                     'Loading',
-  //                     style: TextStyle(fontSize: 16.0),
-  //                   ),
-  //                   CircularProgressIndicator(
-  //                     strokeWidth: 1.0,
-  //                   )
-  //                 ])));
-  //   } else {
-  //     return Center(
-  //       child: Text("------------------------"),
-  //     );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     var listpage = SmartRefresher(
         enablePullDown: true,
-        enablePullUp: false,
+        enablePullUp: true,
         controller: _refreshController,
         onRefresh: _onRefresh,
-        // onLoading: _onLoading,
+        onLoading: _onLoading,
         header: WaterDropHeader(),
-        // footer: CustomFooter(builder: (context, mode) {
-        //   Widget body;
-        //   if (mode == LoadStatus.idle) {
-        //     body = Text("pull up load");
-        //   } else if (mode == LoadStatus.loading) {
-        //     body = CupertinoActivityIndicator();
-        //   } else if (mode == LoadStatus.failed) {
-        //     body = Text("Load Failed!Click retry!");
-        //   } else if (mode == LoadStatus.canLoading) {
-        //     body = Text("release to load more");
-        //   } else {
-        //     body = Text("No more Data");
-        //   }
-        //   return Container(
-        //     height: 55.0,
-        //     child: Center(child: body),
-        //   );
-        // }
-        // ),
+        footer: CustomFooter(builder: (context, mode) {
+          Widget body;
+          if (mode == LoadStatus.idle) {
+            body = Text("pull up to refresh");
+          } else if (mode == LoadStatus.loading) {
+            body = CupertinoActivityIndicator();
+          } else if (mode == LoadStatus.failed) {
+            body = Text("Load Failed!Click to retry!");
+          } else if (mode == LoadStatus.canLoading) {
+            body = Text("release to load more");
+          } else {
+            body = Text("No more Data");
+          }
+          return Container(
+            height: 55.0,
+            child: Center(child: body),
+          );
+        }),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) =>

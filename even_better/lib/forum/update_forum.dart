@@ -54,9 +54,10 @@ class _updateForumState extends State<updateForum> {
                         child: Column(children: <Widget>[
                           SizedBox(height: 20.0),
                           TextFormField(
+                              initialValue: title,
                               decoration: const InputDecoration(
-                                hintText: "this should be what's in the db",
-                              ),
+                                  // hintText: "this should be what's in the db",
+                                  ),
                               validator: (val) => val!.isEmpty
                                   ? 'Enter your thoughts'
                                   : null, //is valid if null
@@ -68,6 +69,7 @@ class _updateForumState extends State<updateForum> {
                               decoration: const InputDecoration(
                                 hintText: 'Anything to add? (Optional)',
                               ),
+                              initialValue: content,
                               onChanged: (val) {
                                 setState(() => content = val);
                               }),
@@ -91,8 +93,10 @@ class _updateForumState extends State<updateForum> {
                                           .format(now);
                                   print(title);
                                   print(content);
-                                  // connect.updateForum(title, "Ainsley Liu",
-                                  //     content, now_string, "");
+                                  connect.updateForumDB(
+                                      postid, title, content, now_string);
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
                                 }
                               }),
                         ]))))));
