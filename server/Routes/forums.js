@@ -77,6 +77,34 @@ router.post('/create', (req, res) => {
     })
 })
 
+router.post('/update', async (req, res) => {
+    console.log('updating forum')
+    console.log(req.body)
+    var toUpdate = await Forum.updateOne({
+        "_id": req.body['id'],
+      },{
+        "content": req.body.content,
+        "timestamp": req.body.timestamp,
+        "title": req.body.title
+    })
 
+    // toUpdate.save()
+    // .then(data => {
+    //     res.json(data);
+    // })
+    // .catch(err => {
+    //     res.json({message: err})
+    // })
+    if (toUpdate.modifiedCount == 0) {
+        res.status = 400;
+        res.json({
+          message: "user account deleted or does not exist"
+        })
+      } else {
+        res.json({
+          message: "success"
+        })
+    }
+})
 
 module.exports = router;

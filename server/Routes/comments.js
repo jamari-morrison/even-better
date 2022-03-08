@@ -9,6 +9,7 @@ router.get('/all', async (req, res) => {
 
         res.json(comments);
     } catch(err){
+        res.statusCode = 500;
         res.json({message: "Error!"})
     }
 })
@@ -23,7 +24,24 @@ router.post('/get', async (req, res) => {
     }
 })
 
-
+router.get('/getById/:id', async (req, res) => {
+    try{
+        //currently only supports single tag queries
+        console.log('obtaining forum by id')
+        const comment = await Comment.findById(req.params.id);
+        if (comment == null){
+            res.statusCode = 500;
+            res.json({message: "no comment with that id"});
+        }
+        else {
+            res.json({message: comment});
+        }
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+})
+// create need to update forum field comments, and create the comment itself.
 router.post('/create', (req, res) => {
     console.log('creating comment')
     console.log(req.body)
