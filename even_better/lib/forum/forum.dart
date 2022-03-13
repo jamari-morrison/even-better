@@ -188,17 +188,16 @@ class _ForumListPageState extends State<ForumListPage> {
   }
 }
 
-
 // code in init
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Forums Loaded');
-    // EasyLoading.removeCallbacks();
-    
+// EasyLoading.addStatusCallback((status) {
+//   print('EasyLoading Status $status');
+//   if (status == EasyLoadingStatus.dismiss) {
+//     _timer?.cancel();
+//   }
+// });
+// EasyLoading.showSuccess('Forums Loaded');
+// EasyLoading.removeCallbacks();
+
 // code in build
 // var topTagGroup = Container(
 // alignment: Alignment.center,
@@ -276,20 +275,20 @@ class _ForumListPageState extends State<ForumListPage> {
 // );
 
 // body: forumPosts.length == 0 ? _getMoreForums():RefreshIndicator(
-        //   onRefresh: () {return _onRefresh();},
-        //   child:ListView.builder(
-        //     controller:_scrollController,
-        //     itemCount: forumPosts.length,
-        //     // itemBuilder: (context, index) =>{
-        //     //   // // Widget tip = Text("");
-        //     //   // // if (index == forumPosts.length - 1){
-        //     //   // //   tip = _getmoreForums();
-        //     //   // // }
-        //     //   // return Column(
-        //     //   //   children:<Widget>[
-        //     //   //     ListTile(
-        //     //   //       Title: Text("HiHi", maxLines: 1,)
-        //     //   //     ),])
-        //     // },
-        //   ),
-        // ),
+//   onRefresh: () {return _onRefresh();},
+//   child:ListView.builder(
+//     controller:_scrollController,
+//     itemCount: forumPosts.length,
+//     // itemBuilder: (context, index) =>{
+//     //   // // Widget tip = Text("");
+//     //   // // if (index == forumPosts.length - 1){
+//     //   // //   tip = _getmoreForums();
+//     //   // // }
+//     //   // return Column(
+//     //   //   children:<Widget>[
+//     //   //     ListTile(
+//     //   //       Title: Text("HiHi", maxLines: 1,)
+//     //   //     ),])
+//     // },
+//   ),
+// ),
