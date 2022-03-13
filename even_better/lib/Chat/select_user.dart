@@ -75,7 +75,7 @@ class _SelectUserState extends State<SelectUser> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => DirectMessage(
-                            currentStudent: widget.currentStudent,
+                            currentStudent: 'Jamari Morrison',
                             recipient: student['name'],
                           )));
               EasyLoading.dismiss();
