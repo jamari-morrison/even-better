@@ -27,7 +27,7 @@ class _QuestionaireState extends State<Questionaire> {
   String questionID = 'empty';
 
   void getPopupData() async {
-    final uri = Uri.http('10.0.2.2:3000', '/popups/nextQuestion',
+    final uri = Uri.https('api.even-better-api.com', '/popups/nextQuestion',
         {'rose-username': widget.currentStudent.toString()});
 
     final response = await http.get(uri, headers: <String, String>{
@@ -57,7 +57,7 @@ class _QuestionaireState extends State<Questionaire> {
       'answer': jsonEncode(selections),
     }).toString());
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/popups/answer'),
+      Uri.parse('https://api.even-better-api.com/popups/answer'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

@@ -24,7 +24,7 @@ class _InviteState extends State<Invite> {
   void  getItemData() async {
 
     final uri =
-    Uri.http('ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000', '/students/list', {'year': widget.year.toString()});
+    Uri.https('api.even-better-api.com', '/students/list', {'year': widget.year.toString()});
 
     final response = await http.get(uri, headers: <String, String>{
          'Content-Type': 'application/json; charset=UTF-8',
@@ -158,7 +158,7 @@ class _ButtonWidgetState extends State<ButtonWidget> {
       print('pong');
                                       final response = await http.post(
                                         Uri.parse(
-                                            'http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000/students/invite'),
+                                            'https://api.even-better-api.com/students/invite'),
                                         headers: <String, String>{
                                           'Content-Type': 'application/json; charset=UTF-8',
                                         },
