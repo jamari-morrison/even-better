@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -52,22 +54,53 @@ Future<http.Response> _allForum() {
 
 // ------------------------------
 // Delete forum
-// @override
-// void deleteForum() {
-//   _deleteForum();
-//   print("creating forum [connect]");
-// }
+@override
+void deleteForum(forumID) {
+  print(forumID);
+  _deleteForum(forumID);
+  print("deleting forum [connect]");
+}
 
-// @override
-// Future<http.Response> _deleteForum() {
-//   return http.post(
-//     Uri.parse(serverURL + "/forums/create"),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//     body: jsonEncode(<String, String>{}),
-//   );
-// }
+@override
+Future<http.Response> _deleteForum(forumID) {
+  print(serverURL + "/forums/deleteByKey/" + forumID);
+  return http.get(
+    Uri.parse(serverURL + "/forums/deleteByKey/" + forumID),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    // body: jsonEncode(<String, String>{}),
+  );
+}
+
+// ------------------------------
+// update forum
+@override
+void updateForumDB(forumid, title, content, time) {
+  print(forumid);
+  print(title);
+  print(content);
+  _updateForum(forumid, title, content, time);
+  print("updating forum [connect]");
+}
+
+@override
+Future<http.Response> _updateForum(forumid, title, content, time) async {
+  final response = await http.post(
+    Uri.parse('https://api.even-better-api.com:443/forums/update'),
+    // Uri.parse('http://10.0.2.2:3000/forums/update'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "id": forumid,
+      "title": title,
+      "content": content,
+      "timestamp": time,
+    }),
+  );
+  return response;
+}
 
 // ----------------------------------------------------------------
 // create tag

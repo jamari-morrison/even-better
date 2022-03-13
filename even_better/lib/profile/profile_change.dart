@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:even_better/post/feed_screen.dart';
+import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:flutter/material.dart';
 import 'package:even_better/screens/api.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -72,6 +73,8 @@ class ProfileUpdateState extends State<ProfileUpdate> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenwidth = MediaQuery.of(context).size.width;
+    final double screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -144,14 +147,25 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                         borderRadius: BorderRadius.circular(18.0),
                       ))),
                   onPressed: () async {
-                    _timer?.cancel();
-                    await EasyLoading.show(
-                      status: 'updating...',
-                      maskType: EasyLoadingMaskType.black,
-                    );
-                    print('EasyLoading updating profile');
-                    _sendDataBack(context);
-                    EasyLoading.dismiss();
+                    if (bioController.text.isEmpty ||
+                        companyController.text.isEmpty ||
+                        bioController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildPopupDialog(context),
+                      );
+                    } else {
+                      _timer?.cancel();
+                      await EasyLoading.show(
+                        status: 'updating...',
+                        maskType: EasyLoadingMaskType.black,
+                      );
+
+                      print('EasyLoading updating profile');
+                      _sendDataBack(context);
+                      EasyLoading.dismiss();
+                    }
                   },
                 ),
               ),
@@ -243,6 +257,8 @@ class ProfileUpdateState extends State<ProfileUpdate> {
     String company = companyController.text;
     String name = nameController.text;
     String bio = bioController.text;
+    createBooleanUpdate(cs, se, ds);
+    createStringUpdate(name, company, bio);
     Navigator.pop(context, Prof(company, name, bio, cs, se, ds));
   }
 }
@@ -255,13 +271,18 @@ Widget _companyTile(TextEditingController companyController) {
     child: ListTile(
       tileColor: Colors.grey[200],
       leading: Icon(Icons.edit),
-      title: Text(
-        'Company',
-        style: TextStyle(
-            fontFamily: 'EB',
-            height: 2,
-            color: Colors.grey[800],
-            fontSize: 20.0),
+      title: RichText(
+        text: TextSpan(
+          text: "Company",
+          style: TextStyle(
+              fontFamily: 'EB',
+              height: 2,
+              color: Colors.grey[800],
+              fontSize: 20.0),
+          children: <TextSpan>[
+            TextSpan(text: '*', style: TextStyle(color: Colors.red)),
+          ],
+        ),
       ),
       subtitle: TextField(
         controller: companyController,
@@ -295,13 +316,18 @@ Widget _nameTile(TextEditingController nameController) {
           ),
           tileColor: Colors.grey[200],
           leading: Icon(Icons.edit),
-          title: Text(
-            'Name',
-            style: TextStyle(
-                fontFamily: 'EB',
-                height: 2,
-                color: Colors.grey[800],
-                fontSize: 20.0),
+          title: RichText(
+            text: TextSpan(
+              text: "Name",
+              style: TextStyle(
+                  fontFamily: 'EB',
+                  height: 2,
+                  color: Colors.grey[800],
+                  fontSize: 20.0),
+              children: <TextSpan>[
+                TextSpan(text: '*', style: TextStyle(color: Colors.red)),
+              ],
+            ),
           ),
           subtitle: TextField(
             controller: nameController,
@@ -330,13 +356,18 @@ Widget _bioTile(TextEditingController bioController) {
       ),
       tileColor: Colors.grey[200],
       leading: Icon(Icons.edit),
-      title: Text(
-        'Bio',
-        style: TextStyle(
-            fontFamily: 'EB',
-            height: 2,
-            color: Colors.grey[800],
-            fontSize: 20.0),
+      title: RichText(
+        text: TextSpan(
+          text: "Bio",
+          style: TextStyle(
+              fontFamily: 'EB',
+              height: 2,
+              color: Colors.grey[800],
+              fontSize: 20.0),
+          children: <TextSpan>[
+            TextSpan(text: '*', style: TextStyle(color: Colors.red)),
+          ],
+        ),
       ),
       subtitle: TextField(
         controller: bioController,
@@ -355,6 +386,28 @@ Widget _bioTile(TextEditingController bioController) {
       ),
     ),
   ]);
+}
+
+Widget _buildPopupDialog(BuildContext context) {
+  return AlertDialog(
+    title: const Text('Sorry'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const <Widget>[
+        Text("Fields marked with an asterisk* are required."),
+      ],
+    ),
+    actions: <Widget>[
+      FlatButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        textColor: Theme.of(context).primaryColor,
+        child: const Text('Close'),
+      ),
+    ],
+  );
 }
 
 class Prof {

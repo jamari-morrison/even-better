@@ -7,6 +7,7 @@ import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum.dart';
 import 'package:even_better/screens/api.dart';
 import 'package:even_better/screens/my_flutter_app_icons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:meta/meta.dart';
 import 'package:even_better/profile/profile.dart';
@@ -17,7 +18,6 @@ import 'package:even_better/post/view_post_screen.dart';
 import 'package:like_button/like_button.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 
 //https://stackoverflow.com/questions/50945526/flutter-get-data-from-a-list-of-json
 class FeedScreen extends StatefulWidget {
@@ -35,7 +35,6 @@ class _FeedScreenState extends State<FeedScreen> {
   // List<Posting> now_ps = <Posting>[];
   Timer? _timer;
   bool _shouldShowPopup = false;
-
 
   //need to not hard-code the rose-username field
   void checkIfShouldPopup() async {
@@ -61,10 +60,16 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
+  String _username = "";
+  String _name = "";
+  String? email;
+  String? name;
+
   @override
   void initState() {
     super.initState();
     checkIfShouldPopup();
+    initialName();
     // EasyLoading.addStatusCallback((status) {
     //   print('EasyLoading Status $status');
     //   if (status == EasyLoadingStatus.dismiss) {
@@ -73,6 +78,18 @@ class _FeedScreenState extends State<FeedScreen> {
     // });
     // EasyLoading.showSuccess('Loading Successed');
     // EasyLoading.removeCallbacks();
+  }
+
+  initialName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      _username = email!;
+    }
+    name = user?.displayName;
+    if (name != null) {
+      _name = name!;
+    }
   }
 
   Image getAvatorImage() {
@@ -397,18 +414,20 @@ class _FeedScreenState extends State<FeedScreen> {
                   //   maskType: EasyLoadingMaskType.black,
                   // );
                   // print('EasyLoading show');
-                  final NewPost _post = await Navigator.push(
+                  var _post = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
                   // EasyLoading.dismiss();
-                  setState(() {
-                    p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                        _post.content, 'Jamari', 0, '');
-                    SinglePost sp = SinglePost('', 0, p);
-                    ps.add(sp);
-                    l = getPostWidgets();
-                  });
+                  if (_post != null) {
+                    setState(() {
+                      p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
+                          _post.content, _username, 0, '');
+                      SinglePost sp = SinglePost('', 0, p);
+                      ps.add(sp);
+                      l = getPostWidgets();
+                    });
+                  }
                 },
                 child: const Icon(
                   Icons.add,
@@ -442,63 +461,65 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget _postHome() {
-    return _shouldShowPopup ? Questionaire(currentStudent: 'morrisjj') : ListView(
-      physics: AlwaysScrollableScrollPhysics(),
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return _shouldShowPopup
+        ? Questionaire(currentStudent: 'morrisjj')
+        : ListView(
+            physics: AlwaysScrollableScrollPhysics(),
             children: <Widget>[
-              const Text(
-                'Even Better',
-                style: TextStyle(
-                  fontFamily: 'Billabong',
-                  fontSize: 35.0,
-                  color: CompanyColors.red,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    const Text(
+                      'Even Better',
+                      style: TextStyle(
+                        fontFamily: 'Billabong',
+                        fontSize: 35.0,
+                        color: CompanyColors.red,
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        const SizedBox(width: 16.0),
+                        SizedBox(
+                          width: 35.0,
+                          child: IconButton(
+                            icon: const Icon(Icons.send),
+                            iconSize: 30.0,
+                            onPressed: () async {
+                              _timer?.cancel();
+                              await EasyLoading.show(
+                                status: 'loading...',
+                                maskType: EasyLoadingMaskType.black,
+                              );
+                              print('EasyLoading show');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      SelectUser(currentStudent: 'morrisjj'),
+                                ),
+                              );
+                              EasyLoading.dismiss();
+                            }
+
+                            // => print('Direct Messages')
+                            ,
+                          ),
+                        )
+                      ],
+                    )
+                  ],
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  const SizedBox(width: 16.0),
-                  SizedBox(
-                    width: 35.0,
-                    child: IconButton(
-                      icon: const Icon(Icons.send),
-                      iconSize: 30.0,
-                      onPressed: () async {
-                        _timer?.cancel();
-                        await EasyLoading.show(
-                          status: 'loading...',
-                          maskType: EasyLoadingMaskType.black,
-                        );
-                        print('EasyLoading show');
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                SelectUser(currentStudent: 'morrisjj'),
-                          ),
-                        );
-                        EasyLoading.dismiss();
-                      }
-
-                      // => print('Direct Messages')
-                      ,
-                    ),
-                  )
-                ],
-              )
+              // p,
+              l,
+              // Container(
+              //   height: 200,
+              // ),
             ],
-          ),
-        ),
-        // p,
-        l,
-        // Container(
-        //   height: 200,
-        // ),
-      ],
-    );
+          );
   }
 
   Widget getPostWidgets() {

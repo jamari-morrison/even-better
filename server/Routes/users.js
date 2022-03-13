@@ -148,6 +148,7 @@ router.post('/sendValidationEmail', async (req, res) => {
     }, {
       "verified": false,
       "verification-token": key,
+      "moderator": false,   //could set this based on graduation year if we want to differentiate between alums and students
       "creation-time": Date.now()
     })
 
@@ -156,7 +157,8 @@ router.post('/sendValidationEmail', async (req, res) => {
         "rose-username": req.body['rose-username'],
         'verification-token': key,
         'verified': false,
-        'creation-time': Date.now()
+        'creation-time': Date.now(),
+        'moderator': true
       });
 
       //create a placeholder account for verification
@@ -229,9 +231,9 @@ router.get('/validateEmail/:token', async (req, res) => {
 
     });
     if (updateStats.matchedCount >= 1) {
-      res.sendFile('/Webpages/emailValidate/success.html', {root: "./"});
+      res.sendFile('/Webpages/emailValidate/success.html', { root: "./" });
     } else {
-      res.sendFile('/Webpages/emailValidate/failure.html', {root: "./"});
+      res.sendFile('/Webpages/emailValidate/failure.html', { root: "./" });
     }
   }
 });
@@ -243,7 +245,7 @@ router.get('/emailValidated/:username', async (req, res) => {
   var user = await User.findOne({
     "rose-username": req.params.username,
     "verified": true
-  }, );
+  });
 
   if (user) {
     res.json({
@@ -282,6 +284,184 @@ router.post('/update/', async (req, res) => {
   } else {
     res.json({
       message: "success"
+    })
+  }
+})
+
+
+
+router.get('/getUser/:username', async (req, res) => {
+  console.log('getting user')
+  console.log(req.params.username)
+  try {
+    var user = await User.findOne({
+      "username": req.params.username,
+      "verified": true
+    });
+    console.log(res.statusCode);
+    console.log(user);
+    if (user != null) {
+      res.status = 200;
+      res.json({ user });
+    }
+  } catch (err) {
+    console.log(err)
+    res.json({
+      message: "Error!"
+    })
+  }
+})
+
+
+
+
+
+router.post('/updatestring/:username', async (req, res) => {
+  console.log('updating user')
+  console.log(req.body)
+
+  var toUpdate = await User.updateOne({
+    "username": req.params.username,
+  }, {
+    "name": req.body.name,
+    "companyname": req.body.companyname,
+    "bio": req.body.bio,
+  })
+
+  if (toUpdate.modifiedCount == 0) {
+    res.status = 400;
+    res.json({
+      message: "user account deleted or does not exist"
+    })
+  } else {
+    res.json({
+      message: "success"
+    })
+  }
+})
+
+
+router.post('/updatebool/:username', async (req, res) => {
+  console.log('updating bool')
+  console.log(req.body)
+  console.log(req.params.username)
+  var toUpdate = await User.updateOne({
+    "username": req.params.username,
+  },
+    {
+      cs: req.body.cs,
+      se: req.body.se,
+      ds: req.body.ds,
+    }
+  )
+  if (toUpdate.modifiedCount == 0) {
+    res.status = 400;
+    res.json({
+      message: "user account deleted or does not exist"
+    })
+  } else {
+    res.json({
+      message: "success"
+    })
+  }
+
+  //   User.findOneAndUpdate({ "username": req.body['username'], }, {
+  //     "$set": {
+  //       "cs": req.body.cs.bo,
+  //       "se": req.body.se,
+  //       "ds": req.body.ds,
+  //     }
+  //   }).exec(function (err, user) {
+  //     if (err) {
+  //       console.log(err);
+  //       res.status(500).send(err);
+  //     } else {
+  //       res.status(200).send(user);
+  //     }
+  //   });
+})
+
+
+//   if (toUpdate.modifiedCount == 0) {
+//     res.status = 400;
+//     res.json({
+//       message: "user account deleted or does not exist"
+//     })
+//   } else {
+//     res.json({
+//       message: "success"
+//     })
+//   }
+// })
+
+router.post('/updateava/:username', async (req, res) => {
+  console.log('updating ava')
+  console.log(req.body)
+  console.log(req.body.avatar)
+  console.log(req.params.username)
+
+  var toUpdate = await User.findOneAndUpdate({
+    "username": req.params.username,
+  }, {
+    "avatar": req.body.avatar,
+  })
+
+  if (toUpdate.modifiedCount == 0) {
+    res.status = 400;
+    res.json({
+      message: "user account deleted or does not exist"
+    })
+  } else {
+    res.json({
+      message: "success"
+    })
+  }
+})
+
+router.post('/addfriend/:username', async (req, res) => {
+  console.log("adding friend")
+  console.log(req.body)
+  console.log(req.params.username)
+  var toUpdate1 = await User.update(
+    {  "username": req.params.username },
+    { $addToSet:{ "friends": req.body.friend } }
+  );
+  var toUpdate2 = await User.update(
+    {  "username": req.body.friend },
+    { $addToSet:{ "friends": req.params.username } }
+  );
+  if (toUpdate1.modifiedCount == 0||toUpdate2.modifiedCount == 0) {
+    res.status = 400;
+    res.json({
+      message: "user account deleted or does not exist"
+    })
+  } else {
+    res.json({
+      message: "success"
+    })
+  }
+})
+
+
+router.get('/getUserFriends/:username', async (req, res) => {
+  console.log('getting user friends')
+  console.log(req.params.username)
+  try {
+    var user = await User.findOne({
+      "username": req.params.username,
+      "verified": true
+    });
+    console.log(res.statusCode);
+    // console.log(user.friend);
+    console.log(user.friends);
+    if (user.friends != null) {
+      res.status = 200;
+      res.json( user.friends );
+    }
+  } catch (err) {
+    console.log(err)
+    res.json({
+      message: "Error!"
     })
   }
 })

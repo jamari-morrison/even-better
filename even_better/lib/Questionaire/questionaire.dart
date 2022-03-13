@@ -22,8 +22,21 @@ class Questionaire extends StatefulWidget {
 }
 
 class _QuestionaireState extends State<Questionaire> {
+<<<<<<< HEAD
   List<dynamic> countries = [];
   String questionTitle = '';
+=======
+  List<dynamic> countries = [
+    'React',
+    'Flutter',
+    'Node.js',
+    'Express',
+    'Vue',
+    'Mongoose',
+    'Angular'
+  ];
+  String questionTitle = 'Original';
+>>>>>>> 26c99286396118278c507269a6e9814957e70e1a
   String questionID = 'empty';
 
   void getPopupData() async {
@@ -46,16 +59,28 @@ class _QuestionaireState extends State<Questionaire> {
       });
     } else {
       //redirect to dm's here :D
+<<<<<<< HEAD
       print('nothing to show');
+=======
+>>>>>>> 26c99286396118278c507269a6e9814957e70e1a
     }
   }
 
   void sendPopupData(List<String> selections) async {
+<<<<<<< HEAD
     print(jsonEncode(<String, String>{
       'questionID': questionID.toString(),
       'answerer': widget.currentStudent.toString(),
       'answer': jsonEncode(selections),
     }).toString());
+=======
+    print(jsonEncode(selections));
+    print(jsonEncode(<String, String>{
+      'questionID': widget.currentStudent,
+      'answerer': widget.currentStudent.toString(),
+      'answer': selections.toString(),
+    }.toString()));
+>>>>>>> 26c99286396118278c507269a6e9814957e70e1a
     final response = await http.post(
       Uri.parse('http://10.0.2.2:3000/popups/answer'),
       headers: <String, String>{
@@ -64,7 +89,11 @@ class _QuestionaireState extends State<Questionaire> {
       body: jsonEncode(<String, String>{
         'questionID': questionID.toString(),
         'answerer': widget.currentStudent.toString(),
+<<<<<<< HEAD
         'answer': jsonEncode(selections),
+=======
+        'answer': selections.toString(),
+>>>>>>> 26c99286396118278c507269a6e9814957e70e1a
       }),
     );
     print(response.body);

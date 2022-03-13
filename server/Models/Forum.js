@@ -8,6 +8,7 @@ const ForumSchema = mongoose.Schema(
         "content": String,
         "timestamp": String,
         "likes": Number,
+        "comments": [String],
         "tags": [String]
         
     })

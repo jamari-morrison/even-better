@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'fb_services/auth.dart';
 import 'screens/wrapper.dart';
 import 'models/user.dart';
@@ -18,16 +19,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider<SingleNotifier>(
-          create: (_) => SingleNotifier(),
-        ),
-        ChangeNotifierProvider<MultipleNotifier>(
-          create: (_) => MultipleNotifier([]),
-        )
-      ],
+    providers: [
+      ChangeNotifierProvider<SingleNotifier>(
+        create: (_) => SingleNotifier(),
+      ),
+      ChangeNotifierProvider<MultipleNotifier>(
+        create: (_) => MultipleNotifier([]),
+      )
+    ],
     child: MyApp(),
-  ));  configLoading();
+  ));
+  configLoading();
 }
 
 void configLoading() {
@@ -68,6 +70,12 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: null, //required
       child: MaterialApp(
+        localizationsDelegates: [
+          // this line is important
+          RefreshLocalizations.delegate,
+          // GlobalWidgetsLocalizations.delegate,
+          // GlobalMaterialLocalizations.delegate
+        ],
         debugShowCheckedModeBanner: true,
         title: MyApp.appTitle,
         theme: ThemeData(

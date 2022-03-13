@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:even_better/fb_services/auth.dart';
-import 'package:even_better/post/addpost.dart';
+import 'package:even_better/models/allusers.dart';
+import 'package:http/http.dart' as http;
 import 'package:even_better/post/feed_screen.dart';
+import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:even_better/profile/profile_change.dart';
 import 'package:even_better/profile/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +15,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
+
+import 'moderator/moderator.dart';
 
 class ProfileApp extends StatefulWidget {
   const ProfileApp({Key? key}) : super(key: key);
@@ -26,6 +31,7 @@ class ProfileAppState extends State<ProfileApp> {
   final TextEditingController postController = TextEditingController();
   final picker = ImagePicker();
   final user = FirebaseAuth.instance.currentUser;
+  late UserI me;
   bool _update = false;
   File? _image;
   String _company = ' ';
@@ -38,6 +44,7 @@ class ProfileAppState extends State<ProfileApp> {
   String? name;
   String _bio = ' ';
   Timer? _timer;
+  List<String> friends = <String>[];
 
   // SizedBox sb = _noupdateProfile();
 
@@ -46,6 +53,22 @@ class ProfileAppState extends State<ProfileApp> {
   void initState() {
     super.initState();
     initialName();
+    getUserInfo().then((result) {
+      // print(result.avatar);
+      setState(() {
+        me = result;
+        _name = result.name;
+        cs = result.cs;
+        ds = result.ds;
+        se = result.se;
+        _company = result.companyname;
+        _bio = result.bio;
+        if (result.avatar != "N/A" && result.avatar.isNotEmpty) {
+          _image = File(result.avatar);
+        }
+      });
+    });
+    fetchUsers(_username);
   }
 
   // final FirebaseAuth _fireauth = FirebaseAuth.instance;
@@ -58,6 +81,33 @@ class ProfileAppState extends State<ProfileApp> {
     name = user?.displayName;
     if (name != null) {
       _name = name!;
+    }
+  }
+
+  void fetchUsers(email) async {
+    print("email: " + email);
+    var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
+    var response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonMembers = json.decode(response.body);
+      print(response.body);
+      print(jsonMembers);
+      if (jsonMembers != null) {
+        setState(() {
+          friends = (jsonMembers as List).map((e) => e as String).toList();
+        });
+        // if (friends != null) {
+        //   print("ffffffffffffffffff" + friends!.length.toString());
+        // }
+      }
+    } else {
+      print("status code: " + response.statusCode.toString());
+      throw Exception('failed to get all user info');
     }
   }
 
@@ -117,11 +167,18 @@ class ProfileAppState extends State<ProfileApp> {
         actions: <Widget>[
           FlatButton.icon(
               label: const Text(''),
+              icon: const Icon(Icons.admin_panel_settings),
+              onPressed: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Moderator()));
+              }),
+          FlatButton.icon(
+              label: const Text(''),
               icon: const Icon(Icons.settings),
               onPressed: () async {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Settings(_auth)));
-              })
+              }),
         ],
       ),
       body: SingleChildScrollView(
@@ -206,18 +263,19 @@ class ProfileAppState extends State<ProfileApp> {
                           height: 10.0,
                         ),
                         Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 0.0),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenwidth * 0.1, vertical: 0.0),
                           clipBehavior: Clip.antiAlias,
                           color: Colors.white,
                           elevation: 5.0,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: screenwidth * 0.005,
-                                vertical: screenheight * 0.0001),
+                                vertical: screenheight * 0.007),
                             child: Row(
                               children: <Widget>[
                                 Expanded(
+                                  flex: 2,
                                   child: Column(
                                     children: <Widget>[
                                       Text(
@@ -233,7 +291,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         height: 2.0,
                                       ),
                                       Text(
-                                        "1",
+                                        "0",
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           fontSize: screenwidth / 22,
@@ -248,7 +306,7 @@ class ProfileAppState extends State<ProfileApp> {
                                   child: Column(
                                     children: <Widget>[
                                       Text(
-                                        "Followers",
+                                        "Friends",
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
@@ -260,7 +318,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         height: 2.0,
                                       ),
                                       Text(
-                                        "20",
+                                        friends.length.toString(),
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           fontSize: screenwidth / 22.0,
@@ -270,32 +328,32 @@ class ProfileAppState extends State<ProfileApp> {
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Text(
-                                        "Follow",
-                                        style: TextStyle(
-                                          fontFamily: 'EB',
-                                          color: CompanyColors.red[300],
-                                          fontSize: screenwidth / 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 2.0,
-                                      ),
-                                      Text(
-                                        "10",
-                                        style: TextStyle(
-                                          fontFamily: 'EB',
-                                          fontSize: screenwidth / 22.0,
-                                          color: CompanyColors.red[300],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                // Expanded(
+                                //   child: Column(
+                                //     children: <Widget>[
+                                //       Text(
+                                //         "Follow",
+                                //         style: TextStyle(
+                                //           fontFamily: 'EB',
+                                //           color: CompanyColors.red[300],
+                                //           fontSize: screenwidth / 20.0,
+                                //           fontWeight: FontWeight.bold,
+                                //         ),
+                                //       ),
+                                //       const SizedBox(
+                                //         height: 2.0,
+                                //       ),
+                                //       Text(
+                                //         "10",
+                                //         style: TextStyle(
+                                //           fontFamily: 'EB',
+                                //           fontSize: screenwidth / 22.0,
+                                //           color: CompanyColors.red[300],
+                                //         ),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
                                 Expanded(
                                   flex: 2,
                                   child: Column(
@@ -424,12 +482,12 @@ class ProfileAppState extends State<ProfileApp> {
 
   void _awaitReturnValueFromSecondScreen(BuildContext context) async {
     // start the SecondScreen and wait for it to finish with a result
-    final Prof _r = await Navigator.push(
+    var _r = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ProfileUpdate(
             _company,
-            _username,
+            _name,
             _bio,
             cs,
             se,
@@ -437,16 +495,18 @@ class ProfileAppState extends State<ProfileApp> {
           ),
         ));
 
-    // after the SecondScreen result comes back update the Text widget with it
-    setState(() {
-      _company = _r.company!;
-      _username = _r.name!;
-      _bio = _r.bio!;
-      cs = _r.cs!;
-      se = _r.se!;
-      ds = _r.ds!;
-      _major();
-    });
+    if (_r != null) {
+      // after the SecondScreen result comes back update the Text widget with it
+      setState(() {
+        _company = _r.company!;
+        _name = _r.name!;
+        _bio = _r.bio!;
+        cs = _r.cs!;
+        se = _r.se!;
+        ds = _r.ds!;
+        _major();
+      });
+    }
   }
 
   _imgFromCamera() async {
@@ -455,6 +515,7 @@ class ProfileAppState extends State<ProfileApp> {
       setState(() {
         _image = File(pickedImage.path);
       });
+      createAvatarUpdate(_image!.path);
     }
   }
 
@@ -464,6 +525,7 @@ class ProfileAppState extends State<ProfileApp> {
       setState(() {
         _image = File(pickedImage.path);
       });
+      createAvatarUpdate(_image!.path);
     }
   }
 
