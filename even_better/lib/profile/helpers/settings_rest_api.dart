@@ -32,7 +32,6 @@ Future<Album> createAlbumDeleteAccount(ebUsername) async {
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     Album output = Album.fromJson(jsonDecode(response.body));
-    print("message is: " + output.message);
     return output;
   } else {
     print("status code: " + response.statusCode.toString());
