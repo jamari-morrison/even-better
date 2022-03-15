@@ -65,9 +65,10 @@ class _DetailedForum extends State<DetailedForum> {
 
   void getComments() async {
     List<Forum_Answer> listItems = [];
-
+    String temp = serverurl + "/comments/get/" + post.postId;
+    print(temp);
     final response = await http.get(
-      Uri.parse(serverurl + "/comments/all"),
+      Uri.parse(serverurl + "/comments/get/" + post.postId),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

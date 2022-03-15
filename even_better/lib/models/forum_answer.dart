@@ -63,10 +63,46 @@ class ForumAnswer extends StatelessWidget {
                 ),
                 Row(
                   children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.only(right: 5.0),
-                      child: Icon(Icons.delete),
-                    ),
+                    Padding(
+                        padding: EdgeInsets.only(right: 5.0),
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.black,
+                            ),
+                            onPressed: () async {
+                              Widget cancelButton = TextButton(
+                                child: Text("CANCEL"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                              Widget continueButton = TextButton(
+                                child: Text("DELETE"),
+                                onPressed: () {
+                                  print("Trying to delete");
+                                  // deleteForum(post.postId);
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                              AlertDialog alert = AlertDialog(
+                                title: Text("Are you sure?"),
+                                content: Text(
+                                    "This forum will be deleted permanently."),
+                                actions: [
+                                  cancelButton,
+                                  continueButton,
+                                ],
+                              );
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return alert;
+                                },
+                              );
+                            })),
                     // Padding(
                     //   padding: const EdgeInsets.only(right: 8.0, left: 2.0),
                     //   child: Text(answers.likes.toString()),
