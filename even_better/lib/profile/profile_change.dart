@@ -149,7 +149,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                   onPressed: () async {
                     if (bioController.text.isEmpty ||
                         companyController.text.isEmpty ||
-                        bioController.text.isEmpty) {
+                        nameController.text.isEmpty) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>

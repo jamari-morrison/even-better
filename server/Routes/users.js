@@ -191,8 +191,8 @@ router.post('/sendValidationEmail', async (req, res) => {
         to: req.body['rose-username'] + '@rose-hulman.edu',
         subject: "Verify Your Even Better Account",
         //TODO: change to be the actual server and not local host
-        html: `<p><a href='https://api.even-better-api.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
-        // html: `<p><a href='https://api.even-better-api.com:443/users/validateEmail/${key}'>click here to verify email</a></p>`
+        html: `<p><a href='https://api.even-better-api.com/users/validateEmail/${key}'>click here to verify email</a></p>`
+        // html: `<p><a href='https://api.even-better-api.com/users/validateEmail/${key}'>click here to verify email</a></p>`
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {

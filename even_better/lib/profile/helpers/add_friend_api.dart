@@ -9,7 +9,7 @@ void createAddFriend(friend) async {
     print("email: " + email);
     print("friend's username: " + friend);
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/users/addfriend/' +
+      Uri.parse('https://api.even-better-api.com/users/addfriend/' +
           email), //http://10.0.2.2:3000/users/update
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

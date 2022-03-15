@@ -24,7 +24,7 @@ class Album {
 //make this private but still usable in test case??
 Future<Album> createAlbumDeleteAccount(ebUsername) async {
   final response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/users/delete'),
+    Uri.parse('https://api.even-better-api.com/users/delete'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
