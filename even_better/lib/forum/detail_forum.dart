@@ -38,8 +38,8 @@ class _DetailedForum extends State<DetailedForum> {
   Timer? _timer;
   RefreshController _refreshController =
       RefreshController(initialRefresh: true);
-  String serverurl = "http://10.0.2.2:3000";
-  // String serverurl = "https://api.even-better-api.com/";
+  // String serverurl = "http://10.0.2.2:3000";
+  String serverurl = "https://api.even-better-api.com";
   _DetailedForum(this.comments, this.post);
   @override
   void initState() {
