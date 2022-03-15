@@ -5,17 +5,12 @@ import 'dart:convert';
 
 import 'package:even_better/forum/create_forum.dart';
 import 'package:even_better/models/forum_post.dart' as fp;
-import 'package:even_better/forum/data.dart';
-import 'package:even_better/forum/showAllTags.dart';
 import 'package:even_better/models/forum_post.dart';
-import 'package:even_better/models/tag.dart';
-import 'package:even_better/post/feed_screen.dart';
-import 'package:even_better/screens/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+// import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ForumListPage extends StatefulWidget {
@@ -27,13 +22,15 @@ class ForumListPage extends StatefulWidget {
 
 class _ForumListPageState extends State<ForumListPage> {
   List<Forum_Post> forumPosts = [];
-  static const int PAGE_SIZE = 10;
-  bool loaded = true;
-  bool _enablePullup = true;
-  bool loading = true;
+  // static const int PAGE_SIZE = 10;
+  // bool loaded = true;
+  // bool _enablePullup = true;
+  // bool loading = true;
   RefreshController _refreshController =
       RefreshController(initialRefresh: true);
   // Timer? _timer;
+  String serverurl = "http://10.0.2.2:3000";
+  // String serverurl = "https://api.even-better-api.com";
   _ForumListPageState();
 
   @override
@@ -45,46 +42,34 @@ class _ForumListPageState extends State<ForumListPage> {
   }
 
   void _onRefresh() async {
-    print("trying to refresh");
     await Future.delayed(Duration(milliseconds: 1000), () {
       getallForums();
     });
-    // await Future.delayed(Duration(milliseconds: 2000));
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
-    print("trying to refresh from bottom");
     await Future.delayed(Duration(milliseconds: 1000), () {
       getallForums();
     });
-    // await Future.delayed(Duration(milliseconds: 2000));
     _refreshController.loadComplete();
   }
 
   void getallForums() async {
     List<Forum_Post> listItems = [];
-    final uri = Uri.http(
-        'ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000',
-        '/forums/all', {});
-    final response = await http.get(uri, headers: <String, String>{
+    final uri = serverurl + "/forums/all";
+    final response = await http.get(Uri.parse(uri), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
     if (response != null && response.statusCode == HttpStatus.ok) {
       List<dynamic> reslist = jsonDecode(response.body);
-      print("reslist is: " + reslist.toString());
+      // print("reslist is: " + reslist.toString());
       for (var forum in reslist) {
         String id = forum['_id'];
         String tempPoster = forum['poster'];
         String tempTitle = forum['title'];
         String tempContent = forum['content'];
-        /* TODO: enable tags here*/
-        // List<> tempTags = forum['tags'];
-        // List<Tag> passInTags = [];
-        // for (var t in tempTags) {
-        //   Tag temp = Tag(t, "1");
-        //   passInTags.add(temp);
-        // }
+        /* enable tags here*/
         Forum_Post tempFP =
             Forum_Post(id, tempPoster, tempTitle, tempContent, [], []);
         listItems.add(tempFP);
@@ -174,7 +159,7 @@ class _ForumListPageState extends State<ForumListPage> {
 
   void _onCreateForumPressed() {
     // Navigator.pop(context);
-    print('add new post');
+    // print('add new post');
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => createForum()),

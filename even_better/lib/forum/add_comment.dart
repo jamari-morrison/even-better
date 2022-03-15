@@ -4,7 +4,6 @@ import 'package:even_better/post/feed_screen.dart';
 import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart';
 // import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:even_better/forum/connect.dart' as connect;
 import 'package:intl/intl.dart';
@@ -37,7 +36,7 @@ class _commentForumState extends State<commentForum> {
         _name = result.name;
       });
     });
-    print("name is " + _name);
+    print("name is " + _name); // TODO: comment out
     // EasyLoading.addStatusCallback((status) {
     //   print('EasyLoading Status $status');
     //   if (status == EasyLoadingStatus.dismiss) {
@@ -92,7 +91,7 @@ class _commentForumState extends State<commentForum> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          print("---!!!Creating comment: " + text);
+                          // print("---!!!Creating comment: " + text);
                           // TODO: implement submit comment
                           // _timer?.cancel();
                           // await EasyLoading.show(

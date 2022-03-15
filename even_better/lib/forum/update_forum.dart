@@ -81,18 +81,12 @@ class _updateForumState extends State<updateForum> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
-                                print(
-                                    "--------------------Update pressed------------------");
                                 if (_formKey.currentState!.validate()) {
-                                  print(title);
-                                  print(content);
                                   Navigator.pop(context);
                                   DateTime now = DateTime.now();
                                   String now_string =
                                       DateFormat('yyyy-MM-dd kk:mm')
                                           .format(now);
-                                  print(title);
-                                  print(content);
                                   connect.updateForumDB(
                                       postid, title, content, now_string);
                                   Navigator.of(context).pop();

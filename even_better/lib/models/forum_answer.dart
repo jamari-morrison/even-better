@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -60,17 +62,17 @@ class ForumAnswer extends StatelessWidget {
                   ),
                 ),
                 Row(
-                    // children: <Widget>[
-                    //   const Padding(
-                    //     padding: EdgeInsets.all(2.0),
-                    //     child: Icon(Icons.thumb_up),
-                    //   ),
-                    //   Padding(
-                    //     padding: const EdgeInsets.only(right: 8.0, left: 2.0),
-                    //     child: Text(answers.likes.toString()),
-                    //   ),
-                    // ],
-                    )
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.only(right: 5.0),
+                      child: Icon(Icons.delete),
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(right: 8.0, left: 2.0),
+                    //   child: Text(answers.likes.toString()),
+                    // ),
+                  ],
+                )
               ],
             ),
           ),
