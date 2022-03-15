@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Forum_Answer {
   // i didnt put fid because i think it will be linked thru the forum
   final String aid; //answer_id
-  final String uid; //author_id
+  final String username; //author_id
   String text;
   int likes = 0;
-
-  Forum_Answer(this.aid, this.uid, this.text) {
-    print('Forum Answer with uid: ${aid} [Forum_Answer]');
+  String timestamp;
+  Forum_Answer(this.aid, this.username, this.text, this.timestamp) {
+    // print('Forum Answer with uid: ${aid} [Forum_Answer]');
     // print('Forum Answer with answer: ${text} [Forum_Answer]');
   }
 
@@ -24,6 +25,8 @@ class ForumAnswer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // String timestring =
+    //     DateFormat('yyyy-MM-dd kk:mm').format(answers.timestamp);
     return Container(
       margin: const EdgeInsets.all(5.0),
       decoration: BoxDecoration(
@@ -51,23 +54,23 @@ class ForumAnswer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(answers.uid),
-                      Text(answers.aid),
+                      Text(answers.username),
+                      Text(answers.timestamp),
                     ],
                   ),
                 ),
                 Row(
-                  children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: Icon(Icons.thumb_up),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0, left: 2.0),
-                      child: Text(answers.likes.toString()),
-                    ),
-                  ],
-                )
+                    // children: <Widget>[
+                    //   const Padding(
+                    //     padding: EdgeInsets.all(2.0),
+                    //     child: Icon(Icons.thumb_up),
+                    //   ),
+                    //   Padding(
+                    //     padding: const EdgeInsets.only(right: 8.0, left: 2.0),
+                    //     child: Text(answers.likes.toString()),
+                    //   ),
+                    // ],
+                    )
               ],
             ),
           ),

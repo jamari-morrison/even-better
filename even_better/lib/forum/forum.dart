@@ -33,12 +33,6 @@ class _ForumListPageState extends State<ForumListPage> {
   bool loading = true;
   RefreshController _refreshController =
       RefreshController(initialRefresh: true);
-  // List<Tag> tags = [
-  //   Tag("Framework", "1"),
-  //   Tag("Company", "1"),
-  //   Tag("Project", "1"),
-  //   Tag("OO Design", "1")
-  // ];
   // Timer? _timer;
   _ForumListPageState();
 

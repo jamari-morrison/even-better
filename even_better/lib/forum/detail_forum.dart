@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, avoid_print
+// ignore_for_file: prefer_const_constructors, avoid_print, prefer_final_fields
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:even_better/forum/add_comment.dart';
 import 'package:even_better/forum/connect.dart';
@@ -9,9 +10,13 @@ import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
 import 'package:even_better/report_content/report_content.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:even_better/models/forum_answer.dart' as fa;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DetailedForum extends StatefulWidget {
   List<Forum_Answer> comments;
@@ -27,40 +32,70 @@ class DetailedForum extends StatefulWidget {
   _DetailedForum createState() => _DetailedForum(comments, post);
 }
 
-// ------------------------------------------------------------
-// create some forum data
-// ------------------------------------------------------------
-// var ForumSamplePost = [
-//   fa.Forum_Answer("answerid1", "poster1",
-//       "Hello,\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
-//   fa.Forum_Answer("answerid2", "poster2",
-//       "Pellentesque justo metus, finibus porttitor consequat vitae, tincidunt vitae quam. Vestibulum molestie sem diam. Nullam pretium semper tempus. Maecenas lobortis lacus nunc, id lacinia nunc imperdiet tempor. Mauris mi ipsum, finibus consectetur eleifend a, maximus eget lorem. Praesent a magna nibh. In congue sapien sed velit mattis sodales. Nam tempus pulvinar metus, in gravida elit tincidunt in. Curabitur sed sapien commodo, fringilla tortor eu, accumsan est. Proin tincidunt convallis dolor, a faucibus sapien auctor sodales. Duis vitae dapibus metus. Nulla sit amet porta ipsum, posuere tempor tortor.\n\nCurabitur mauris dolor, cursus et mi id, mattis sagittis velit. Duis eleifend mi et ante aliquam elementum. Ut feugiat diam enim, at placerat elit semper vitae. Phasellus vulputate quis ex eu dictum. Cras sapien magna, faucibus at lacus vel, faucibus viverra lorem. Phasellus quis dui tristique, ultricies velit non, cursus lectus. Suspendisse neque nisl, vestibulum non dui in, vulputate placerat elit. Sed at convallis mauris, eu blandit dolor. Vivamus suscipit iaculis erat eu condimentum. Aliquam erat volutpat. Curabitur posuere commodo arcu vel consectetur."),
-//   fa.Forum_Answer("answerid3", "poster3",
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
-//   fa.Forum_Answer("answerid4", "poster4",
-//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
-// ];
-// var tag_FrameWork = Tag("Framework", "");
-// var tag_Project = Tag("Project", "");
-// var tag_Work = Tag("Work", "");
-
 class _DetailedForum extends State<DetailedForum> {
+  List<Forum_Answer> forumComments = [];
   List<Forum_Answer> comments;
   Forum_Post post;
   Timer? _timer;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
 
   _DetailedForum(this.comments, this.post);
   @override
   void initState() {
     super.initState();
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Loading Succeeded');
-    // EasyLoading.removeCallbacks();
+    getComments();
+  }
+
+  void _onRefresh() async {
+    print("trying to refresh");
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getComments();
+    });
+    // await Future.delayed(Duration(milliseconds: 2000));
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    print("trying to refresh from bottom");
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getComments();
+    });
+    // await Future.delayed(Duration(milliseconds: 2000));
+    _refreshController.loadComplete();
+  }
+
+  void getComments() async {
+    List<Forum_Answer> listItems = [];
+
+    final response = await http.get(
+      Uri.parse("http://10.0.2.2:3000/comments/all"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response != null && response.statusCode == HttpStatus.ok) {
+      List<dynamic> reslist = jsonDecode(response.body);
+      print("reslist is: " + reslist.toString());
+      for (var comment in reslist) {
+        String aid = comment['_id'];
+        String commenter = comment['commenter'];
+        String parent = comment['parent-id'];
+        String tempContent = comment['content'];
+        String tempTime = comment['timestamp'];
+        Forum_Answer tempFA =
+            Forum_Answer(aid, commenter, tempContent, tempTime);
+        listItems.add(tempFA);
+      }
+      setState(() {
+        forumComments = listItems;
+      });
+    } else if (response.statusCode == HttpStatus.noContent) {
+      print("No content");
+    } else {
+      print("Loading Comments DB Error!!!!!");
+    }
   }
 
   @override
@@ -94,12 +129,52 @@ class _DetailedForum extends State<DetailedForum> {
       ),
     );
     var responses = Container(
+        margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
         padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) =>
-              fa.ForumAnswer(comments[index]),
-          itemCount: comments.length,
+        child: Text(
+          "Be the first one to contribute!",
+          textScaleFactor: 2,
+          style: TextStyle(
+            fontFamily: 'Billabong',
+          ),
         ));
+    if (forumComments.isNotEmpty) {
+      responses = Container(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) =>
+                fa.ForumAnswer(forumComments[index]),
+            itemCount: forumComments.length,
+          ));
+    }
+    var thelist = SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        header: WaterDropHeader(),
+        footer: CustomFooter(builder: (context, mode) {
+          Widget body;
+          if (mode == LoadStatus.idle) {
+            body = Text("pull up to refresh");
+          } else if (mode == LoadStatus.loading) {
+            body = CupertinoActivityIndicator();
+          } else if (mode == LoadStatus.failed) {
+            body = Text("Load Failed!Click to retry!");
+          } else if (mode == LoadStatus.canLoading) {
+            body = Text("release to load more");
+          } else {
+            body = Text("No more Data");
+          }
+          return Container(
+            height: 55.0,
+            child: Center(child: body),
+          );
+        }),
+        child: Center(child: responses));
+
     var itemsInMenu = [
       DropdownMenuItem(
           value: 1,
@@ -241,7 +316,7 @@ class _DetailedForum extends State<DetailedForum> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
-              child: responses,
+              child: thelist,
             ),
           ),
         ],

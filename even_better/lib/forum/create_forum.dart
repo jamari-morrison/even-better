@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, camel_case_types
+
 import 'dart:async';
 
 import 'package:even_better/forum/data.dart';
@@ -193,14 +195,14 @@ class _createForumState extends State<createForum> {
                                       DateFormat('yyyy-MM-dd kk:mm')
                                           .format(now);
                                   connect.createForum(title, "Ainsley Liu",
-                                      content, now_string, "");
+                                      content, now_string, "", "");
                                   // TODO: implement submit comment
                                   // _timer?.cancel();
                                   // await EasyLoading.show(
                                   //   status: 'creating...',
                                   //   maskType: EasyLoadingMaskType.black,
                                   // );
-                                  print('EasyLoading show');
+                                  // print('EasyLoading show');
                                   // Navigator.push(
                                   //     context,
                                   //     MaterialPageRoute(

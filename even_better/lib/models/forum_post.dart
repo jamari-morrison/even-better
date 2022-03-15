@@ -13,7 +13,6 @@ class Forum_Post {
   // .year, .month, .day, .hour, .minute
   String title;
   String details;
-  // String id;
   List<Tag> tags;
   List<Forum_Answer> answers;
 
@@ -34,9 +33,9 @@ class Forum_Post {
     return display;
   }
 
-  void add_comment(Forum_Answer answer) {
-    answers.add(answer);
-  }
+  // void add_comment(Forum_Answer answer) {
+  //   answers.add(answer);
+  // }
 }
 
 class ForumPost extends StatelessWidget {

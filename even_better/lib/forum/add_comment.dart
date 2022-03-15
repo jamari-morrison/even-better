@@ -1,10 +1,13 @@
 import 'dart:async';
-
-import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/post/feed_screen.dart';
+import 'package:even_better/profile/helpers/update_user_api.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
+// import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:even_better/forum/connect.dart' as connect;
+import 'package:intl/intl.dart';
 
 class commentForum extends StatefulWidget {
   Forum_Post forum;
@@ -18,10 +21,23 @@ class _commentForumState extends State<commentForum> {
   String text = '';
   Forum_Post forum;
   Timer? _timer;
+  final user = auth.FirebaseAuth.instance.currentUser;
+  String _username = "";
+  String _name = "";
+  String? email;
+  String? name;
   _commentForumState(this.forum);
   @override
   void initState() {
     super.initState();
+    initialName();
+    getUserInfo().then((result) {
+      // print(result.avatar);
+      setState(() {
+        _name = result.name;
+      });
+    });
+    print("name is " + _name);
     // EasyLoading.addStatusCallback((status) {
     //   print('EasyLoading Status $status');
     //   if (status == EasyLoadingStatus.dismiss) {
@@ -30,6 +46,18 @@ class _commentForumState extends State<commentForum> {
     // });
     // EasyLoading.showSuccess('Loading Successed');
     // EasyLoading.removeCallbacks();
+  }
+
+  initialName() async {
+    auth.User? user = auth.FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      _username = email!;
+    }
+    name = user?.displayName;
+    if (name != null) {
+      _name = name!;
+    }
   }
 
   @override
@@ -64,18 +92,23 @@ class _commentForumState extends State<commentForum> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          print(text);
+                          print("---!!!Creating comment: " + text);
                           // TODO: implement submit comment
-                          _timer?.cancel();
-                          await EasyLoading.show(
-                            status: 'Commenting...',
-                            maskType: EasyLoadingMaskType.black,
-                          );
-                          print('EasyLoading show');
-                          forum.add_comment(
-                              Forum_Answer("answer6", "morrison jamari", text));
+                          // _timer?.cancel();
+                          // await EasyLoading.show(
+                          //   status: 'Commenting...',
+                          //   maskType: EasyLoadingMaskType.black,
+                          // );
+                          // print('EasyLoading show');
+                          // forum.add_comment(
+                          //     Forum_Answer("answer6", "morrison jamari", text));
+                          DateTime now = DateTime.now();
+                          String now_string =
+                              DateFormat('yyyy-MM-dd kk:mm').format(now);
+                          connect.createComment(
+                              forum.postId, text, _name, now_string); //TODO!!!!
                           Navigator.of(context).pop();
-                          EasyLoading.dismiss();
+                          // EasyLoading.dismiss();
                         }
                       }),
                 ]))));

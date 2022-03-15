@@ -9,20 +9,24 @@ import 'dart:convert';
 //https://medium.com/flutter/some-options-for-deserializing-json-with-flutter-7481325a4450
 
 const String serverURL =
-    "http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000";
+    // "http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000";
+    "http://10.0.2.2:3000";
 
+// FORUM
 // ----------------------------------------------------------------
 // create post
 @override
-void createForum(title, poster, content, time, tags) {
-  _createForum(title, poster, content, time, tags);
+void createForum(title, poster, content, time, comments, tags) {
+  _createForum(title, poster, content, time, comments, tags);
   print("creating forum [connect]");
 }
 
 @override
-Future<http.Response> _createForum(title, poster, content, time, tags) {
+Future<http.Response> _createForum(
+    title, poster, content, time, comments, tags) {
   return http.post(
-    Uri.parse(serverURL + "/forums/create"),
+    // Uri.parse(serverURL + "/forums/create"),
+    Uri.parse('http://10.0.2.2:3000/forums/create'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -31,6 +35,7 @@ Future<http.Response> _createForum(title, poster, content, time, tags) {
       "poster": poster,
       "content": content,
       "timestamp": time,
+      "comments": comments,
       "tags": tags,
     }),
   );
@@ -100,6 +105,49 @@ Future<http.Response> _updateForum(forumid, title, content, time) async {
     }),
   );
   return response;
+}
+
+// FORUM COMMENTS
+// ----------------------------------------------------------------
+// create comments
+@override
+void createComment(forumid, content, commenter, time) {
+  var temp = _createComment(forumid, content, commenter, time);
+  print("creating comments [connect]");
+  print(temp);
+}
+
+@override
+Future<http.Response> _createComment(forumid, content, commenter, time) {
+  return http.post(
+    // Uri.parse(serverURL + "/forums/create"),
+    Uri.parse('http://10.0.2.2:3000/comments/create'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "parent-id": forumid,
+      "content": content,
+      "commenter": commenter,
+      "timestamp": time,
+    }),
+  );
+}
+
+//----------------------------------------------------------------
+// get comments for the forum
+void getcurrentComments(forumid) {
+  print(currentComments(forumid));
+  print("getting comments [connect]");
+}
+
+Future<http.Response> currentComments(forumid) {
+  return http.get(
+    Uri.parse("http://10.0.2.2:3000/get/" + forumid),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
 }
 
 // ----------------------------------------------------------------
