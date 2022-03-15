@@ -108,25 +108,4 @@ router.post('/update', async (req, res) => {
     }
 })
 
-// this is for updating current list of comment string
-router.post('/updateCommentListWithID', async (req, res) => {
-    console.log('updating forum')
-    console.log(req.body)
-    var toUpdate = await Forum.InsertOne({
-        "_id": req.body['id'],
-      },{
-        "comments": req.body.comments
-    })
-    if (toUpdate.modifiedCount == 0) {
-        res.status = 400;
-        res.json({
-          message: "user account deleted or does not exist"
-        })
-      } else {
-        res.json({
-          message: "success"
-        })
-    }
-})
-
 module.exports = router;
