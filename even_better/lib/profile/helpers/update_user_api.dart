@@ -10,8 +10,8 @@ Future<UserI> getUserInfo() async {
     print("email: " + email);
   }
   final response = await http.get(
-    Uri.parse('https://api.even-better-api.com/users/getUser/' +
-        email!), //http://10.0.2.2:3000/users/update
+    Uri.parse('https://api.even-better-api.com/users/getUser/' + email!),
+    // Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email!),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -38,8 +38,8 @@ void createStringUpdate(name, companyname, bio) async {
   if (email != null) {
     print("email: " + email);
     final response = await http.post(
-      Uri.parse('https://api.even-better-api.com/users/updatestring/' +
-          email), //http://10.0.2.2:3000/users/update
+      Uri.parse('https://api.even-better-api.com/users/updatestring/' + email),
+      // Uri.parse('http://10.0.2.2:3000/users/updatestring/' + email),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -61,8 +61,8 @@ void createBooleanUpdate(bool cs, bool se, bool ds) async {
     // print("emailbool: " + email);
     // print("bool: " + cs.toString() + se.toString() + ds.toString());
     final response = await http.post(
-      Uri.parse('https://api.even-better-api.com/users/updatebool/' +
-          email), //http://10.0.2.2:3000/users/update
+      Uri.parse('https://api.even-better-api.com/users/updatebool/' + email),
+      // Uri.parse('http://10.0.2.2:3000/users/updatebool/' + email),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -84,8 +84,8 @@ void createAvatarUpdate(ava) async {
     print("email: " + email);
     print("ava: " + ava);
     final response = await http.post(
-      Uri.parse('https://api.even-better-api.com/users/updateava/' +
-          email), //http://10.0.2.2:3000/users/update
+      Uri.parse('https://api.even-better-api.com/users/updateava/' + email),
+      // Uri.parse('http://10.0.2.2:3000/users/updateava/' + email),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
