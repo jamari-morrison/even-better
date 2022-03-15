@@ -69,7 +69,7 @@ class _DetailedForum extends State<DetailedForum> {
     List<Forum_Answer> listItems = [];
 
     final response = await http.get(
-      Uri.parse("http://10.0.2.2:3000/comments/all"),
+      Uri.parse("https://api.even-better-api.com/comments/all"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

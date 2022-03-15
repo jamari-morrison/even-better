@@ -10,7 +10,7 @@ import 'dart:convert';
 
 const String serverURL =
     // "http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000";
-    "http://10.0.2.2:3000";
+    "https://api.even-better-api.com";
 
 // FORUM
 // ----------------------------------------------------------------
@@ -26,7 +26,7 @@ Future<http.Response> _createForum(
     title, poster, content, time, comments, tags) {
   return http.post(
     // Uri.parse(serverURL + "/forums/create"),
-    Uri.parse('http://10.0.2.2:3000/forums/create'),
+    Uri.parse('https://api.even-better-api.com/forums/create'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -121,7 +121,7 @@ void createComment(forumid, content, commenter, time) {
 Future<http.Response> _createComment(forumid, content, commenter, time) {
   return http.post(
     // Uri.parse(serverURL + "/forums/create"),
-    Uri.parse('http://10.0.2.2:3000/comments/create'),
+    Uri.parse('https://api.even-better-api.com/comments/create'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -143,7 +143,7 @@ void getcurrentComments(forumid) {
 
 Future<http.Response> currentComments(forumid) {
   return http.get(
-    Uri.parse("http://10.0.2.2:3000/get/" + forumid),
+    Uri.parse("https://api.even-better-api.com/forums/get/" + forumid),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
