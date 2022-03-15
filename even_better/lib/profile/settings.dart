@@ -1,4 +1,5 @@
 import 'package:even_better/UserVerification/Helpers/account_creation.dart';
+import 'package:even_better/profile/deletion_revalidate.dart';
 import 'package:even_better/profile/password_change.dart';
 import 'package:flutter/material.dart';
 
@@ -25,9 +26,8 @@ class Settings extends StatelessWidget {
         child: ListView(
           // physics: const NeverScrollableScrollPhysics(),
           children: [
-            ElevatedButton.icon(
-                icon: const Icon(Icons.person),
-                label: const Text(
+            ElevatedButton(
+                child: const Text(
                   'logout',
                   style: TextStyle(
                     fontFamily: 'EB',
@@ -55,60 +55,20 @@ class Settings extends StatelessWidget {
                           builder: (context) => const ChangePassword()));
                 }),
             ElevatedButton(
-              onPressed: () {
-                Widget cancelButton = TextButton(
-                  child: Text("CANCEL"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                );
-                Widget continueButton = TextButton(
-                  child: Text("DELETE"),
-                  onPressed: () {
-                    //do the deletions!
-                    print(auth.userEmail);
-                    createAlbumDeleteAccount(auth.userEmail).then((album) {
-                      auth.deleteAccount().then((value) {
-                        auth.signOut();
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      }).catchError((error) {
-                        //other modal goes here
-                        print(error);
-                        modalErrorHandler(error, context,
-                            "Even Better Account Deletion Failure");
-                      });
-                    }).catchError((error) {
-                      print(error);
-                      //modal here
-                      modalErrorHandler(
-                          error, context, "Firebase Account Deletion Failure");
-                    });
-                    //TODO: Error handling here
-                  },
-                );
-
-                // set up the AlertDialog
-                AlertDialog alert = AlertDialog(
-                  title: Text("Are you sure?"),
-                  content: Text("Account Deletion is Permanent"),
-                  actions: [
-                    cancelButton,
-                    continueButton,
-                  ],
-                );
-
-                // show the dialog
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return alert;
-                  },
-                );
-                // Navigator.pop(context);
-              },
-              child: Text('Delete Account'),
-            )
+                child: const Text(
+                  'delete account',
+                  style: TextStyle(
+                    fontFamily: 'EB',
+                    fontSize: 25.0,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DeletionRevalidate(auth)));
+                }),
           ],
         ),
       ),

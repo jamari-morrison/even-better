@@ -8,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../Chat/select_user.dart';
 import 'multiple_notifier.dart';
 import 'SingleNotifier.dart';
+import '../post/feed_screen.dart';
 
 class Questionaire extends StatefulWidget {
   const Questionaire({
@@ -21,20 +22,12 @@ class Questionaire extends StatefulWidget {
 }
 
 class _QuestionaireState extends State<Questionaire> {
-  List<dynamic> countries = [
-    'React',
-    'Flutter',
-    'Node.js',
-    'Express',
-    'Vue',
-    'Mongoose',
-    'Angular'
-  ];
-  String questionTitle = 'Original';
+  List<dynamic> countries = [];
+  String questionTitle = '';
   String questionID = 'empty';
 
   void getPopupData() async {
-    final uri = Uri.http('10.0.2.2:3000', '/popups/nextQuestion',
+    final uri = Uri.https('api.even-better-api.com', '/popups/nextQuestion',
         {'rose-username': widget.currentStudent.toString()});
 
     final response = await http.get(uri, headers: <String, String>{
@@ -53,25 +46,25 @@ class _QuestionaireState extends State<Questionaire> {
       });
     } else {
       //redirect to dm's here :D
+      print('nothing to show');
     }
   }
 
   void sendPopupData(List<String> selections) async {
-    print(jsonEncode(selections));
     print(jsonEncode(<String, String>{
-      'questionID': widget.currentStudent,
+      'questionID': questionID.toString(),
       'answerer': widget.currentStudent.toString(),
-      'answer': selections.toString(),
-    }.toString()));
+      'answer': jsonEncode(selections),
+    }).toString());
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/popups/answer'),
+      Uri.parse('https://api.even-better-api.com/popups/answer'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'questionID': widget.currentStudent,
+        'questionID': questionID.toString(),
         'answerer': widget.currentStudent.toString(),
-        'answer': selections.toString(),
+        'answer': jsonEncode(selections),
       }),
     );
     print(response.body);
@@ -111,7 +104,11 @@ class _QuestionaireState extends State<Questionaire> {
                       child: Text("Submit"),
                       onPressed: () {
                         sendPopupData(_multipleNotifier.selectedItems);
-                        Navigator.of(context).pop();
+                        //Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => FeedScreen()));
                       },
                     ),
                   ],
@@ -205,7 +202,15 @@ class _QuestionaireState extends State<Questionaire> {
               FlatButton(
                 child: Text("Submit"),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                 // Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                      SelectUser(currentStudent: 'morrisjj'),
+                    ),
+                  );
+                  EasyLoading.dismiss();
                 },
               ),
             ],

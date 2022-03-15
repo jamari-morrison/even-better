@@ -24,7 +24,7 @@ Future<AlbumBool> createAlbumReportContent(
   print("reason: " + reason);
   // if (contentType == "post") {
   response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/reports/submit'),
+    Uri.parse('https://api.even-better-api.com/reports/submit'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -37,7 +37,7 @@ Future<AlbumBool> createAlbumReportContent(
   // }
   // if (contentType == "comment") {
   //   response = await http.post(
-  //     Uri.parse('https://api.even-better-api.com:443/comments/reportComment'),
+  //     Uri.parse('https://api.even-better-api.com/comments/reportComment'),
   //     headers: <String, String>{
   //       'Content-Type': 'application/json; charset=UTF-8',
   //     },
@@ -46,7 +46,7 @@ Future<AlbumBool> createAlbumReportContent(
   // }
   // if (contentType == "forumPost") {
   //   response = await http.post(
-  //     Uri.parse('https://api.even-better-api.com:443/forum/reportForum'),
+  //     Uri.parse('https://api.even-better-api.com/forum/reportForum'),
   //     headers: <String, String>{
   //       'Content-Type': 'application/json; charset=UTF-8',
   //     },

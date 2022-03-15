@@ -64,7 +64,6 @@ class _MySearchPageState extends State<MySearchPage> {
                   ),
                   onPressed: () {
                     bool ifcontain = friends.contains(person.username);
-                    print(ifcontain);
                     if (_username == person.username) {
                       showDialog(
                         context: context,
@@ -124,7 +123,6 @@ class _MySearchPageState extends State<MySearchPage> {
                   ),
                   onPressed: () {
                     bool ifcontain = friends.contains(person.username);
-                    print(ifcontain);
                     if (_username == person.username) {
                       showDialog(
                         context: context,
@@ -158,7 +156,7 @@ class _MySearchPageState extends State<MySearchPage> {
   Future<List<UserI>> fetchUsers() async {
     // var users = List<User>();
     List<UserI> users = <UserI>[];
-    var url = 'https://api.even-better-api.com:443/users/all';
+    var url = 'https://api.even-better-api.com/users/all';
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
@@ -179,6 +177,7 @@ class _MySearchPageState extends State<MySearchPage> {
 
   void fetchFriends(email) async {
     print("email: " + email);
+    // var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
     var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
     var response = await http.get(
       Uri.parse(url),

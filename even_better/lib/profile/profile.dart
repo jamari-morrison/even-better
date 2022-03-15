@@ -86,6 +86,7 @@ class ProfileAppState extends State<ProfileApp> {
 
   void fetchUsers(email) async {
     print("email: " + email);
+    // var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
     var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
     var response = await http.get(
       Uri.parse(url),
@@ -264,14 +265,14 @@ class ProfileAppState extends State<ProfileApp> {
                         ),
                         Card(
                           margin: EdgeInsets.symmetric(
-                              horizontal: screenwidth * 0.1, vertical: 0.0),
+                              horizontal: screenwidth * 0.03, vertical: 0.0),
                           clipBehavior: Clip.antiAlias,
                           color: Colors.white,
                           elevation: 5.0,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: screenwidth * 0.005,
-                                vertical: screenheight * 0.007),
+                                // horizontal: screenwidth * 0.08,
+                                vertical: screenheight * 0.008),
                             child: Row(
                               children: <Widget>[
                                 Expanded(
@@ -283,7 +284,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: screenwidth / 20,
+                                          fontSize: screenwidth / 22,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -294,7 +295,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         "0",
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: screenwidth / 22,
+                                          fontSize: screenwidth / 28,
                                           color: CompanyColors.red[300],
                                         ),
                                       )
@@ -310,7 +311,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: screenwidth / 20.0,
+                                          fontSize: screenwidth / 22.0,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -321,39 +322,13 @@ class ProfileAppState extends State<ProfileApp> {
                                         friends.length.toString(),
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: screenwidth / 22.0,
+                                          fontSize: screenwidth / 28.0,
                                           color: CompanyColors.red[300],
                                         ),
                                       )
                                     ],
                                   ),
                                 ),
-                                // Expanded(
-                                //   child: Column(
-                                //     children: <Widget>[
-                                //       Text(
-                                //         "Follow",
-                                //         style: TextStyle(
-                                //           fontFamily: 'EB',
-                                //           color: CompanyColors.red[300],
-                                //           fontSize: screenwidth / 20.0,
-                                //           fontWeight: FontWeight.bold,
-                                //         ),
-                                //       ),
-                                //       const SizedBox(
-                                //         height: 2.0,
-                                //       ),
-                                //       Text(
-                                //         "10",
-                                //         style: TextStyle(
-                                //           fontFamily: 'EB',
-                                //           fontSize: screenwidth / 22.0,
-                                //           color: CompanyColors.red[300],
-                                //         ),
-                                //       )
-                                //     ],
-                                //   ),
-                                // ),
                                 Expanded(
                                   flex: 2,
                                   child: Column(
@@ -363,7 +338,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         style: TextStyle(
                                           fontFamily: 'EB',
                                           color: CompanyColors.red[300],
-                                          fontSize: screenwidth / 20.0,
+                                          fontSize: screenwidth / 22.0,
                                         ),
                                       ),
                                       const SizedBox(
@@ -373,7 +348,7 @@ class ProfileAppState extends State<ProfileApp> {
                                         _company,
                                         style: TextStyle(
                                           fontFamily: 'EB',
-                                          fontSize: screenwidth / 22.0,
+                                          fontSize: screenwidth / 30,
                                           color: CompanyColors.red[300],
                                         ),
                                       ),
@@ -402,12 +377,12 @@ class ProfileAppState extends State<ProfileApp> {
                         style: TextStyle(
                             color: CompanyColors.red[300],
                             fontFamily: 'EBI',
-                            fontSize: 20.0),
+                            fontSize: screenwidth / 20),
                       ),
                       Text(
                         _major(),
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: screenwidth / 22,
                           fontFamily: 'EB',
                           color: Colors.black87,
                           letterSpacing: 1.0,
@@ -420,12 +395,12 @@ class ProfileAppState extends State<ProfileApp> {
                         style: TextStyle(
                             color: CompanyColors.red[300],
                             fontFamily: 'EBI',
-                            fontSize: 20.0),
+                            fontSize: screenwidth / 20),
                       ),
                       Text(
                         _name,
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: screenwidth / 22,
                           fontFamily: 'EB',
                           color: Colors.black87,
                           letterSpacing: 1.0,
@@ -438,16 +413,22 @@ class ProfileAppState extends State<ProfileApp> {
                         style: TextStyle(
                             color: CompanyColors.red[300],
                             fontFamily: 'EBI',
-                            fontSize: 20.0),
+                            fontSize: screenwidth / 20),
                       ),
-                      Text(
-                        _bio,
-                        // 'I have graduated from Rose-Hulman CS major for 10 years. If you need any mobile app for your company then contact me for more informations.'
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'EB',
-                          color: Colors.black87,
-                          letterSpacing: 1.0,
+                    ]),
+                    Row(children: <Widget>[
+                      SizedBox(
+                        width: screenwidth * 0.9,
+                        child: Text(
+                          _bio,
+                          // 'I have graduated from Rose-Hulman CS major for 10 years. If you need any mobile app for your company then contact me for more informations.'
+                          style: TextStyle(
+                            fontSize: screenwidth / 22,
+                            fontFamily: 'EBR',
+                            color: Colors.black87,
+                            letterSpacing: 1.0,
+                          ),
+                          // maxLines: 15,
                         ),
                       )
                     ]),

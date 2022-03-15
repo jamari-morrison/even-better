@@ -21,7 +21,7 @@ class AlbumBool {
 //make this private but still usable in test case??
 Future<AlbumBool> createAlbumValidateRose(roseUsername) async {
   final response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/students/checkExist'),
+    Uri.parse('https://api.even-better-api.com/students/checkExist'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -39,8 +39,7 @@ Future<AlbumBool> createAlbumValidateRose(roseUsername) async {
 Future<AlbumBool> createAlbumIsEmailValidated(email) async {
   final response = await http.get(
     //query parameters!
-    Uri.parse(
-        'https://api.even-better-api.com:443/users/emailValidated/' + email),
+    Uri.parse('https://api.even-better-api.com/users/emailValidated/' + email),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -57,7 +56,7 @@ Future<AlbumBool> createAlbumIsEmailValidated(email) async {
 Future<AlbumSendEmail> createAlbumSendEmail(email) async {
   print("sending email to " + email + "...");
   final response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/users/sendValidationEmail/'),
+    Uri.parse('https://api.even-better-api.com/users/sendValidationEmail/'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -101,7 +100,7 @@ class AlbumSignUp {
 Future<AlbumSignUp> createAlbumSignUpEB(username, roseUsername, name) async {
   print(name);
   final response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/users/signup'),
+    Uri.parse('https://api.even-better-api.com/users/signup'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -137,7 +136,7 @@ Future<AlbumConfirmName> createAlbumConfirmName(roseUsername) async {
   //note: this get endpoint returns the entire user object. We only need to use the name
 
   final response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/students/studentFromEmail'),
+    Uri.parse('https://api.even-better-api.com/students/studentFromEmail'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

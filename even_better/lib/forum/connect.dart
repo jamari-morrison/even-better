@@ -92,7 +92,7 @@ void updateForumDB(forumid, title, content, time) {
 @override
 Future<http.Response> _updateForum(forumid, title, content, time) async {
   final response = await http.post(
-    Uri.parse('https://api.even-better-api.com:443/forums/update'),
+    Uri.parse('https://api.even-better-api.com/forums/update'),
     // Uri.parse('http://10.0.2.2:3000/forums/update'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
