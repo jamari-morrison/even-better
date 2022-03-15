@@ -2,12 +2,10 @@ const Comment = require('../Models/Comment');
 const express = require('express');
 const router = express.Router();
 
-// const Forum = require('../Models/Forum'); // to add comment id strings in forum
-
 // create need to update forum field comments, and create the comment itself.
 router.post('/create', (req, res) => {
-    console.log('creating comment')
-    console.log(req.body)
+    // console.log('creating comment')
+    // console.log(req.body)
     const comment = new Comment({
         "content": req.body.content,
         "likes": req.body.likes || 0,
@@ -29,7 +27,6 @@ router.get('/all', async (req, res) => {
     try{
         // console.log('made it to getting all comments')
         const comments = await Comment.find();
-
         res.json(comments);
     } catch(err){
         res.statusCode = 500;
@@ -39,7 +36,7 @@ router.get('/all', async (req, res) => {
 
 router.get('/get/:forumid', async (req, res) => {
     try{
-        console.log('made it to getting specific comments')
+        // console.log('made it to getting specific comments')
         const comments = await Comment.find({"parent-id": req.params.forumid});
         res.json(comments);
     } catch(err){
