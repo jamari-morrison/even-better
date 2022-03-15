@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.get('/all', async (req, res) => {
     try{
-        console.log('made it to getting all forums')
         const forums = await Forum.find();
 
         res.json(forums);
@@ -16,7 +15,6 @@ router.get('/all', async (req, res) => {
 router.post('/get', async (req, res) => {
     try{
         //currently only supports single tag queries
-        console.log('made it to getting specific Forum by tag')
         const forums = await Forum.find({"tag": req['tag']});
         res.json(forums);
     } catch(err){
@@ -28,7 +26,6 @@ router.post('/get', async (req, res) => {
 router.get('/getById/:id', async (req, res) => {
     try{
         //currently only supports single tag queries
-        console.log('obtaining forum by id')
         const forum = await Forum.findById(req.params.id);
         if (forum == null){
             res.statusCode = 500;
@@ -57,8 +54,7 @@ router.get('/deleteByKey/:id', async (req, res) => {
 })
 
 router.post('/create', (req, res) => {
-    console.log('creating forum')
-    console.log(req.body)
+    // console.log(req.body)
     const forum = new Forum({
         "content": req.body.content || "",
         "likes": req.body.likes || 0,
@@ -79,8 +75,7 @@ router.post('/create', (req, res) => {
 })
 
 router.post('/update', async (req, res) => {
-    console.log('updating forum')
-    console.log(req.body)
+    // console.log(req.body)
     var toUpdate = await Forum.updateOne({
         "_id": req.body['id'],
       },{
@@ -89,13 +84,6 @@ router.post('/update', async (req, res) => {
         "title": req.body.title
     })
 
-    // toUpdate.save()
-    // .then(data => {
-    //     res.json(data);
-    // })
-    // .catch(err => {
-    //     res.json({message: err})
-    // })
     if (toUpdate.modifiedCount == 0) {
         res.status = 400;
         res.json({
