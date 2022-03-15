@@ -65,7 +65,8 @@ router.post('/create', (req, res) => {
         "poster": req.body.poster,
         "timestamp": req.body.timestamp,
         "title": req.body.title,
-        "tags": req.body.tags
+        "tags": req.body.tags,
+        "comments": req.body.comments
     });
 
     forum.save()
@@ -95,6 +96,27 @@ router.post('/update', async (req, res) => {
     // .catch(err => {
     //     res.json({message: err})
     // })
+    if (toUpdate.modifiedCount == 0) {
+        res.status = 400;
+        res.json({
+          message: "user account deleted or does not exist"
+        })
+      } else {
+        res.json({
+          message: "success"
+        })
+    }
+})
+
+// this is for updating current list of comment string
+router.post('/updateCommentListWithID', async (req, res) => {
+    console.log('updating forum')
+    console.log(req.body)
+    var toUpdate = await Forum.InsertOne({
+        "_id": req.body['id'],
+      },{
+        "comments": req.body.comments
+    })
     if (toUpdate.modifiedCount == 0) {
         res.status = 400;
         res.json({
