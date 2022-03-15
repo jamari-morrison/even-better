@@ -2,9 +2,6 @@
 
 import 'dart:async';
 
-import 'package:even_better/forum/data.dart';
-import 'package:even_better/forum/forum%20copy.dart';
-import 'package:even_better/forum/forum.dart';
 import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
 import 'package:even_better/models/tag.dart' as tagg;
@@ -25,17 +22,17 @@ class _createForumState extends State<createForum> {
   final _formKey = GlobalKey<FormState>();
   String title = '';
   String content = '';
-  List<Tag> addtags = [];
-  String newTag = '';
-  // Data db;
+  // List<Tag> addtags = [];
+  // String newTag = '';
   Timer? _timer;
-  //TODO: get all tags
-  List<Tag> tags = [
-    Tag("Framework", "1"),
-    Tag("Company", "1"),
-    Tag("Project", "1"),
-    Tag("OO Design", "1")
-  ];
+  String name = "Add a name";
+  /*get all tags*/
+  // List<Tag> tags = [
+  //   Tag("Framework", "1"),
+  //   Tag("Company", "1"),
+  //   Tag("Project", "1"),
+  //   Tag("OO Design", "1")
+  // ];
 
   _createForumState();
   @override
@@ -85,96 +82,7 @@ class _createForumState extends State<createForum> {
                               onChanged: (val) {
                                 setState(() => content = val);
                               }),
-                          SizedBox(height: 40.0),
-                          Container(
-                              child: Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[tags[0], tags[1], tags[2]],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  tags[3],
-                                  TextButton(
-                                    onPressed: () => showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Dialog(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        20.0)), //this right here
-                                            child: Container(
-                                              height: 200,
-                                              child: Padding(
-                                                // key: _formKey,
-                                                padding:
-                                                    const EdgeInsets.all(12.0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    const Text(
-                                                      "Creating New Tag",
-                                                      style: TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    const SizedBox(
-                                                        height: 20.0),
-                                                    TextFormField(
-                                                        decoration:
-                                                            const InputDecoration(
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hintText:
-                                                                    "What's the new tag's name?"),
-                                                        validator: (val) => val!
-                                                                .isEmpty
-                                                            ? 'Enter your thoughts'
-                                                            : null, //is valid if null
-                                                        onChanged: (val) {
-                                                          setState(() =>
-                                                              newTag = val);
-                                                        }),
-                                                    SizedBox(
-                                                      width: 320.0,
-                                                      child: FlatButton(
-                                                        onPressed: () {
-                                                          print(newTag);
-                                                        },
-                                                        child: const Text(
-                                                          "Create",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                        color: Colors.red,
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                    child: const Text("+",
-                                        style: TextStyle(color: Colors.black)),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
+                          // tag section here, saved in forum copy.dart
                           RaisedButton(
                               color: CompanyColors.red,
                               child: const Text(
@@ -182,27 +90,22 @@ class _createForumState extends State<createForum> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
-                                print(
-                                    "--------------------Create pressed------------------");
                                 if (_formKey.currentState!.validate()) {
-                                  print(title);
-                                  print(content);
                                   Navigator.pop(context);
-                                  /* TODO: get current User Here to pass in and create forum  */
+                                  /* TODO: get current User to pass in and create forum  */
 
                                   DateTime now = DateTime.now();
                                   String now_string =
                                       DateFormat('yyyy-MM-dd kk:mm')
                                           .format(now);
-                                  connect.createForum(title, "Ainsley Liu",
-                                      content, now_string, "", "");
+                                  connect.createForum(
+                                      title, name, content, now_string, "", "");
                                   // TODO: implement submit comment
                                   // _timer?.cancel();
                                   // await EasyLoading.show(
                                   //   status: 'creating...',
                                   //   maskType: EasyLoadingMaskType.black,
                                   // );
-                                  // print('EasyLoading show');
                                   // Navigator.push(
                                   //     context,
                                   //     MaterialPageRoute(

@@ -8,12 +8,11 @@ import 'package:even_better/forum/connect.dart';
 import 'package:even_better/forum/update_forum.dart';
 import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
-import 'package:even_better/models/tag.dart';
 import 'package:even_better/report_content/report_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:even_better/models/forum_answer.dart' as fa;
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+// import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -39,7 +38,8 @@ class _DetailedForum extends State<DetailedForum> {
   Timer? _timer;
   RefreshController _refreshController =
       RefreshController(initialRefresh: true);
-
+  String serverurl = "http://10.0.2.2:3000";
+  // String serverurl = "https://api.even-better-api.com/";
   _DetailedForum(this.comments, this.post);
   @override
   void initState() {
@@ -52,16 +52,14 @@ class _DetailedForum extends State<DetailedForum> {
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
-    // await Future.delayed(Duration(milliseconds: 2000));
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
-    print("trying to refresh from bottom");
+    print("trying to refresh");
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
-    // await Future.delayed(Duration(milliseconds: 2000));
     _refreshController.loadComplete();
   }
 
@@ -69,7 +67,7 @@ class _DetailedForum extends State<DetailedForum> {
     List<Forum_Answer> listItems = [];
 
     final response = await http.get(
-      Uri.parse("http://10.0.2.2:3000/comments/all"),
+      Uri.parse(serverurl + "/comments/all"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -77,7 +75,7 @@ class _DetailedForum extends State<DetailedForum> {
 
     if (response != null && response.statusCode == HttpStatus.ok) {
       List<dynamic> reslist = jsonDecode(response.body);
-      print("reslist is: " + reslist.toString());
+      // print("reslist is: " + reslist.toString());
       for (var comment in reslist) {
         String aid = comment['_id'];
         String commenter = comment['commenter'];
@@ -119,7 +117,8 @@ class _DetailedForum extends State<DetailedForum> {
                   post.uid,
                   iconColor: Colors.black,
                 ),
-                Text(post.tagNames),
+                // Text(post.tagNames),
+                Text(""),
               ],
             ),
           ),
@@ -177,11 +176,12 @@ class _DetailedForum extends State<DetailedForum> {
 
     var itemsInMenu = [
       DropdownMenuItem(
-          value: 1,
-          child: Row(children: <Widget>[
+        value: 1,
+        child: Row(
+          children: <Widget>[
             IconButton(
               onPressed: () async {
-                print("update forum");
+                print("update");
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -197,8 +197,22 @@ class _DetailedForum extends State<DetailedForum> {
               ),
               padding: EdgeInsets.only(right: 10.0),
             ),
-            Text("Update"),
-          ])),
+            TextButton(
+              // style: TextButton.styleFrom(primary: Colors.black),
+              onPressed: () async {
+                print("update");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          updateForum(post.postId, post.title, post.details)),
+                );
+              },
+              child: Text("Update", style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        ),
+      ),
       DropdownMenuItem(
           value: 2,
           child: Row(children: <Widget>[
@@ -213,7 +227,7 @@ class _DetailedForum extends State<DetailedForum> {
                   Widget continueButton = TextButton(
                     child: Text("DELETE"),
                     onPressed: () {
-                      print("Trying to delete");
+                      // print("Trying to delete");
                       deleteForum(post.postId);
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
@@ -243,14 +257,50 @@ class _DetailedForum extends State<DetailedForum> {
                   size: 35.0,
                   color: Colors.black,
                 )),
-            Text("Delete"),
+            TextButton(
+              // style: TextButton.styleFrom(primary: Colors.black),r
+              onPressed: () async {
+                Widget cancelButton = TextButton(
+                  child: Text("CANCEL"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                );
+                Widget continueButton = TextButton(
+                  child: Text("DELETE"),
+                  onPressed: () {
+                    // print("Trying to delete");
+                    deleteForum(post.postId);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                );
+                // set up the AlertDialog
+                AlertDialog alert = AlertDialog(
+                  title: Text("Are you sure?"),
+                  content: Text("This forum will be deleted permanently."),
+                  actions: [
+                    cancelButton,
+                    continueButton,
+                  ],
+                );
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
+              },
+              child: Text("Delete", style: TextStyle(color: Colors.black)),
+            ),
           ])),
       DropdownMenuItem(
           value: 3,
           child: Row(children: <Widget>[
             IconButton(
               onPressed: () async {
-                print("report content");
+                // print("report content");
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -268,7 +318,21 @@ class _DetailedForum extends State<DetailedForum> {
               ),
               padding: EdgeInsets.only(right: 10.0),
             ),
-            Text("Report"),
+            TextButton(
+              // style: TextButton.styleFrom(primary: Colors.black),
+              onPressed: () async {
+                // print("report content");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ReportContent(
+                            contentId: post.postId,
+                            contentType: "forumPost",
+                          )),
+                );
+              },
+              child: Text("Report", style: TextStyle(color: Colors.black)),
+            ),
           ]))
     ];
     return Scaffold(
@@ -289,11 +353,11 @@ class _DetailedForum extends State<DetailedForum> {
                     color: Colors.white,
                   ),
                   items: itemsInMenu,
-                  onTap: () => print("Menu pressed"),
+                  // onTap: () => print("Menu pressed"),
                   onChanged: (value) {})),
           IconButton(
             onPressed: () async {
-              print("add comments");
+              // print("add comments");
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => commentForum(post)),
