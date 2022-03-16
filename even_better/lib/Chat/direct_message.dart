@@ -11,6 +11,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 //import 'package:socket_io/socket_io.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 String randomString() {
   final random = Random.secure();
@@ -34,6 +35,8 @@ class DirectMessage extends StatefulWidget {
 class _DirectMessageState extends State<DirectMessage> {
   List<types.Message> _messages = [];
   final _user = const types.User(id: 'currentStudent');
+  final fireUser = FirebaseAuth.instance.currentUser;
+  String? fireEmail = "";
   final _recipient = const types.User(id: 'recipient');
   Socket socket = io(
       'https://api.even-better-api.com',
@@ -50,6 +53,8 @@ class _DirectMessageState extends State<DirectMessage> {
   //     .build());
 
   void getMessageHistory() async {
+    print("Fire user is: "+fireUser!.toString());
+    print("fire email is: "+fireEmail!);
     final uri = Uri.https(
         'api.even-better-api.com',
         '/messages/conversation',
@@ -134,6 +139,8 @@ class _DirectMessageState extends State<DirectMessage> {
   void initState() {
     super.initState();
     getMessageHistory();
+    User? user = FirebaseAuth.instance.currentUser;
+    fireEmail = user?.displayName!!;
     socket.connect();
     print('START');
 

@@ -146,6 +146,22 @@ router.get('/allAnswers', async (req, res) => {
 })
 
 
+router.post('/create', async (req, res) => {
+
+})
+
+router.post('/edit', async (req, res) => {
+
+})
+
+router.get('/all', async (req, res) => {
+
+})
+
+router.post('/specific', async (req, res) => {
+
+})
+
 
 
 module.exports = router;
