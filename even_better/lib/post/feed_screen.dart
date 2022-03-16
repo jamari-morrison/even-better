@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:even_better/Chat/select_user.dart';
 import 'package:even_better/Questionaire/questionaire.dart';
 import 'package:even_better/Search/searchpage.dart';
 import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum.dart';
+import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:even_better/screens/api.dart';
 import 'package:even_better/screens/my_flutter_app_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,8 +37,28 @@ class _FeedScreenState extends State<FeedScreen> {
   // List<Posting> now_ps = <Posting>[];
   Timer? _timer;
   bool _shouldShowPopup = false;
+  File? _image;
+  List<String> friends = <String>[];
+  var pixelRatio;
+  //Size in physical pixels
+  var physicalScreenSize;
+  var physicalWidth;
+  var physicalHeight;
 
-  //need to not hard-code the rose-username field
+//Size in logical pixels
+  var logicalScreenSize;
+  var logicalWidth;
+  var logicalHeight;
+//   //Size in physical pixels
+//   var physicalScreenSize = window.physicalSize;
+//   var physicalWidth = physicalScreenSize.width;
+//   var physicalHeight = physicalScreenSize.height;
+
+// //Size in logical pixels
+//   var logicalScreenSize = window.physicalSize / pixelRatio;
+//   var logicalWidth = logicalScreenSize.width;
+//   var logicalHeight = logicalScreenSize.height;
+
   void checkIfShouldPopup() async {
     final uri = Uri.http('10.0.2.2:3000', '/popups/shouldQuestion',
         {'rose-username': 'morrisjj'});
@@ -70,14 +92,26 @@ class _FeedScreenState extends State<FeedScreen> {
     super.initState();
     checkIfShouldPopup();
     initialName();
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Loading Successed');
-    // EasyLoading.removeCallbacks();
+    getUserInfo().then((result) {
+      // print(result.avatar);
+      setState(() {
+        _name = result.name;
+        if (result.avatar != "N/A" && result.avatar.isNotEmpty) {
+          _image = File(result.avatar);
+        }
+      });
+    });
+    fetchUsers(_username);
+    pixelRatio = window.devicePixelRatio;
+    //Size in physical pixels
+    physicalScreenSize = window.physicalSize;
+    physicalWidth = physicalScreenSize.width;
+    physicalHeight = physicalScreenSize.height;
+
+    //Size in logical pixels
+    logicalScreenSize = window.physicalSize / pixelRatio;
+    logicalWidth = logicalScreenSize.width;
+    logicalHeight = logicalScreenSize.height;
   }
 
   initialName() async {
@@ -92,13 +126,47 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-  Image getAvatorImage() {
-    return Image(
+  void fetchUsers(email) async {
+    print("email: " + email);
+    var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
+    // var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
+    var response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonMembers = json.decode(response.body);
+      print(response.body);
+      print(jsonMembers);
+      if (jsonMembers != null) {
+        setState(() {
+          friends = (jsonMembers as List).map((e) => e as String).toList();
+        });
+        // if (friends != null) {
+        //   print("ffffffffffffffffff" + friends!.length.toString());
+        // }
+      }
+    } else {
+      print("status code: " + response.statusCode.toString());
+      throw Exception('failed to get all user info');
+    }
+  }
+
+  Image getAvatarImage() {
+    return Image.file(
+      _image!,
       height: 50.0,
       width: 50.0,
-      image: AssetImage(posts[0].authorImageUrl),
       fit: BoxFit.cover,
     );
+    // Image(
+    //   height: 50.0,
+    //   width: 50.0,
+    //   image: AssetImage(posts[0].authorImageUrl),
+    //   fit: BoxFit.cover,
+    // );
   }
 
   FileImage getPostImage(String s) {
@@ -107,7 +175,7 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget _buildPost(String time, String image, String title, String content,
-      String username, int likes, String pid) {
+      String name, int likes, String pid) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Container(
@@ -152,11 +220,11 @@ class _FeedScreenState extends State<FeedScreen> {
                         ],
                       ),
                       child: CircleAvatar(
-                        child: ClipOval(child: getAvatorImage()),
+                        child: ClipOval(child: getAvatarImage()),
                       ),
                     ),
                     title: Text(
-                      username,
+                      name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -326,6 +394,8 @@ class _FeedScreenState extends State<FeedScreen> {
   int _index = 0;
   @override
   Widget build(BuildContext context) {
+    // screenwidth = MediaQuery.of(context).size.width;
+    // screenheight = MediaQuery.of(context).size.height;
     Widget child = Container();
 
     switch (_index) {
@@ -422,7 +492,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   if (_post != null) {
                     setState(() {
                       p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                          _post.content, _username, 0, '');
+                          _post.content, _name, 0, '');
                       SinglePost sp = SinglePost('', 0, p);
                       ps.add(sp);
                       l = getPostWidgets();
@@ -601,11 +671,21 @@ class _FeedScreenState extends State<FeedScreen> {
 }
 
 Widget _noaddNewPosts() {
+  var pixelRatio = window.devicePixelRatio;
+  //Size in physical pixels
+  var physicalScreenSize = window.physicalSize;
+  var physicalWidth = physicalScreenSize.width;
+  var physicalHeight = physicalScreenSize.height;
+
+//Size in logical pixels
+  var logicalScreenSize = window.physicalSize / pixelRatio;
+  var logicalWidth = logicalScreenSize.width;
+  var logicalHeight = logicalScreenSize.height;
   return Padding(
-    padding: EdgeInsets.all(50.0),
+    padding: EdgeInsets.all(logicalWidth * 0.08),
     child: Container(
       width: double.infinity,
-      height: 100.0,
+      height: logicalHeight * 0.6,
       constraints: const BoxConstraints(
         maxHeight: double.infinity,
       ),
@@ -625,14 +705,14 @@ Widget _noaddNewPosts() {
         child: Container(
           margin: const EdgeInsets.all(10.0),
           color: Colors.white,
-          width: 300.0,
-          height: 50.0,
-          child: const Center(
+          width: logicalWidth * 0.9,
+          height: logicalHeight * 0.5,
+          child: Center(
             child: Text(
               'Create your first Post! :)',
               style: TextStyle(
                 fontFamily: 'Billabong',
-                fontSize: 30.0,
+                fontSize: logicalWidth / 13,
                 color: CompanyColors.red,
               ),
             ),

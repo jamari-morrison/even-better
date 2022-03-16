@@ -10,8 +10,6 @@ import 'package:even_better/profile/profile_change.dart';
 import 'package:even_better/profile/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -32,10 +30,9 @@ class ProfileAppState extends State<ProfileApp> {
   final picker = ImagePicker();
   final user = FirebaseAuth.instance.currentUser;
   late UserI me;
-  bool _update = false;
   File? _image;
   String _company = ' ';
-  bool cs = true;
+  bool cs = false;
   bool se = false;
   bool ds = false;
   String _username = "";
@@ -43,7 +40,6 @@ class ProfileAppState extends State<ProfileApp> {
   String? email;
   String? name;
   String _bio = ' ';
-  Timer? _timer;
   List<String> friends = <String>[];
 
   // SizedBox sb = _noupdateProfile();
@@ -238,6 +234,9 @@ class ProfileAppState extends State<ProfileApp> {
                             ),
                           ),
                         ),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -382,8 +381,8 @@ class ProfileAppState extends State<ProfileApp> {
                       Text(
                         _major(),
                         style: TextStyle(
-                          fontSize: screenwidth / 22,
-                          fontFamily: 'EB',
+                          fontSize: screenwidth / 20,
+                          fontFamily: 'EBI',
                           color: Colors.black87,
                           letterSpacing: 1.0,
                         ),
@@ -400,8 +399,8 @@ class ProfileAppState extends State<ProfileApp> {
                       Text(
                         _name,
                         style: TextStyle(
-                          fontSize: screenwidth / 22,
-                          fontFamily: 'EB',
+                          fontSize: screenwidth / 20,
+                          fontFamily: 'EBI',
                           color: Colors.black87,
                           letterSpacing: 1.0,
                         ),
@@ -424,7 +423,7 @@ class ProfileAppState extends State<ProfileApp> {
                           // 'I have graduated from Rose-Hulman CS major for 10 years. If you need any mobile app for your company then contact me for more informations.'
                           style: TextStyle(
                             fontSize: screenwidth / 22,
-                            fontFamily: 'EBR',
+                            fontFamily: 'EBI',
                             color: Colors.black87,
                             letterSpacing: 1.0,
                           ),
