@@ -147,20 +147,72 @@ router.get('/allAnswers', async (req, res) => {
 
 
 router.post('/create', async (req, res) => {
+  console.log('creating popup');
+  const optionQuantities = [];
+  
+  for(input in req.body.options)optionQuantities.push({input: 0});
 
+  const popup = new PopupQuestion({
+      "question": req.body.question,
+      "priority": req.body.priority,
+      "quota": req.body.quota,
+      "options": req.body.options,
+      "optionQuantities": optionQuantities,
+      "currentAnswers": 0,
+  })
+
+  popup.save()
+  .then(data => {
+      res.json(data);
+  })
+  .catch(err => {
+      res.json({message: err})
+  })
 })
 
 router.post('/edit', async (req, res) => {
+const updateResult = await PopupQuestion.updateOne({"_id": req.body['_id']}, 
+{
+  "question": req.body.question,
+  "priority": req.body.priority,
+  "quota": req.body.quota,
+  "options": req.body.options,
+}
+).then(res =>{
+  res.json({
+    message: err
+  })
+})
+.catch(err => {
+  res.json({
+    message: err
+  })
+})
+console.log(updateResult)
+
+
 
 })
 
-router.get('/all', async (req, res) => {
-
+router.post('delete', async (req, res) => {
+  const deleteResult = await PopupQuestion.deleteOne({"_id": req.body['_id']})
+  .then(msg =>{
+    res.json({
+      message: msg
+    })
+  })
+  .catch(err => {
+    res.json({
+      message: err
+    })
+  })
+  console.log(deleteResult);
 })
 
-router.post('/specific', async (req, res) => {
+//not needed right now
+// router.post('/specific', async (req, res) => {
 
-})
+// })
 
 
 
