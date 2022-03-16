@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:even_better/post/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../UserVerification/firsttime.dart';
 import 'home/home.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
+import 'package:onesignal_flutter/'
 
 class Wrapper extends StatefulWidget {
   const Wrapper({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
     super.initState();
+    initPlatform();
     EasyLoading.addStatusCallback((status) {
       print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {
@@ -46,5 +49,12 @@ class _WrapperState extends State<Wrapper> {
 
       return FeedScreen();
     }
+  }
+
+  Future<void> initPlatform() async {
+    await OneSignal.shared.setAppId("68f951ef-3a62-4c97-89dc-7ef962b29bc6");
+    await OneSignal.shared.getDeviceState().then((value) => {
+      print(value!.userId);
+    })
   }
 }
