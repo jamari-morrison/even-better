@@ -297,7 +297,7 @@ Widget _companyTile(TextEditingController companyController) {
         //keyboardType: TextInputType.multiline,
         minLines: 1,
         maxLines: 1,
-        maxLength: 9,
+        maxLength: 8,
       ),
     ),
   );

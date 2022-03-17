@@ -682,10 +682,10 @@ Widget _noaddNewPosts() {
   var logicalWidth = logicalScreenSize.width;
   var logicalHeight = logicalScreenSize.height;
   return Padding(
-    padding: EdgeInsets.all(logicalWidth * 0.08),
+    padding: EdgeInsets.all(logicalWidth * 0.085),
     child: Container(
       width: double.infinity,
-      height: logicalHeight * 0.6,
+      height: logicalHeight * 0.55,
       constraints: const BoxConstraints(
         maxHeight: double.infinity,
       ),
@@ -705,7 +705,7 @@ Widget _noaddNewPosts() {
         child: Container(
           margin: const EdgeInsets.all(10.0),
           color: Colors.white,
-          width: logicalWidth * 0.9,
+          width: logicalWidth * 0.8,
           height: logicalHeight * 0.5,
           child: Center(
             child: Text(
