@@ -7,6 +7,7 @@ import 'package:even_better/Search/searchpage.dart';
 import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum.dart';
 import 'package:even_better/profile/helpers/update_user_api.dart';
+import 'package:even_better/report_content/report_content.dart';
 import 'package:even_better/screens/api.dart';
 import 'package:even_better/screens/my_flutter_app_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -175,7 +176,140 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget _buildPost(String time, String image, String title, String content,
-      String name, int likes, String pid) {
+      String name, int likes, String pid, context) {
+    var itemsInMenu = [
+      DropdownMenuItem(
+        value: 1,
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              onPressed: () {
+                print("update");
+              },
+              color: Colors.transparent,
+              icon: const Icon(
+                Icons.update,
+                size: 35.0,
+                color: Colors.black,
+              ),
+              padding: EdgeInsets.only(right: 10.0),
+            ),
+            TextButton(
+              // style: TextButton.styleFrom(primary: Colors.black),
+              onPressed: () async {
+                print("update");
+              },
+              child: Text("Update", style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        ),
+      ),
+      DropdownMenuItem(
+          value: 2,
+          child: Row(children: <Widget>[
+            IconButton(
+                onPressed: () async {
+                  Widget cancelButton = TextButton(
+                    child: Text("CANCEL"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  );
+                  Widget continueButton = TextButton(
+                    child: Text("DELETE"),
+                    onPressed: () {
+                      print("Trying to delete");
+                    },
+                  );
+                  // set up the AlertDialog
+                  AlertDialog alert = AlertDialog(
+                    title: Text("Are you sure?"),
+                    content: Text("This forum will be deleted permanently."),
+                    actions: [
+                      cancelButton,
+                      continueButton,
+                    ],
+                  );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                },
+                color: Colors.transparent,
+                padding: const EdgeInsets.only(right: 10.0),
+                icon: const Icon(
+                  Icons.delete,
+                  size: 35.0,
+                  color: Colors.black,
+                )),
+            TextButton(
+              // style: TextButton.styleFrom(primary: Colors.black),r
+              onPressed: () async {
+                Widget cancelButton = TextButton(
+                  child: Text("CANCEL"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                );
+                Widget continueButton = TextButton(
+                  child: Text("DELETE"),
+                  onPressed: () {
+                    print("Trying to delete");
+                  },
+                );
+                // set up the AlertDialog
+                AlertDialog alert = AlertDialog(
+                  title: Text("Are you sure?"),
+                  content: Text("This forum will be deleted permanently."),
+                  actions: [
+                    cancelButton,
+                    continueButton,
+                  ],
+                );
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
+              },
+              child: Text("Delete", style: TextStyle(color: Colors.black)),
+            ),
+          ])),
+      DropdownMenuItem(
+          value: 3,
+          child: Row(children: <Widget>[
+            IconButton(
+              onPressed: () async {
+                print("report content");
+              },
+              color: Colors.transparent,
+              icon: const Icon(
+                Icons.report,
+                size: 35.0,
+                color: Colors.black,
+              ),
+              padding: EdgeInsets.only(right: 10.0),
+            ),
+            TextButton(
+              // style: TextButton.styleFrom(primary: Colors.black),
+              onPressed: () async {
+                print("report content");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ReportContent(
+                            contentId: "123",
+                            contentType: "posts",
+                          )),
+                );
+              },
+              child: Text("Report", style: TextStyle(color: Colors.black)),
+            ),
+          ]))
+    ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Container(
@@ -230,11 +364,16 @@ class _FeedScreenState extends State<FeedScreen> {
                       ),
                     ),
                     subtitle: Text(time),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.more_horiz),
-                      color: Colors.black,
-                      onPressed: () => print('More'),
-                    ),
+                    trailing: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            icon: const Icon(
+                              Icons.menu,
+                              size: 35.0,
+                              color: Colors.black,
+                            ),
+                            items: itemsInMenu,
+                            // onTap: () => print("Menu pressed"),
+                            onChanged: (value) {})),
                   ),
                   InkWell(
                     onDoubleTap: () => print('Like post'),
@@ -396,6 +535,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     // screenwidth = MediaQuery.of(context).size.width;
     // screenheight = MediaQuery.of(context).size.height;
+
     Widget child = Container();
 
     switch (_index) {
@@ -492,7 +632,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   if (_post != null) {
                     setState(() {
                       p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                          _post.content, _name, 0, '');
+                          _post.content, _name, 0, '', context);
                       SinglePost sp = SinglePost('', 0, p);
                       ps.add(sp);
                       l = getPostWidgets();
