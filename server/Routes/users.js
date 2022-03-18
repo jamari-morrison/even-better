@@ -67,7 +67,6 @@ router.get('/all', async (req, res) => {
   }
 })
 
-
 router.post('/signup', async (req, res) => {
   console.log('creating user')
   console.log(req.body)
@@ -96,6 +95,14 @@ router.post('/signup', async (req, res) => {
 
 router.post('/delete', async (req, res) => {
   console.log('deleting user ' + req.body['username']);
+
+  //delete all of the users stuff
+  //Ensure poster is acutally username and not the name of the user.
+  Post.deleteMany({"poster": req.body['username']});
+
+
+
+  //delete the actual user
   const deleted = await User.deleteOne({
     'username': req.body['username']
   }).catch(err => {
@@ -312,7 +319,24 @@ router.get('/getUser/:username', async (req, res) => {
   }
 })
 
-
+router.get('/getUser/:ebuid', async (req, res) => {
+  console.log('getting user')
+  console.log(req.params.username)
+  try {
+    var user = await User.findOne({
+      "_id": req.params.ebuid
+    });
+    if (user != null) {
+      res.status = 200;
+      res.json({ user });
+    }
+  } catch (err) {
+    console.log(err)
+    res.json({
+      message: "Error!"
+    })
+  }
+})
 
 
 

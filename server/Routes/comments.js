@@ -9,7 +9,8 @@ router.post('/create', (req, res) => {
     const comment = new Comment({
         "content": req.body.content,
         "likes": req.body.likes || 0,
-        "commenter": req.body.commenter,
+        "commenter": req.body.commenterid,
+        "commentername": req.body.commentername,
         "timestamp": req.body.timestamp,
         "parent-id": req.body['parent-id']
     });
@@ -45,5 +46,17 @@ router.get('/get/:forumid', async (req, res) => {
     }
 })
 
+router.get('/deleteByKey/:id', async (req, res) => {
+    try{
+        //currently only supports single tag queries
+        console.log("deleting comment with id " + req.params.id);
+        const comments = await Comment.findByIdAndDelete(req.params.id);
+        
+        res.json({message : "Successfully deleted comment"});
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+})
 
 module.exports = router;

@@ -43,9 +43,12 @@ class _DetailedReportState extends State<DetailedReport> {
   }
 
   void obtainContent() async {
-    final uri = Uri.http(
-        'ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000',
-        '/${widget.contentType}/getById/${widget.contentId}', {});
+    print("content type is : " + widget.contentType);
+    print("id is: " + widget.contentId);
+    print(
+        "call is : + https://api.even-better-api.com/${widget.contentType}/getById/${widget.contentId}");
+    final uri = Uri.parse(
+        'https://api.even-better-api.com/${widget.contentType}/getById/${widget.contentId}');
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
@@ -58,6 +61,7 @@ class _DetailedReportState extends State<DetailedReport> {
           String poster = message['poster'];
           String title = message['title'];
           String content = message['content'];
+          String posterid = message['posterID'];
           int likes = message['likes'];
           var tags = message[
               'tags']; //some weird type error going on here so don't pass to Forum_Post
@@ -65,7 +69,33 @@ class _DetailedReportState extends State<DetailedReport> {
             //TODO: need to obtain comments and tags at some point here
             page = DetailedForum(
                 postId: widget.id,
-                post: Forum_Post(widget.id, poster, title, content, [], []),
+                post: Forum_Post(
+                    widget.id, poster, posterid, title, content, [], []),
+                key: widget.key,
+                comments: []);
+          });
+          break;
+        case "comments": // Wasn't sure if we are supposed to let the moderator only see the comment...
+          // I think they should look at the forum first to figure out whether the comment is
+          // unfriendly or sth. but the problem will be that, if a post has a lot of comments
+          // the moderator might need to look for the comment themselves, and we might not want
+          // that? they might lose track of the comment.... One thing I thought about is that
+          // maybe we can flag a comment if they are reported, and we might change the color of
+          // the comment to show that the comment is the one that being reported. But we might not
+          // want normal users to notice that? Not sure what I should do...
+          String poster = message['poster'];
+          String title = message['title'];
+          String content = message['content'];
+          String posterid = message['posterID'];
+          int likes = message['likes'];
+          var tags = message[
+              'tags']; //some weird type error going on here so don't pass to Forum_Post
+          setState(() {
+            //TODO: need to obtain comments and tags at some point here
+            page = DetailedForum(
+                postId: widget.id,
+                post: Forum_Post(
+                    widget.id, poster, posterid, title, content, [], []),
                 key: widget.key,
                 comments: []);
           });

@@ -8,7 +8,6 @@ import '../UserVerification/firsttime.dart';
 import 'home/home.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
-import 'package:onesignal_flutter/'
 
 class Wrapper extends StatefulWidget {
   const Wrapper({Key? key}) : super(key: key);
@@ -54,7 +53,7 @@ class _WrapperState extends State<Wrapper> {
   Future<void> initPlatform() async {
     await OneSignal.shared.setAppId("68f951ef-3a62-4c97-89dc-7ef962b29bc6");
     await OneSignal.shared.getDeviceState().then((value) => {
-      print(value!.userId);
-    })
+      print(value!.userId)
+    });
   }
 }

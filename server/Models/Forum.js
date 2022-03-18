@@ -4,6 +4,7 @@ const ForumSchema = mongoose.Schema(
     {
 
         "poster": String,
+        "posterID": String,
         "title": String,
         "content": String,
         "timestamp": String,

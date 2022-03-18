@@ -35,7 +35,7 @@ class MySearchPage extends StatefulWidget {
 //   ];
 class _MySearchPageState extends State<MySearchPage> {
   List<UserI> _users = <UserI>[];
-  Timer? _timer;
+  // Timer? _timer;
   String _username = "";
   String? email;
   List<String> friends = <String>[];
@@ -178,7 +178,7 @@ class _MySearchPageState extends State<MySearchPage> {
   void fetchFriends(email) async {
     print("email: " + email);
     var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
-    // var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
+    // var url = '10.0.2.2/users/getUserFriends/' + email;
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{

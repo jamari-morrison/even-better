@@ -18,14 +18,14 @@ class ImageFromGalleryEx extends StatefulWidget {
 }
 
 class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
-  final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController postController = TextEditingController();
   final picker = ImagePicker();
-  final username = "Jamari Morrison";
+  String username = "";
   File? _image;
   Timer? _timer;
+  String? email;
   ImageFromGalleryExState();
 
   @override
@@ -39,6 +39,11 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
     // });
     // EasyLoading.showSuccess('Loading ucceeded');
     // EasyLoading.removeCallbacks();
+    User? user = FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      username = email!;
+    }
   }
 
   @override
@@ -242,14 +247,16 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                         borderRadius: BorderRadius.circular(18.0),
                       ))),
                   onPressed: () async {
-                    _timer?.cancel();
-                    await EasyLoading.show(
-                      status: 'Creating...',
-                      maskType: EasyLoadingMaskType.black,
-                    );
-                    print('EasyLoading show');
-                    if (_image == null) {
-                      EasyLoading.dismiss();
+                    // _timer?.cancel();
+                    // await EasyLoading.show(
+                    //   status: 'Creating...',
+                    //   maskType: EasyLoadingMaskType.black,
+                    // );
+                    // print('EasyLoading show');
+                    if (_image == null ||
+                        titleController.text.isEmpty ||
+                        postController.text.isEmpty) {
+                      // EasyLoading.dismiss();
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>
@@ -264,7 +271,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                           titleController.text.replaceAll('\n', ' '),
                           postController.text.trim(),
                           _image!.path,
-                          300,
+                          0,
                           formattedDate,
                           username);
 
@@ -371,7 +378,7 @@ Widget _buildPopupDialog(BuildContext context) {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const <Widget>[
-        Text("Image is required for posting"),
+        Text("All fields are required for posting"),
       ],
     ),
     actions: <Widget>[

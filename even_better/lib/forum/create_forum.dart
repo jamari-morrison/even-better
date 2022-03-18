@@ -5,11 +5,14 @@ import 'dart:async';
 import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
 import 'package:even_better/models/tag.dart' as tagg;
+import 'package:even_better/models/user.dart';
 import 'package:even_better/post/feed_screen.dart';
+import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:even_better/forum/connect.dart' as connect;
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class createForum extends StatefulWidget {
   // Data db;
@@ -25,7 +28,15 @@ class _createForumState extends State<createForum> {
   // List<Tag> addtags = [];
   // String newTag = '';
   Timer? _timer;
-  String name = "Add a name";
+  // String name = "Add a name";
+  final user = auth.FirebaseAuth.instance.currentUser;
+  String? fbuid;
+  String? email;
+
+  String _ebuid = "";
+  String _displayname = "";
+  bool _ifModerator = false;
+  String _roseuid = "";
   /*get all tags*/
   // List<Tag> tags = [
   //   Tag("Framework", "1"),
@@ -38,6 +49,22 @@ class _createForumState extends State<createForum> {
   @override
   void initState() {
     super.initState();
+    getCurrentUser();
+  }
+
+  getCurrentUser() async {
+    auth.User? user = auth.FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    fbuid = user?.uid;
+    MyUser currentUser = MyUser(fbuid!, email);
+    _ebuid = MyUser.getEBUid();
+    _displayname = MyUser.getDisplayName();
+    _ifModerator = MyUser.getIsModerator();
+    _roseuid = MyUser.getRoseUsername();
+    print("firebase uid is " + fbuid! + " and email is " + email!);
+    print("EB uid is " + _ebuid);
+    print("displayname is " + _displayname);
+    print(_ifModerator);
   }
 
   @override
@@ -98,8 +125,8 @@ class _createForumState extends State<createForum> {
                                   String now_string =
                                       DateFormat('yyyy-MM-dd kk:mm')
                                           .format(now);
-                                  connect.createForum(
-                                      title, name, content, now_string, "", "");
+                                  connect.createForum(title, _displayname,
+                                      _ebuid, content, now_string, "", "");
                                   // TODO: implement submit comment
                                   // _timer?.cancel();
                                   // await EasyLoading.show(
