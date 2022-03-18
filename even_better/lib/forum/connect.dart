@@ -77,6 +77,23 @@ Future<http.Response> _deleteForum(forumID) {
   );
 }
 
+// Delete comment
+@override
+void deleteComment(commentID) {
+  _deleteComment(commentID);
+  // print("deleting forum [connect]");
+}
+
+@override
+Future<http.Response> _deleteComment(commentID) {
+  return http.get(
+    Uri.parse(serverURL + "forums/deleteByKey/" + commentID),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+}
+
 // ------------------------------
 // update forum
 @override
