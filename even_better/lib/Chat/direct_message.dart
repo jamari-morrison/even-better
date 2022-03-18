@@ -136,7 +136,7 @@ class _DirectMessageState extends State<DirectMessage> {
     super.initState();
     getMessageHistory();
     User? user = FirebaseAuth.instance.currentUser;
-    fireEmail = user?.displayName!!;
+    fireEmail = user?.displayName!;
     socket.connect();
     print('START');
 
