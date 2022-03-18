@@ -36,7 +36,7 @@ class _FeedScreenState extends State<FeedScreen> {
   List<SinglePost> ps = <SinglePost>[];
   Widget l = _noaddNewPosts();
   // List<Posting> now_ps = <Posting>[];
-  Timer? _timer;
+  // Timer? _timer;
   bool _shouldShowPopup = false;
   File? _image;
   List<String> friends = <String>[];
@@ -698,12 +698,12 @@ class _FeedScreenState extends State<FeedScreen> {
                             icon: const Icon(Icons.send),
                             iconSize: 30.0,
                             onPressed: () async {
-                              _timer?.cancel();
-                              await EasyLoading.show(
-                                status: 'loading...',
-                                maskType: EasyLoadingMaskType.black,
-                              );
-                              print('EasyLoading show');
+                              // _timer?.cancel();
+                              // await EasyLoading.show(
+                              //   status: 'loading...',
+                              //   maskType: EasyLoadingMaskType.black,
+                              // );
+                              // print('EasyLoading show');
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -711,7 +711,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                       SelectUser(currentStudent: 'morrisjj'),
                                 ),
                               );
-                              EasyLoading.dismiss();
+                              // EasyLoading.dismiss();
                             }
 
                             // => print('Direct Messages')

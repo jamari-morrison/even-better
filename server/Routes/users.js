@@ -319,7 +319,24 @@ router.get('/getUser/:username', async (req, res) => {
   }
 })
 
-
+router.get('/getUser/:ebuid', async (req, res) => {
+  console.log('getting user')
+  console.log(req.params.username)
+  try {
+    var user = await User.findOne({
+      "_id": req.params.ebuid
+    });
+    if (user != null) {
+      res.status = 200;
+      res.json({ user });
+    }
+  } catch (err) {
+    console.log(err)
+    res.json({
+      message: "Error!"
+    })
+  }
+})
 
 
 

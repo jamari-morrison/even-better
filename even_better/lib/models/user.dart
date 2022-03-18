@@ -9,6 +9,7 @@ class MyUser {
   static late bool isModerator;
   static late String roseUsername;
   static late String ebuid;
+  static late String displayName;
 
   MyUser(this.fbuid, this.userEmail) {
     print('User obj with uid: ${this.fbuid} [MyUser]');
@@ -18,6 +19,7 @@ class MyUser {
       roseUsername = userData["rose-username"];
       isModerator = userData["moderator"];
       ebuid = userData["_id"];
+      displayName = userData["name"];
       print("obtained user data!");
     }).catchError((err) {
       print("failed to get user data :(");
@@ -31,6 +33,14 @@ class MyUser {
 
   static getIsModerator() {
     return isModerator;
+  }
+
+  static getDisplayName() {
+    return displayName;
+  }
+
+  static getEBUid() {
+    return ebuid;
   }
 
   Future getUserData() async {

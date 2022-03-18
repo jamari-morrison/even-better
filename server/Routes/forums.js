@@ -61,6 +61,7 @@ router.post('/create', (req, res) => {
         "content": req.body.content || "",
         "likes": req.body.likes || 0,
         "poster": req.body.poster,
+        "posterID": req.body.posterID,
         "timestamp": req.body.timestamp,
         "title": req.body.title,
         "tags": req.body.tags,
