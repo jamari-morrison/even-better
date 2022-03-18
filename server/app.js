@@ -73,6 +73,7 @@ const forumsRoute = require('./Routes/forums');
 const messagesRoute = require('./Routes/messages')
 const reportsRoute = require('./Routes/reports')
 const popupsRoute = require('./Routes/popups')
+const notificationsRoute = require('./Routes/notifications')
 
 
 
@@ -84,6 +85,7 @@ app.use('/students', studentRoute);
 app.use('/comments', commentsRoute);
 app.use('/forums', forumsRoute);
 app.use('/reports', reportsRoute);
+app.use('/notifications', notificationsRoute);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
