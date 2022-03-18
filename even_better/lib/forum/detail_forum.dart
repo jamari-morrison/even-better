@@ -173,7 +173,8 @@ class _DetailedForum extends State<DetailedForum> {
             child: Center(child: body),
           );
         }),
-        child: Center(child: responses));
+        // child: Center(child: responses));
+        child: responses);
 
     var itemsInMenu = [
       DropdownMenuItem(

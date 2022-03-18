@@ -6,10 +6,12 @@ import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
 import 'package:even_better/models/tag.dart' as tagg;
 import 'package:even_better/post/feed_screen.dart';
+import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:even_better/forum/connect.dart' as connect;
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class createForum extends StatefulWidget {
   // Data db;
@@ -25,7 +27,12 @@ class _createForumState extends State<createForum> {
   // List<Tag> addtags = [];
   // String newTag = '';
   Timer? _timer;
-  String name = "Add a name";
+  // String name = "Add a name";
+  final user = auth.FirebaseAuth.instance.currentUser;
+  String _username = "";
+  String _name = "";
+  String? email;
+  String? name;
   /*get all tags*/
   // List<Tag> tags = [
   //   Tag("Framework", "1"),
@@ -38,6 +45,25 @@ class _createForumState extends State<createForum> {
   @override
   void initState() {
     super.initState();
+    initialName();
+    getUserInfo().then((result) {
+      // print(result.avatar);
+      setState(() {
+        _name = result.name;
+      });
+    });
+  }
+
+  initialName() async {
+    auth.User? user = auth.FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      _username = email!;
+    }
+    name = user?.displayName;
+    if (name != null) {
+      _name = name!;
+    }
   }
 
   @override
@@ -98,8 +124,8 @@ class _createForumState extends State<createForum> {
                                   String now_string =
                                       DateFormat('yyyy-MM-dd kk:mm')
                                           .format(now);
-                                  connect.createForum(
-                                      title, name, content, now_string, "", "");
+                                  connect.createForum(title, _name, content,
+                                      now_string, "", "");
                                   // TODO: implement submit comment
                                   // _timer?.cancel();
                                   // await EasyLoading.show(
