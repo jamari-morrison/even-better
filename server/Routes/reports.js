@@ -17,6 +17,19 @@ router.get('/all', async (req, res) => {
     }
 })
 
+
+
+router.post('/deleteById', async (req, res) => {
+    try{
+        //currently only supports single tag queries
+        const forums = await Report.findByIdAndDelete(req.body["id"]);
+        res.json({message : "Successfully deleted report"});
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+})
+
 router.post('/submit', async (req, res) => {
     //save the report to the reports collection
     console.log('submitting report')
