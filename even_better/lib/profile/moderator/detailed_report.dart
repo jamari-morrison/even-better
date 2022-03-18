@@ -43,9 +43,12 @@ class _DetailedReportState extends State<DetailedReport> {
   }
 
   void obtainContent() async {
-    final uri = Uri.http(
-        'ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000',
-        '/${widget.contentType}/getById/${widget.contentId}', {});
+    print("content type is : " + widget.contentType);
+    print("id is: " + widget.contentId);
+    print(
+        "call is : + https://api.even-better-api.com/${widget.contentType}/getById/${widget.contentId}");
+    final uri = Uri.parse(
+        'https://api.even-better-api.com/${widget.contentType}/getById/${widget.contentId}');
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });

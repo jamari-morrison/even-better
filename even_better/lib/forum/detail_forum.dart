@@ -307,7 +307,7 @@ class _DetailedForum extends State<DetailedForum> {
                   MaterialPageRoute(
                       builder: (context) => ReportContent(
                             contentId: post.postId,
-                            contentType: "forumPost",
+                            contentType: "forums",
                           )),
                 );
               },
@@ -328,7 +328,7 @@ class _DetailedForum extends State<DetailedForum> {
                   MaterialPageRoute(
                       builder: (context) => ReportContent(
                             contentId: post.postId,
-                            contentType: "forumPost",
+                            contentType: "forums",
                           )),
                 );
               },

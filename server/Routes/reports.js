@@ -43,6 +43,9 @@ router.post('/submit', async (req, res) => {
     if (contentType == "forums") {
         content = await Forum.findById(req.body['content-id']);
     }
+    else if (contentType == "posts") {
+        content = await Post.findById(req.body['content-id']);
+    }
     //email the content to the admin account
 
     var transporter = nodemailer.createTransport({

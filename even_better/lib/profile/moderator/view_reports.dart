@@ -32,9 +32,7 @@ class _ViewReportsState extends State<ViewReports> {
 
   void getallReports() async {
     List<Report> listItems = [];
-    final uri = Uri.http(
-        'ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000',
-        '/reports/all', {});
+    final uri = Uri.parse('https://api.even-better-api.com/reports/all');
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });

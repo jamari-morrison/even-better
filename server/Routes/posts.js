@@ -13,6 +13,24 @@ router.get('/all', async (req, res) => {
     }
 })
 
+router.get('/getById/:id', async (req, res) => {
+    try{
+        //currently only supports single tag queries
+        const forum = await Post.findById(req.params.id);
+        if (forum == null){
+            res.statusCode = 500;
+            res.json({message: "no post with that id"});
+        }
+        else {
+            res.json({message: forum});
+        }
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+
+})
+
 router.post('/create', (req, res) => {
     console.log('creating post')
     console.log(req.body)

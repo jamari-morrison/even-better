@@ -23,9 +23,10 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController postController = TextEditingController();
   final picker = ImagePicker();
-  final username = "Jamari Morrison";
+  String username = "";
   File? _image;
   Timer? _timer;
+  String? email;
   ImageFromGalleryExState();
 
   @override
@@ -39,6 +40,11 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
     // });
     // EasyLoading.showSuccess('Loading ucceeded');
     // EasyLoading.removeCallbacks();
+    User? user = FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      username = email!;
+    }
   }
 
   @override
@@ -242,14 +248,14 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                         borderRadius: BorderRadius.circular(18.0),
                       ))),
                   onPressed: () async {
-                    _timer?.cancel();
-                    await EasyLoading.show(
-                      status: 'Creating...',
-                      maskType: EasyLoadingMaskType.black,
-                    );
-                    print('EasyLoading show');
+                    // _timer?.cancel();
+                    // await EasyLoading.show(
+                    //   status: 'Creating...',
+                    //   maskType: EasyLoadingMaskType.black,
+                    // );
+                    // print('EasyLoading show');
                     if (_image == null) {
-                      EasyLoading.dismiss();
+                      // EasyLoading.dismiss();
                       showDialog(
                         context: context,
                         builder: (BuildContext context) =>
@@ -264,7 +270,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                           titleController.text.replaceAll('\n', ' '),
                           postController.text.trim(),
                           _image!.path,
-                          300,
+                          0,
                           formattedDate,
                           username);
 
