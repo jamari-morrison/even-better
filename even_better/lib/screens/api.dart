@@ -8,9 +8,9 @@ import 'package:http/http.dart';
 
 //documentation: https://flutter.dev/docs/cookbook/networking/send-data
 //if we need to work with responses, add stuff from here ^
-String BASE_URL = 'https://api.even-better-api.com/posts/';
-// String BASE_URL = 'http://10.0.2.2:3000/posts/';
-List<Posting> serverposts = <Posting>[];
+// String BASE_URL = 'https://api.even-better-api.com/posts/';
+String BASE_URL = 'http://10.0.2.2:3000/posts/';
+// List<Posting> serverposts = <Posting>[];
 
 void createPost(title, description, url, likes, time, username) {
   _createPost(title, description, url, likes, time, username);
@@ -50,9 +50,9 @@ Future<http.Response> _createPost(
 //   GetRequest();
 // }
 
-// Future<List<Posting>> GetRequest() async {
-//   print("Ip: get ->");
-//   String ip = BASE_URL + 'all';
+// void GetRequest(String username) async {
+//   print("Ip: get -> Post");
+//   String ip = BASE_URL + 'getUserPost/' + username;
 //   print(ip);
 
 //   Response response = await http.get(
@@ -61,61 +61,89 @@ Future<http.Response> _createPost(
 //       'Content-Type': 'application/json; charset=UTF-8',
 //     },
 //   );
+//  if (response.statusCode == 200 || response.statusCode == 201) {
+//       var jsonMembers = json.decode(response.body);
+//       print(response.body);
+//       print(jsonMembers);
+//       if (jsonMembers != null) {
+//         setState(() {
+//           serverposts = (jsonMembers as List).map((e) => e as String).toList();
+//         });
+//         // if (friends != null) {
+//         //   print("ffffffffffffffffff" + friends!.length.toString());
+//         // }
+//       }
+//     } else {
+//       print("status code: " + response.statusCode.toString());
+//       throw Exception('failed to get all user info');
+//     }
+//   // var psJson = jsonDecode(response.body);
+//   // List? ps = psJson != null ? List.from(psJson) : null;
 
-//   var psJson = jsonDecode(response.body);
-//   List? ps = psJson != null ? List.from(psJson) : null;
-
-//   // final url = Uri.parse('$urlPrefix/posts');
-//   // Response response = await get(url);
-//   print('Status code: ${response.statusCode}');
-//   print('Headers: ${response.headers}');
-//   print('Body: ${response.body}');
-//   print(">> " + ps![0]["_id"]);
-//   print(">> " + ps[1]["title"]);
-//   print(">> " + ps[0]["likes"].toString());
-//   print(">> " + ps[1]["picture-uri"].toString());
-//   for (var i = 0; i < ps.length; i++) {
-//     serverposts.add(Posting(
-//       // ps[i]["_id"] ?? 't0',
-//       // ps[i]["title"] ?? 't1',
-//       // ps[i]["description"] ?? 't2',
-//       // ps[i]["picture-uri"] ?? 't3',
-//       // ps[i]["likes"] ?? 0,
-//       // ps[i]["poster"] ?? 't4',
-//       // ps[i]["timestamp"] ?? 't5',
-//       ps[i]["_id"],
-//       ps[i]["title"],
-//       ps[i]["description"],
-//       ps[i]["picture-uri"],
-//       ps[i]["likes"],
-//       ps[i]["poster"],
-//       ps[i]["timestamp"],
-//     ));
-//   }
-//   // for (var i = 0; i < serverposts.length; i++) {
-//   //   print(serverposts[i].likes);
+//   // // final url = Uri.parse('$urlPrefix/posts');
+//   // // Response response = await get(url);
+//   // print('Status code: ${response.statusCode}');
+//   // print('Headers: ${response.headers}');
+//   // print('Body: ${response.body}');
+//   // print(">> " + ps![0]["_id"]);
+//   // print(">> " + ps[1]["title"]);
+//   // print(">> " + ps[0]["likes"].toString());
+//   // print(">> " + ps[1]["picture-uri"].toString());
+//   // for (var i = 0; i < ps.length; i++) {
+//   //   serverposts.add(Posting(
+//   //     // ps[i]["_id"] ?? 't0',
+//   //     // ps[i]["title"] ?? 't1',
+//   //     // ps[i]["description"] ?? 't2',
+//   //     // ps[i]["picture-uri"] ?? 't3',
+//   //     // ps[i]["likes"] ?? 0,
+//   //     // ps[i]["poster"] ?? 't4',
+//   //     // ps[i]["timestamp"] ?? 't5',
+//   //     ps[i]["_id"],
+//   //     ps[i]["title"],
+//   //     ps[i]["description"],
+//   //     ps[i]["picture-uri"],
+//   //     ps[i]["likes"],
+//   //     ps[i]["poster"],
+//   //     ps[i]["timestamp"],
+//   //   ));
 //   // }
-//   print('postlikes:::::::::');
-//   print(serverposts[serverposts.length - 1].pid);
-//   // return serverposts;
+//   // // for (var i = 0; i < serverposts.length; i++) {
+//   // //   print(serverposts[i].likes);
+//   // // }
+//   // print('postlikes:::::::::');
+//   // print(serverposts[serverposts.length - 1].pid);
+//   // // return serverposts;
 // }
 
 class Posting {
-  String pid;
-  String title;
-  String des;
-  String imageUrl;
-  int likes;
-  String authorName;
-  String timeAgo;
+  final String title, des, imageUrl, poster, timestamp;
+  final int likes;
+  // final followers, following;
+  // User(this.roseusername, this.username);
+  Posting({
+    required this.title,
+    required this.des,
+    required this.imageUrl,
+    required this.likes,
+    required this.poster,
+    required this.timestamp,
+  });
 
-  Posting(
-    this.pid,
-    this.title,
-    this.des,
-    this.imageUrl,
-    this.likes,
-    this.authorName,
-    this.timeAgo,
-  );
+  factory Posting.fromJson(Map<String, dynamic> json) => Posting(
+        title: json['title'] as String,
+        des: json['description'] as String,
+        imageUrl: json['picture-uri'] as String,
+        likes: json['likes'] as int,
+        poster: json['poster'] as String,
+        timestamp: json['timestamp'] as String,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "title": title,
+        "desctiption": des,
+        "picture-uri": imageUrl,
+        "likes": likes,
+        "poster": poster,
+        "timestamp": timestamp,
+      };
 }

@@ -6,12 +6,14 @@ import 'package:even_better/Questionaire/questionaire.dart';
 import 'package:even_better/Search/searchpage.dart';
 import 'package:even_better/forum/data.dart';
 import 'package:even_better/forum/forum.dart';
+import 'package:even_better/models/allusers.dart';
 import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:even_better/report_content/report_content.dart';
 import 'package:even_better/screens/api.dart';
 import 'package:even_better/screens/my_flutter_app_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:even_better/profile/profile.dart';
 import 'package:flutter/material.dart';
@@ -34,12 +36,13 @@ class _FeedScreenState extends State<FeedScreen> {
   bool _hasBeenPressed = false;
   Widget p = _noaddNewPost();
   List<SinglePost> ps = <SinglePost>[];
-  Widget l = _noaddNewPosts();
+  // Widget l = _noaddNewPosts();
   // List<Posting> now_ps = <Posting>[];
   // Timer? _timer;
   bool _shouldShowPopup = false;
   File? _image;
   List<String> friends = <String>[];
+  List<Posting> serverposts = <Posting>[];
   var pixelRatio;
   //Size in physical pixels
   var physicalScreenSize;
@@ -50,15 +53,6 @@ class _FeedScreenState extends State<FeedScreen> {
   var logicalScreenSize;
   var logicalWidth;
   var logicalHeight;
-//   //Size in physical pixels
-//   var physicalScreenSize = window.physicalSize;
-//   var physicalWidth = physicalScreenSize.width;
-//   var physicalHeight = physicalScreenSize.height;
-
-// //Size in logical pixels
-//   var logicalScreenSize = window.physicalSize / pixelRatio;
-//   var logicalWidth = logicalScreenSize.width;
-//   var logicalHeight = logicalScreenSize.height;
 
   void checkIfShouldPopup() async {
     final uri = Uri.http('10.0.2.2:3000', '/popups/shouldQuestion',
@@ -113,6 +107,26 @@ class _FeedScreenState extends State<FeedScreen> {
     logicalScreenSize = window.physicalSize / pixelRatio;
     logicalWidth = logicalScreenSize.width;
     logicalHeight = logicalScreenSize.height;
+    getRequest().then((value) {
+      setState(() {
+        serverposts.addAll(value);
+        for (Posting po in serverposts) {
+          // Future<String> name = getDiaplayName(po.poster);
+          p = _buildPost(po.timestamp, po.imageUrl, po.title, po.des, po.poster,
+              po.likes, '', context);
+          SinglePost sp = SinglePost('', po.likes, p);
+          ps.add(sp);
+        }
+        print("000000000000000000sb");
+        print(ps.length);
+        // l = getPostWidgets();
+      });
+    });
+    // if (ps.isEmpty) {
+    //   setState(() {
+    //     l = _noaddNewPost();
+    //   });
+    // }
   }
 
   initialName() async {
@@ -124,6 +138,53 @@ class _FeedScreenState extends State<FeedScreen> {
     name = user?.displayName;
     if (name != null) {
       _name = name!;
+    }
+  }
+
+  Future<String> getDiaplayName(String email) async {
+    print("email: " + email);
+    final response = await http.get(
+      Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
+      // Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var user = json.decode(response.body);
+      wholeUser u = wholeUser.fromJson(user);
+      print(u.useri.name);
+      // print(user.toString());
+      return u.useri.name;
+    } else {
+      print("status code: " + response.statusCode.toString());
+      throw Exception('failed to load user');
+    }
+  }
+
+  Future<List<Posting>> getRequest() async {
+    print("Ip: get -> Post");
+    List<Posting> posts = <Posting>[];
+    var url = 'http://10.0.2.2:3000/posts/getUserPost/' + _username;
+    var response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var jsonMembers = json.decode(response.body);
+      print(jsonMembers);
+      setState(() {
+        // posts =
+        //     jsonMembers.map<Posting>((json) => Posting.fromJson(json)).toList();
+        posts =
+            jsonMembers.map<Posting>((json) => Posting.fromJson(json)).toList();
+      });
+      return posts;
+    } else {
+      print("status code: " + response.statusCode.toString());
+      throw Exception('failed to get all user posts info');
     }
   }
 
@@ -156,18 +217,20 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Image getAvatarImage() {
+    if (_image == null) {
+      return Image(
+        height: 50.0,
+        width: 50.0,
+        image: AssetImage(posts[0].authorImageUrl),
+        fit: BoxFit.cover,
+      );
+    }
     return Image.file(
       _image!,
       height: 50.0,
       width: 50.0,
       fit: BoxFit.cover,
     );
-    // Image(
-    //   height: 50.0,
-    //   width: 50.0,
-    //   image: AssetImage(posts[0].authorImageUrl),
-    //   fit: BoxFit.cover,
-    // );
   }
 
   FileImage getPostImage(String s) {
@@ -177,6 +240,12 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Widget _buildPost(String time, String image, String title, String content,
       String name, int likes, String pid, context) {
+    // String uname = "";
+    // getDiaplayName(name).then((String result) {
+    //   setState(() {
+    //     uname = result;
+    //   });
+    // });
     var itemsInMenu = [
       DropdownMenuItem(
         value: 1,
@@ -596,49 +665,56 @@ class _FeedScreenState extends State<FeedScreen> {
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 color: Color(0xFFF8BBD0),
-                // onPressed: () async {
-                //   final NewPost _post = await Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => ImageFromGalleryEx()));
-                //   // await GetRequest();
-                //   //TODO: Post real data
-                //   setState(() {
-                //     // Posting latestpost = serverposts[serverposts.length - 1];
-                //     // String pid = latestpost.pid;
-                //     // int numlikes = latestpost.likes;
-
-                //     // int l = serverposts.length - 1;
-                //     // Posting p_more = serverposts[];
-                //     p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                //         _post.content, _post.username, 0, pid);
-                //     SinglePost sp = SinglePost(pid, numlikes, p);
-                //     ps.add(sp);
-                //     l = getPostWidgets();
-                //   });
-                // },
                 onPressed: () async {
-                  // _timer?.cancel();
-                  // await EasyLoading.show(
-                  //   status: 'loading...',
-                  //   maskType: EasyLoadingMaskType.black,
-                  // );
-                  // print('EasyLoading show');
-                  var _post = await Navigator.push(
+                  final NewPost _post = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
-                  // EasyLoading.dismiss();
-                  if (_post != null) {
-                    setState(() {
-                      p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                          _post.content, _name, 0, '', context);
-                      SinglePost sp = SinglePost('', 0, p);
-                      ps.add(sp);
-                      l = getPostWidgets();
-                    });
-                  }
+                  // await GetRequest();
+                  //TODO: Post real data
+                  setState(() {
+                    // Posting latestpost = serverposts[serverposts.length - 1];
+                    // String pid = latestpost.pid;
+                    // int numlikes = latestpost.likes;
+
+                    // int l = serverposts.length - 1;
+                    // Posting p_more = serverposts[];
+                    p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
+                        _post.content, _name, 0, '', context);
+                    SinglePost sp = SinglePost('', 0, p);
+                    ps.add(sp);
+                    // l = getPostWidgets();
+                  });
                 },
+                // onPressed: () async {
+                //   // _timer?.cancel();
+                //   // await EasyLoading.show(
+                //   //   status: 'loading...',
+                //   //   maskType: EasyLoadingMaskType.black,
+                //   // );
+                //   // print('EasyLoading show');
+                //   var _post = await Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => ImageFromGalleryEx()));
+                //   // EasyLoading.dismiss();
+                //   if (_post != null) {
+                //     setState(() {
+                // p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
+                //     _post.content, _name, 0, '', context);
+                //       Posting posting = Posting(
+                //           title: _post.title,
+                //           des: _post.content,
+                //           imageUrl: _post.imageUrl,
+                //           likes: 0,
+                //           poster: _username,
+                //           timestamp: _post.timeAgo);
+                //       SinglePost sp = SinglePost(posting, p);
+                //       ps.add(sp);
+                //       l = getPostWidgets();
+                //     });
+                //   }
+                // },
                 child: const Icon(
                   Icons.add,
                   size: 35.0,
@@ -724,7 +800,8 @@ class _FeedScreenState extends State<FeedScreen> {
                 ),
               ),
               // p,
-              l,
+              ps.isEmpty ? _noaddNewPosts() : getPostWidgets(),
+              // l,
               // Container(
               //   height: 200,
               // ),
@@ -746,12 +823,11 @@ class _FeedScreenState extends State<FeedScreen> {
             shrinkWrap: true,
             // physics: AlwaysScrollableScrollPhysics(),
             children:
-
                 // ps.reversed.toList()
-                Displayingpost(ps).reversed.toList()));
+                displayingpost(ps).reversed.toList()));
   }
 
-  List<Widget> Displayingpost(List<SinglePost> ls) {
+  List<Widget> displayingpost(List<SinglePost> ls) {
     List<Widget> toreturn = <Widget>[];
     for (var i = 0; i < ls.length; i++) {
       toreturn.add(ls[i].widget);
@@ -868,7 +944,7 @@ Widget _noaddNewPost() {
     decoration: const BoxDecoration(color: Colors.white),
     child: const Center(
       child: Text(
-        'Hello World',
+        '',
         textDirection: TextDirection.ltr,
         style: TextStyle(
           fontSize: 32,
@@ -903,6 +979,11 @@ class CompanyColors {
   );
 }
 
+// class SinglePost {
+//   Posting posting;
+//   Widget widget;
+//   SinglePost(this.posting, this.widget);
+// }
 class SinglePost {
   String pid;
   int likes;

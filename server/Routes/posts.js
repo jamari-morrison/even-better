@@ -31,6 +31,29 @@ router.get('/getById/:id', async (req, res) => {
 
 })
 
+router.get('/getUserPost/:username', async (req, res) => {
+    console.log('getting user posts')
+    console.log(req.params.username)
+    try {
+      var posts = await Post.find({
+        "poster": req.params.username
+      });
+      console.log(res.statusCode);
+      // console.log(user.friend);
+     console.log(posts);
+      if (posts != null) {
+        res.status = 200;
+        res.json( posts );
+      }
+    } catch (err) {
+      console.log(err)
+      res.json({
+        message: "Error!"
+      })
+    }
+  })
+
+
 router.post('/create', (req, res) => {
     console.log('creating post')
     console.log(req.body)

@@ -18,7 +18,6 @@ class ImageFromGalleryEx extends StatefulWidget {
 }
 
 class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
-  final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController postController = TextEditingController();
@@ -254,7 +253,9 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                     //   maskType: EasyLoadingMaskType.black,
                     // );
                     // print('EasyLoading show');
-                    if (_image == null) {
+                    if (_image == null ||
+                        titleController.text.isEmpty ||
+                        postController.text.isEmpty) {
                       // EasyLoading.dismiss();
                       showDialog(
                         context: context,
@@ -377,7 +378,7 @@ Widget _buildPopupDialog(BuildContext context) {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const <Widget>[
-        Text("Image is required for posting"),
+        Text("All fields are required for posting"),
       ],
     ),
     actions: <Widget>[
