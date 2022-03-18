@@ -136,7 +136,7 @@ class ForumAnswer extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => ReportContent(
                                     contentId: answers.aid,
-                                    contentType: "comment",
+                                    contentType: "comments",
                                   )),
                         );
                       },

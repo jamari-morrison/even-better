@@ -699,11 +699,11 @@ class _FeedScreenState extends State<FeedScreen> {
                             iconSize: 30.0,
                             onPressed: () async {
                               // _timer?.cancel();
-                              await EasyLoading.show(
-                                status: 'loading...',
-                                maskType: EasyLoadingMaskType.black,
-                              );
-                              print('EasyLoading show');
+                              // await EasyLoading.show(
+                              //   status: 'loading...',
+                              //   maskType: EasyLoadingMaskType.black,
+                              // );
+                              // print('EasyLoading show');
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -711,7 +711,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                       SelectUser(currentStudent: 'morrisjj'),
                                 ),
                               );
-                              EasyLoading.dismiss();
+                              // EasyLoading.dismiss();
                             }
 
                             // => print('Direct Messages')
