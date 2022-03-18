@@ -39,6 +39,25 @@ Future<Album> createAlbumDeleteAccount(ebUsername) async {
   }
 }
 
+Future<Album> createAlbumDeleteReport(reportId) async {
+  print("calling delete report");
+  final response = await http.post(
+    Uri.parse('https://api.even-better-api.com/reports/deleteById'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{'id': reportId}),
+  );
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    Album output = Album.fromJson(jsonDecode(response.body));
+    print(output.toString());
+    return output;
+  } else {
+    print("status code: " + response.statusCode.toString());
+    throw Exception('bad response');
+  }
+}
+
 class AlbumUpdate {
   final String fname;
 
