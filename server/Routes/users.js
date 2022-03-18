@@ -96,9 +96,9 @@ router.post('/signup', async (req, res) => {
 router.post('/delete', async (req, res) => {
   console.log('deleting user ' + req.body['username']);
 
-  //TODO
   //delete all of the users stuff
-
+  //Ensure poster is acutally username and not the name of the user.
+  Post.deleteMany({"poster": req.body['username']});
 
 
 

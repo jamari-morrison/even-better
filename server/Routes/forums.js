@@ -1,4 +1,5 @@
 const Forum = require('../Models/Forum');
+const Report = require('../Models/Report');
 const express = require('express');
 const router = express.Router();
 
@@ -45,6 +46,7 @@ router.get('/deleteByKey/:id', async (req, res) => {
     try{
         //currently only supports single tag queries
         const forums = await Forum.findByIdAndDelete(req.params.id);
+        Report.deleteMany({"content-id": req.params.id});
         
         res.json({message : "Successfully deleted post"});
     } catch(err){
