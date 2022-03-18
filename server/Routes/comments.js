@@ -9,7 +9,8 @@ router.post('/create', (req, res) => {
     const comment = new Comment({
         "content": req.body.content,
         "likes": req.body.likes || 0,
-        "commenter": req.body.commenter,
+        "commenter": req.body.commenterid,
+        "commentername": req.body.commentername,
         "timestamp": req.body.timestamp,
         "parent-id": req.body['parent-id']
     });
