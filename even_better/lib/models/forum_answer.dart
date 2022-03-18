@@ -102,10 +102,10 @@ class ForumAnswer extends StatelessWidget {
                                     child: Text("DELETE"),
                                     onPressed: () {
                                       print("Trying to delete");
-                                      deleteForum(answers.aid);
+                                      deleteComment(answers.aid);
                                       Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
+                                      // Navigator.of(context).pop();
+                                      // Navigator.of(context).pop();
                                     },
                                   );
                                   AlertDialog alert = AlertDialog(

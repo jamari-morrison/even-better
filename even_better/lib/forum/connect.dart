@@ -11,8 +11,8 @@ import 'dart:convert';
 
 const String serverURL =
     // "http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000/";
-    "https://api.even-better-api.com/";
-// "http://10.0.2.2:3000/";
+    // "https://api.even-better-api.com/";
+    "http://10.0.2.2:3000/";
 // USER
 Future getUserData(ebuid) async {
   final uri = Uri.parse(serverURL + "users/getUser/" + ebuid);
@@ -87,7 +87,7 @@ void deleteComment(commentID) {
 @override
 Future<http.Response> _deleteComment(commentID) {
   return http.get(
-    Uri.parse(serverURL + "forums/deleteByKey/" + commentID),
+    Uri.parse(serverURL + "comments/deleteByKey/" + commentID),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

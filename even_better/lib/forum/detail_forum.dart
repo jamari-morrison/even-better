@@ -183,7 +183,7 @@ class _DetailedForum extends State<DetailedForum> {
           );
         }),
         // child: Center(child: responses));
-        child: responses);
+        child: Center(child: responses));
 
     // var itemsInMenu = [
 
