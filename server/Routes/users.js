@@ -96,6 +96,14 @@ router.post('/signup', async (req, res) => {
 
 router.post('/delete', async (req, res) => {
   console.log('deleting user ' + req.body['username']);
+
+  //TODO
+  //delete all of the users stuff
+
+
+
+
+  //delete the actual user
   const deleted = await User.deleteOne({
     'username': req.body['username']
   }).catch(err => {
