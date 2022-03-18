@@ -25,6 +25,17 @@ class _DeletionRevalidateState extends State<DeletionRevalidate> {
         passwordController.text.trim() != "";
   }
 
+  void initState() {
+    super.initState();
+
+    usernameController.addListener(() {
+      setState(() {});
+    });
+    passwordController.addListener(() {
+      setState(() {});
+    });
+  }
+
   deleteAccount() async {
     print(FirebaseAuth.instance.currentUser);
 
@@ -82,11 +93,12 @@ class _DeletionRevalidateState extends State<DeletionRevalidate> {
         child: ListView(
           physics: const NeverScrollableScrollPhysics(),
           children: [
+            Text("Reenter credentials to delete your account"),
             Container(
               margin: const EdgeInsets.only(top: 35),
               child: LabeledTextField(
                 isPassword: false,
-                label: "Username",
+                label: "Email",
                 textEditingController: usernameController,
                 isSignUpPassword: false,
                 onSubmit: (String val) {
