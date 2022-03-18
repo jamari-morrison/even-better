@@ -8,7 +8,7 @@ class AuthService {
   MyUser? _userFromFirebase(User? user) {
     // !!!! The operand can't be null, so the condition is always true.
     if (user != null) {
-      return MyUser(user.uid);
+      return MyUser(user.uid, userEmail);
     } else {
       print('No user specified, shouldve returned null [_userFromFirebase]');
       return null;

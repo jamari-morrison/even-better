@@ -67,7 +67,6 @@ router.get('/all', async (req, res) => {
   }
 })
 
-
 router.post('/signup', async (req, res) => {
   console.log('creating user')
   console.log(req.body)

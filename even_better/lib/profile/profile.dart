@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:even_better/fb_services/auth.dart';
 import 'package:even_better/models/allusers.dart';
+import 'package:even_better/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:even_better/post/feed_screen.dart';
 import 'package:even_better/profile/helpers/update_user_api.dart';
@@ -162,13 +163,15 @@ class ProfileAppState extends State<ProfileApp> {
         //IconButton
         brightness: Brightness.dark,
         actions: <Widget>[
-          FlatButton.icon(
-              label: const Text(''),
-              icon: const Icon(Icons.admin_panel_settings),
-              onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Moderator()));
-              }),
+          MyUser.isModerator
+              ? FlatButton.icon(
+                  label: const Text(''),
+                  icon: const Icon(Icons.admin_panel_settings),
+                  onPressed: () async {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Moderator()));
+                  })
+              : Text(''),
           FlatButton.icon(
               label: const Text(''),
               icon: const Icon(Icons.settings),
