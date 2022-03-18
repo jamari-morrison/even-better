@@ -61,6 +61,7 @@ class _DetailedReportState extends State<DetailedReport> {
           String poster = message['poster'];
           String title = message['title'];
           String content = message['content'];
+          String posterid = message['posterID'];
           int likes = message['likes'];
           var tags = message[
               'tags']; //some weird type error going on here so don't pass to Forum_Post
@@ -68,7 +69,8 @@ class _DetailedReportState extends State<DetailedReport> {
             //TODO: need to obtain comments and tags at some point here
             page = DetailedForum(
                 postId: widget.id,
-                post: Forum_Post(widget.id, poster, title, content, [], []),
+                post: Forum_Post(
+                    widget.id, poster, posterid, title, content, [], []),
                 key: widget.key,
                 comments: []);
           });

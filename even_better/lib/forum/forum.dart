@@ -67,11 +67,12 @@ class _ForumListPageState extends State<ForumListPage> {
       for (var forum in reslist) {
         String id = forum['_id'];
         String tempPoster = forum['poster'];
+        String posterID = forum['posterID'];
         String tempTitle = forum['title'];
         String tempContent = forum['content'];
         /* enable tags here*/
-        Forum_Post tempFP =
-            Forum_Post(id, tempPoster, tempTitle, tempContent, [], []);
+        Forum_Post tempFP = Forum_Post(
+            id, tempPoster, posterID, tempTitle, tempContent, [], []);
         listItems.add(tempFP);
       }
       setState(() {

@@ -5,8 +5,9 @@ import 'tag.dart';
 import 'package:flutter/material.dart';
 
 class Forum_Post {
-  final String uid; // auther
+  final String postername; // auther
   final String postId;
+  final String posterid;
   // final String fid; // forum_id
   DateTime post_time = DateTime.utc(1989, DateTime.november, 9);
   // DateTime _now = DateTime.now();
@@ -16,8 +17,8 @@ class Forum_Post {
 
   List<Forum_Answer> answers;
 
-  Forum_Post(this.postId, this.uid, this.title, this.details, this.tags,
-      this.answers) {
+  Forum_Post(this.postId, this.postername, this.posterid, this.title,
+      this.details, this.tags, this.answers) {
     post_time = DateTime.now();
   }
 

@@ -66,7 +66,7 @@ class _DetailedForum extends State<DetailedForum> {
   void getComments() async {
     List<Forum_Answer> listItems = [];
     String temp = serverurl + "/comments/get/" + post.postId;
-    print(temp);
+    // print(temp);
     final response = await http.get(
       Uri.parse(serverurl + "/comments/get/" + post.postId),
       headers: <String, String>{
@@ -83,8 +83,16 @@ class _DetailedForum extends State<DetailedForum> {
         String parent = comment['parent-id'];
         String tempContent = comment['content'];
         String tempTime = comment['timestamp'];
+        String displayName = comment['commentername'];
+        // getUserData(commenter).then((val) {
+        //   var userData = val.userData;
+        //   displayName = userData["name"];
+        //   print("obtained user data! for each comment");
+        // }).catchError((err) {
+        //   print("failed to get user data :(");
+        // });
         Forum_Answer tempFA =
-            Forum_Answer(aid, commenter, tempContent, tempTime);
+            Forum_Answer(aid, commenter, tempContent, tempTime, displayName);
         listItems.add(tempFA);
       }
       setState(() {
@@ -115,7 +123,7 @@ class _DetailedForum extends State<DetailedForum> {
               children: <Widget>[
                 IconWithText(
                   Icons.person,
-                  post.uid,
+                  post.postername,
                   iconColor: Colors.black,
                 ),
                 // Text(post.tagNames),

@@ -39,6 +39,10 @@ class MyUser {
     return displayName;
   }
 
+  static getEBUid() {
+    return ebuid;
+  }
+
   Future getUserData() async {
     final uri = Uri.parse(
         'https://api.even-better-api.com/users/getUser/' + userEmail!);

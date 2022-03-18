@@ -45,5 +45,16 @@ router.get('/get/:forumid', async (req, res) => {
     }
 })
 
+router.get('/deleteByKey/:id', async (req, res) => {
+    try{
+        //currently only supports single tag queries
+        const forums = await Forum.findByIdAndDelete(req.params.id);
+        
+        res.json({message : "Successfully deleted post"});
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+})
 
 module.exports = router;

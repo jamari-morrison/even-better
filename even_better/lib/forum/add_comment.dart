@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:even_better/models/forum_post.dart';
+import 'package:even_better/models/user.dart';
 import 'package:even_better/post/feed_screen.dart';
 import 'package:even_better/profile/helpers/update_user_api.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -21,22 +22,18 @@ class _commentForumState extends State<commentForum> {
   Forum_Post forum;
   Timer? _timer;
   final user = auth.FirebaseAuth.instance.currentUser;
-  String _username = "";
-  String _name = "";
+  String? fbuid;
   String? email;
-  String? name;
+
+  String _ebuid = "";
+  String _displayname = "";
+  bool _ifModerator = false;
+  String _roseuid = "";
   _commentForumState(this.forum);
   @override
   void initState() {
     super.initState();
-    initialName();
-    getUserInfo().then((result) {
-      // print(result.avatar);
-      setState(() {
-        _name = result.name;
-      });
-    });
-    print("name is " + _name); // TODO: comment out
+    getCurrentUser();
     // EasyLoading.addStatusCallback((status) {
     //   print('EasyLoading Status $status');
     //   if (status == EasyLoadingStatus.dismiss) {
@@ -47,16 +44,18 @@ class _commentForumState extends State<commentForum> {
     // EasyLoading.removeCallbacks();
   }
 
-  initialName() async {
+  getCurrentUser() async {
     auth.User? user = auth.FirebaseAuth.instance.currentUser;
     email = user?.email;
-    if (email != null) {
-      _username = email!;
-    }
-    name = user?.displayName;
-    if (name != null) {
-      _name = name!;
-    }
+    fbuid = user?.uid;
+    _ebuid = MyUser.getEBUid();
+    _displayname = MyUser.getDisplayName();
+    _ifModerator = MyUser.getIsModerator();
+    _roseuid = MyUser.getRoseUsername();
+    print("firebase uid is " + fbuid! + " and email is " + email!);
+    print("EB uid is " + _ebuid);
+    print("displayname is " + _displayname);
+    print(_ifModerator);
   }
 
   @override
@@ -104,8 +103,8 @@ class _commentForumState extends State<commentForum> {
                           DateTime now = DateTime.now();
                           String now_string =
                               DateFormat('yyyy-MM-dd kk:mm').format(now);
-                          connect.createComment(
-                              forum.postId, text, _name, now_string); //TODO!!!!
+                          connect.createComment(forum.postId, text, _ebuid,
+                              now_string, _displayname); //TODO!!!!
                           Navigator.of(context).pop();
                           // EasyLoading.dismiss();
                         }

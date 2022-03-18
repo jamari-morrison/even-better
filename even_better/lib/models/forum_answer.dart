@@ -1,18 +1,35 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'dart:convert';
+
+import 'package:even_better/forum/connect.dart';
+import 'package:even_better/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class Forum_Answer {
   // i didnt put fid because i think it will be linked thru the forum
   final String aid; //answer_id
-  final String username; //author_id
+  final String ebuid; //author_id
   String text;
   int likes = 0;
   String timestamp;
-  Forum_Answer(this.aid, this.username, this.text, this.timestamp) {
+  String displayName = "Sth went wrong";
+
+  Forum_Answer(
+      this.aid, this.ebuid, this.text, this.timestamp, this.displayName) {
     // print('Forum Answer with uid: ${aid} [Forum_Answer]');
     // print('Forum Answer with answer: ${text} [Forum_Answer]');
+    // getUserData(ebuid).then((val) {
+    //   var userData = val.userData;
+    //   isModerator = userData["moderator"];
+    //   displayName = userData["name"];
+    //   print("obtained user data!");
+    // }).catchError((err) {
+    //   print("failed to get user data :(");
+    // });
+    // print('In Answer, display name is' + displayName);
   }
 
   void liked() {
@@ -56,7 +73,7 @@ class ForumAnswer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(answers.username),
+                      Text(answers.displayName),
                       Text(answers.timestamp),
                     ],
                   ),
