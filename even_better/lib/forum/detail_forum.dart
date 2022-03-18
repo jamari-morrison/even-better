@@ -8,6 +8,7 @@ import 'package:even_better/forum/connect.dart';
 import 'package:even_better/forum/update_forum.dart';
 import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
+import 'package:even_better/models/user.dart';
 import 'package:even_better/report_content/report_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -184,91 +185,54 @@ class _DetailedForum extends State<DetailedForum> {
         // child: Center(child: responses));
         child: responses);
 
-    var itemsInMenu = [
-      DropdownMenuItem(
-        value: 1,
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              onPressed: () async {
-                print("update");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          updateForum(post.postId, post.title, post.details)),
-                );
-              },
-              color: Colors.transparent,
-              icon: const Icon(
-                Icons.update,
-                size: 35.0,
-                color: Colors.black,
-              ),
-              padding: EdgeInsets.only(right: 10.0),
+    // var itemsInMenu = [
+
+    var item1 = DropdownMenuItem(
+      value: 1,
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            onPressed: () async {
+              print("update");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        updateForum(post.postId, post.title, post.details)),
+              );
+            },
+            color: Colors.transparent,
+            icon: const Icon(
+              Icons.update,
+              size: 35.0,
+              color: Colors.black,
             ),
-            TextButton(
-              // style: TextButton.styleFrom(primary: Colors.black),
-              onPressed: () async {
-                print("update");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          updateForum(post.postId, post.title, post.details)),
-                );
-              },
-              child: Text("Update", style: TextStyle(color: Colors.black)),
-            ),
-          ],
-        ),
+            padding: EdgeInsets.only(right: 10.0),
+          ),
+          TextButton(
+            // style: TextButton.styleFrom(primary: Colors.black),
+            onPressed: () async {
+              print("update");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        updateForum(post.postId, post.title, post.details)),
+              );
+            },
+            child: Text("Update", style: TextStyle(color: Colors.black)),
+          ),
+        ],
       ),
-      DropdownMenuItem(
-          value: 2,
-          child: Row(children: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  Widget cancelButton = TextButton(
-                    child: Text("CANCEL"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  );
-                  Widget continueButton = TextButton(
-                    child: Text("DELETE"),
-                    onPressed: () {
-                      // print("Trying to delete");
-                      deleteForum(post.postId);
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                  );
-                  // set up the AlertDialog
-                  AlertDialog alert = AlertDialog(
-                    title: Text("Are you sure?"),
-                    content: Text("This forum will be deleted permanently."),
-                    actions: [
-                      cancelButton,
-                      continueButton,
-                    ],
-                  );
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return alert;
-                    },
-                  );
-                },
-                color: Colors.transparent,
-                padding: const EdgeInsets.only(right: 10.0),
-                icon: const Icon(
-                  Icons.delete,
-                  size: 35.0,
-                  color: Colors.black,
-                )),
-            TextButton(
-              // style: TextButton.styleFrom(primary: Colors.black),r
+    );
+
+    // Visibility(
+    //     visible: (MyUser.isModerator || post.posterid == MyUser.ebuid),
+    //     child:
+    var item2 = DropdownMenuItem(
+        value: 2,
+        child: Row(children: <Widget>[
+          IconButton(
               onPressed: () async {
                 Widget cancelButton = TextButton(
                   child: Text("CANCEL"),
@@ -302,49 +266,116 @@ class _DetailedForum extends State<DetailedForum> {
                   },
                 );
               },
-              child: Text("Delete", style: TextStyle(color: Colors.black)),
-            ),
-          ])),
-      DropdownMenuItem(
-          value: 3,
-          child: Row(children: <Widget>[
-            IconButton(
-              onPressed: () async {
-                // print("report content");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ReportContent(
-                            contentId: post.postId,
-                            contentType: "forums",
-                          )),
-                );
-              },
               color: Colors.transparent,
+              padding: const EdgeInsets.only(right: 10.0),
               icon: const Icon(
-                Icons.report,
+                Icons.delete,
                 size: 35.0,
                 color: Colors.black,
-              ),
-              padding: EdgeInsets.only(right: 10.0),
+              )),
+          TextButton(
+            // style: TextButton.styleFrom(primary: Colors.black),r
+            onPressed: () async {
+              Widget cancelButton = TextButton(
+                child: Text("CANCEL"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              );
+              Widget continueButton = TextButton(
+                child: Text("DELETE"),
+                onPressed: () {
+                  // print("Trying to delete");
+                  deleteForum(post.postId);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              );
+              // set up the AlertDialog
+              AlertDialog alert = AlertDialog(
+                title: Text("Are you sure?"),
+                content: Text("This forum will be deleted permanently."),
+                actions: [
+                  cancelButton,
+                  continueButton,
+                ],
+              );
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return alert;
+                },
+              );
+            },
+            child: Text("Delete", style: TextStyle(color: Colors.black)),
+          ),
+        ]));
+    var item3 = DropdownMenuItem(
+        value: 3,
+        child: Row(children: <Widget>[
+          IconButton(
+            onPressed: () async {
+              // print("report content");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReportContent(
+                          contentId: post.postId,
+                          contentType: "forums",
+                        )),
+              );
+            },
+            color: Colors.transparent,
+            icon: const Icon(
+              Icons.report,
+              size: 35.0,
+              color: Colors.black,
             ),
-            TextButton(
-              // style: TextButton.styleFrom(primary: Colors.black),
-              onPressed: () async {
-                // print("report content");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ReportContent(
-                            contentId: post.postId,
-                            contentType: "forums",
-                          )),
-                );
-              },
-              child: Text("Report", style: TextStyle(color: Colors.black)),
+            padding: EdgeInsets.only(right: 10.0),
+          ),
+          TextButton(
+            // style: TextButton.styleFrom(primary: Colors.black),
+            onPressed: () async {
+              // print("report content");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReportContent(
+                          contentId: post.postId,
+                          contentType: "forums",
+                        )),
+              );
+            },
+            child: Text("Report", style: TextStyle(color: Colors.black)),
+          ),
+        ]));
+    var itemReport = DropdownMenuItem(
+        value: 3,
+        child: Row(children: <Widget>[
+          IconButton(
+            onPressed: () async {
+              // print("report content");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReportContent(
+                          contentId: post.postId,
+                          contentType: "forums",
+                        )),
+              );
+            },
+            color: Colors.transparent,
+            icon: const Icon(
+              Icons.report,
+              size: 35.0,
+              color: Colors.white,
             ),
-          ]))
-    ];
+            padding: EdgeInsets.only(right: 10.0),
+          ),
+        ]));
+    // ];
+    var itemsInMenu = [item1, item2, item3];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Forum",
@@ -353,18 +384,24 @@ class _DetailedForum extends State<DetailedForum> {
               fontSize: 30.0,
             )),
         actions: <Widget>[
-          DropdownButtonHideUnderline(
-              // alignedDropdown: true,
-              // padding: EdgeInsets.only(right: 10.0),
-              child: DropdownButton(
-                  icon: const Icon(
-                    Icons.menu,
-                    size: 35.0,
-                    color: Colors.white,
-                  ),
-                  items: itemsInMenu,
-                  // onTap: () => print("Menu pressed"),
-                  onChanged: (value) {})),
+          Visibility(
+              visible: !(MyUser.isModerator || post.posterid == MyUser.ebuid),
+              child: itemReport),
+          Visibility(
+            visible: (MyUser.isModerator || post.posterid == MyUser.ebuid),
+            child: DropdownButtonHideUnderline(
+                // alignedDropdown: true,
+                // padding: EdgeInsets.only(right: 10.0),
+                child: DropdownButton(
+                    icon: const Icon(
+                      Icons.menu,
+                      size: 35.0,
+                      color: Colors.white,
+                    ),
+                    items: itemsInMenu,
+                    // onTap: () => print("Menu pressed"),
+                    onChanged: (value) {})),
+          ),
           IconButton(
             onPressed: () async {
               // print("add comments");
