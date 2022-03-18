@@ -35,12 +35,10 @@ class _DirectMessageState extends State<DirectMessage> {
   List<types.Message> _messages = [];
   final _user = const types.User(id: 'currentStudent');
   final _recipient = const types.User(id: 'recipient');
-  Socket socket = io(
-      'https://api.even-better-api.com',
-      <String, dynamic>{
-        'transports': ['websocket'],
-        'autoConnect': false
-      });
+  Socket socket = io('https://api.even-better-api.com', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': false
+  });
   Timer? _timer;
 
   // IO.Socket socket = IO.io('http://10.0.2.2:3000', OptionBuilder()
@@ -50,9 +48,7 @@ class _DirectMessageState extends State<DirectMessage> {
   //     .build());
 
   void getMessageHistory() async {
-    final uri = Uri.https(
-        'api.even-better-api.com',
-        '/messages/conversation',
+    final uri = Uri.https('api.even-better-api.com', '/messages/conversation',
         {'sender': widget.currentStudent, 'recipient': widget.recipient});
 
     final response = await http.get(uri, headers: <String, String>{

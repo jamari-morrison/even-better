@@ -35,7 +35,7 @@ class MySearchPage extends StatefulWidget {
 //   ];
 class _MySearchPageState extends State<MySearchPage> {
   List<UserI> _users = <UserI>[];
-  Timer? _timer;
+  // Timer? _timer;
   String _username = "";
   String? email;
   List<String> friends = <String>[];
