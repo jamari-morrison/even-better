@@ -8,10 +8,8 @@ import 'broadcast_message.dart';
 import 'manage_polls.dart';
 class FacultyHomescreen extends StatefulWidget {
   const FacultyHomescreen({
-    required this.currentStudent,
     Key? key,
   }) : super(key: key);
-  final String currentStudent;
 
   @override
   State<FacultyHomescreen> createState() => _FacultyHomescreenState();

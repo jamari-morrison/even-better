@@ -8,8 +8,18 @@ import 'package:http/http.dart' as http;
 
 class EditPoll extends StatefulWidget {
   const EditPoll({
+    required this.isEdit,
+    required this.startingOptions,
+    required this.startingQuestion,
+    required this.startingQuota,
+    required this.startingPriority,
     Key? key,
   }) : super(key: key);
+  final bool isEdit;
+  final List<String> startingOptions;
+  final String startingQuota;
+  final String startingPriority;
+  final String startingQuestion;
 
   @override
   State<EditPoll> createState() => _EditPollState();
@@ -18,54 +28,125 @@ class EditPoll extends StatefulWidget {
 
 class _EditPollState extends State<EditPoll> {
   List<Widget> itemsData = [];
-  List<dynamic> itemStatuses = [];
   Timer? _timer;
   int  _screen = 0;
+  final _questionController = TextEditingController();
+  final _quotaController = TextEditingController();
+  final _priorityController = TextEditingController();
+  List<TextEditingController> optionControllers = [];
 
-  void getItemData() {
-    List<Widget> listItems = [];
-    for(Widget w in itemsData){
-      listItems.add(w);
+  void initEdit(){
+    //TODO: fill out these two variables
+    //TODO: after that, last frontend-only thing to do is to enable notifications
+    //TODO: then it's just endpoint integration :D
 
-    }
-
-      int itemCount = listItems.length+2;
-    String itemStr = 'Option '+itemCount.toString();
-      listItems.add(TextFormField(
+    List<Widget> oldOptions = [];
+    List<TextEditingController> oldOptionControllers = [];
+    int i = 1;
+    for(String o in widget.startingOptions){
+      String itemStr = "Option "+i.toString();
+      TextEditingController tempController = TextEditingController();
+      oldOptionControllers.add(tempController);
+      tempController.text = o;
+      oldOptions.add(TextFormField(
+        controller: tempController,
         decoration:  InputDecoration(
           border: UnderlineInputBorder(),
           labelText: itemStr,
         ),
-      ));
+      ) );
+    }
+
+    setState(() {
+      _questionController.text = widget.startingQuestion;
+      _quotaController.text = widget.startingQuota;
+      _priorityController.text = widget.startingPriority;
+      optionControllers= oldOptionControllers;
+      itemsData=oldOptions;
+    });
+  }
+  void getItemData() {
+
+      int itemCount = itemsData.length+1;
+    String itemStr = 'Option '+itemCount.toString();
+    final newController = TextEditingController();
+      //listItems.add(
+          Widget newField = TextFormField(
+        controller: newController,
+        decoration:  InputDecoration(
+          border: UnderlineInputBorder(),
+          labelText: itemStr,
+        ),
+      );
+
+      //);
 
 
     setState(() {
-      itemsData = listItems;
-      //print(listItems);
+      //itemsData = listItems;
+      itemsData.add(newField);
+      optionControllers.add(newController);
+
     });
   }
 
+  void removeItemData() {
+    List<Widget> listItems = [];
+    for(Widget w in itemsData){
+      listItems.add(w);
+    }
+    if(listItems.length != 0){
+      listItems.removeLast();
+    }
+    setState(() {
+      itemsData = listItems;
+    });
+  }
+
+  Future<void>  sendData() async {
+    List<String> options = [];
+
+    for(TextEditingController tc in optionControllers){
+      options.add(tc.text);
+    }
+    print(jsonEncode(<String, String>{
+      'question': _questionController.text,
+      'priority': _priorityController.text,
+      'options': options.toString(),
+      'quota': _quotaController.text,
+    }));
+    String url;
+    if(widget.isEdit) url = 'https://api.even-better-api.com/popups/edit';
+      else url = 'https://api.even-better-api.com/popups/create';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'question': _questionController.text,
+        'priority': _priorityController.text,
+        'options': options.toString(),
+        'quota': _quotaController.text,
+      }),
+    );
+    print(response.body);
+  }
    @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         body: _screen == 0 ? Container(
             child: Column(
               children: [
                 Text("Create New Poll"),
             TextFormField(
+              controller: _questionController,
             decoration: const InputDecoration(
             border: UnderlineInputBorder(),
           labelText: 'Poll question',
         ),
     )
                 ,
-                TextFormField(
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Option 1',
-                  ),
-                ),
                 Expanded(
                     child: ListView.builder(
                         itemCount: itemsData.length,
@@ -77,7 +158,10 @@ class _EditPollState extends State<EditPoll> {
                         })),
                 ElevatedButton(
                     child: Text("Add Option"),
-                    onPressed: () async {}),
+                    onPressed: () async {getItemData();}),
+                ElevatedButton(
+                    child: Text("Remove Option"),
+                    onPressed: () async {removeItemData();}),
                 ElevatedButton(
                     child: Text("Next"),
                     onPressed: () async {
@@ -94,6 +178,7 @@ class _EditPollState extends State<EditPoll> {
               children: [
                 Text("Create New Poll"),
                 TextFormField(
+                  controller: _priorityController,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Priority (range: 1 - 1000)',
@@ -102,6 +187,7 @@ class _EditPollState extends State<EditPoll> {
                 )
                 ,
                 TextFormField(
+                  controller: _quotaController,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Quota',
@@ -109,9 +195,16 @@ class _EditPollState extends State<EditPoll> {
                   ),
                 ),
                 ElevatedButton(
-                    child: Text("Create"),
+                    child: Text("go back"),
                     onPressed: () async {
-                      //TODO: put api sending logic hete
+                      setState(() {
+                        _screen=0;
+                      });
+                    }),
+                ElevatedButton(
+                    child: Text(widget.isEdit ? "Update" : "Create"),
+                    onPressed: () async {
+                      sendData();
                       Navigator.pop(context);
                     })
 
@@ -123,6 +216,10 @@ class _EditPollState extends State<EditPoll> {
   @override
   void initState() {
     super.initState();
+    if(widget.isEdit){
+      initEdit();
+    }
+    else getItemData();
     EasyLoading.addStatusCallback((status) {
       print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {

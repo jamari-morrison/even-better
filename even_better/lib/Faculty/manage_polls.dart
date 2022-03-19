@@ -5,7 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'edit_poll.dart';
-
+import 'specific_poll.dart';
 class ManagePolls extends StatefulWidget {
   const ManagePolls({
     Key? key,
@@ -17,29 +17,62 @@ class ManagePolls extends StatefulWidget {
 }
 
 class _ManagePollsState extends State<ManagePolls> {
-  List<Widget> itemsData = [];
-  List<dynamic> itemStatuses = [];
+  List<Widget> pollWidgets = [];
+  List<dynamic> pollData = [];
   Timer? _timer;
 
-  void getItemData() {
+
+  void getPollData(){
+    setState(() {
+      pollData.add({
+        'question': 'Test question',
+        'optionQuantities': {
+          'Option1': '150',
+          'Option2': '50'
+        },
+        'currentAnswers': '200',
+        'quota': '300',
+        'priority': '1'
+      });
+    });
+
+  }
+  void createPollWidgets() {
     List<Widget> listItems = [];
 
-    for (var year = 2020; year <= 2025; year++) {
+    for (dynamic d in pollData) {
+      print('look here');
+      print(pollData);
       listItems.add(ElevatedButton(
-          child: Text(year.toString()),
+          child: Text(d['question'].toString()),
           onPressed: () async {
+            _timer?.cancel();
+            await EasyLoading.show(
+              status: 'loading...',
+              maskType: EasyLoadingMaskType.black,
+            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SpecificPoll(question: d['question'], optionQuantities: d['optionQuantities'],
+                            currentAnswers: d['currentAnswers'],
+                            quota: d['quota'], priority: d['priority'],)));
+            EasyLoading.dismiss();
           }));
-    }
 
+
+
+    }
     setState(() {
-      itemsData = listItems;
+      pollWidgets = listItems;
       //print(listItems);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    getItemData();
+
 
     return Scaffold(
         body: Container(
@@ -57,18 +90,18 @@ class _ManagePollsState extends State<ManagePolls> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditPoll()));
+                              builder: (context) => EditPoll(isEdit: false, startingOptions: [], startingPriority: '', startingQuestion: '', startingQuota: '')));
                       EasyLoading.dismiss();
                     }),
                 Text("Manage Existing Polls"),
                 Expanded(
                     child: ListView.builder(
-                        itemCount: itemsData.length,
+                        itemCount: pollWidgets.length,
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           // print("printing");
                           // print(itemsData);
-                          return itemsData[index];
+                          return pollWidgets[index];
                         }))
               ],
             )));
@@ -77,6 +110,8 @@ class _ManagePollsState extends State<ManagePolls> {
   @override
   void initState() {
     super.initState();
+    getPollData();
+    createPollWidgets();
     EasyLoading.addStatusCallback((status) {
       print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {

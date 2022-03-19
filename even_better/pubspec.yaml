@@ -54,7 +54,7 @@ dependencies:
   url_launcher: ^6.0.12
   intl: ^0.17.0
   search_page: ^2.0.0+1
-  onesignal_flutter: ^3.2.8
+  #onesignal_flutter: 3.2.7
 
 dev_dependencies:
   flutter_test:

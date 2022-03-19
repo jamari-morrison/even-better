@@ -23,7 +23,7 @@ import 'package:even_better/post/view_post_screen.dart';
 import 'package:like_button/like_button.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import '../Faculty/faculty_homescreen.dart';
 //https://stackoverflow.com/questions/50945526/flutter-get-data-from-a-list-of-json
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -784,7 +784,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) =>
-                                      SelectUser(currentStudent: 'morrisjj'),
+                                      //SelectUser(currentStudent: 'morrisjj'),
+                                      FacultyHomescreen()
                                 ),
                               );
                               // EasyLoading.dismiss();
