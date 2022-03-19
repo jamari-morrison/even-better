@@ -33,7 +33,7 @@ class _SpecificPollState extends State<SpecificPoll> {
   List<dynamic> itemStatuses = [];
   Timer? _timer;
   List<String> optionList = [];
-
+  int _screen = 0;
   void initOptionList(){
     List<String> tempList = [];
     for(String s in widget.optionQuantities.keys) tempList.add(s);
@@ -51,7 +51,8 @@ class _SpecificPollState extends State<SpecificPoll> {
        String? currString = widget.optionQuantities[option];
        if(currString != null){
          int currAnswers = int.parse(currString);
-         double currPercentDouble = currAnswers/totalResponses;
+
+         double currPercentDouble = totalResponses == 0 ? 0 : currAnswers/totalResponses;
          int currPercent = (currPercentDouble*100).round();
          String thisOptionData = option + " - "+ currPercent.toString()+"%";
 
@@ -78,12 +79,17 @@ class _SpecificPollState extends State<SpecificPoll> {
     });
   }
 
+  void delete(){
+    //TODO:
+    print('implement delete please <3');
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body:  Container(
-            child: Column(
+             child: _screen == 0 ? Column(
               children: [
                 Text("Manage Poll - " + widget.question),
                 Text('Total responses: ' + widget.currentAnswers),
@@ -113,10 +119,28 @@ class _SpecificPollState extends State<SpecificPoll> {
                           MaterialPageRoute(
                               builder: (context) => EditPoll(isEdit: true, startingOptions: optionList, startingPriority: widget.priority, startingQuestion: widget.question, startingQuota: widget.quota)));
                       EasyLoading.dismiss();                    }),
+                ElevatedButton(
+                    child: Text("Delete"),
+                    onPressed: () async {
+                        delete();
+                        _screen = 1;
+                                      }),
 
 
               ],
-            ))
+            ) :  Column(
+        children: [
+        Text("Poll has been deleted."),
+
+      ElevatedButton(
+          child: Text("Acknowledge"),
+          onPressed: () async {
+            Navigator.pop(context);
+          }),
+
+
+      ],
+    ))
     );
   }
 

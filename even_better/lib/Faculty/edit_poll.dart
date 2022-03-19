@@ -204,6 +204,7 @@ class _EditPollState extends State<EditPoll> {
                 ElevatedButton(
                     child: Text(widget.isEdit ? "Update" : "Create"),
                     onPressed: () async {
+                      print('creating');
                       sendData();
                       Navigator.pop(context);
                     })
