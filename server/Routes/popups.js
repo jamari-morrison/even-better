@@ -127,9 +127,19 @@ router.get('/allQuestions', async (req, res) => {
     try{
         console.log('made it to getting all questions')
         const questions = await PopupQuestion.find();
-
-        res.json(questions);
+        const questionsParsed = JSON.parse(JSON.stringify(questions));
+        for(i in questions){
+          var tempObj = {};
+          for(j in questions[i].optionQuantities){
+            tempObj[questions[i].optionQuantities[j].option] = questions[i].optionQuantities[j].count;
+          }
+          console.log(tempObj)
+          questionsParsed[i].optionQuantities = tempObj;
+        }
+        console.log(questions);
+        res.json(questionsParsed);
     } catch(err){
+      console.log(err)
         res.json({message: "Error!"})
     }
 })
@@ -150,12 +160,19 @@ router.post('/create', async (req, res) => {
   console.log('creating popup');
   const optionQuantities = [];
   
-  for(input in req.body.options)optionQuantities.push({input: 0});
+  for(input in req.body.options){
+    console.log(input);
+    var newObj = {};
+    newObj['option'] = req.body.options[input];
+    newObj['count'] = 0;
+    optionQuantities.push(newObj);
+  }
+  console.log(optionQuantities)
 
   const popup = new PopupQuestion({
       "question": req.body.question,
-      "priority": req.body.priority,
-      "quota": req.body.quota,
+      "priority": parseInt(req.body.priority),
+      "quota": parseInt(req.body.quota),
       "options": req.body.options,
       "optionQuantities": optionQuantities,
       "currentAnswers": 0,
@@ -194,7 +211,7 @@ console.log(updateResult)
 
 })
 
-router.post('delete', async (req, res) => {
+router.post('/delete', async (req, res) => {
   const deleteResult = await PopupQuestion.deleteOne({"_id": req.body['_id']})
   .then(msg =>{
     res.json({

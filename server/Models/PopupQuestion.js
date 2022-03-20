@@ -8,7 +8,7 @@ const PopupQuestionschema = mongoose.Schema(
         "priority": Number,
         "quota": Number,
         "options": [String],
-        "optionQuantities": [{String: Number}],
+        "optionQuantities": [{"option": String, "count": Number}],
         "currentAnswers": Number
         
     })
