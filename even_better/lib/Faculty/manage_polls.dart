@@ -22,19 +22,31 @@ class _ManagePollsState extends State<ManagePolls> {
   Timer? _timer;
 
 
-  void getPollData(){
-    setState(() {
-      pollData.add({
-        'question': 'Test question',
-        'optionQuantities': {
-          'Option1': '150',
-          'Option2': '50'
-        },
-        'currentAnswers': '200',
-        'quota': '300',
-        'priority': '1'
-      });
+  void getPollData () async{
+    final uri =
+    Uri.http('10.0.2.2:3000', 'popups/allQuestions');
+
+    final response = await http.get(uri, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
     });
+
+
+    List<dynamic> responseList = jsonDecode(response.body);
+    print(responseList);
+    setState(() {
+      // pollData.add({
+      //   'question': 'Test question',
+      //   'optionQuantities': {
+      //     'Option1': '150',
+      //     'Option2': '50'
+      //   },
+      //   'currentAnswers': '200',
+      //   'quota': '300',
+      //   'priority': '1'
+      // });
+      pollData=responseList;
+    });
+    createPollWidgets();
 
   }
   void createPollWidgets() {
@@ -56,8 +68,8 @@ class _ManagePollsState extends State<ManagePolls> {
                 MaterialPageRoute(
                     builder: (context) =>
                         SpecificPoll(question: d['question'], optionQuantities: d['optionQuantities'],
-                            currentAnswers: d['currentAnswers'],
-                            quota: d['quota'], priority: d['priority'],)));
+                            currentAnswers: d['currentAnswers'].toString(),
+                            quota: d['quota'].toString(), priority: d['priority'].toString(), id: d['_id'])));
             EasyLoading.dismiss();
           }));
 
@@ -90,7 +102,7 @@ class _ManagePollsState extends State<ManagePolls> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditPoll(isEdit: false, startingOptions: [], startingPriority: '', startingQuestion: '', startingQuota: '')));
+                              builder: (context) => EditPoll(isEdit: false, startingOptions: [], startingPriority: '', startingQuestion: '', startingQuota: '', id: '')));
                       EasyLoading.dismiss();
                     }),
                 Text("Manage Existing Polls"),
@@ -108,10 +120,9 @@ class _ManagePollsState extends State<ManagePolls> {
   }
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     getPollData();
-    createPollWidgets();
     EasyLoading.addStatusCallback((status) {
       print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {

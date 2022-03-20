@@ -13,6 +13,7 @@ class EditPoll extends StatefulWidget {
     required this.startingQuestion,
     required this.startingQuota,
     required this.startingPriority,
+    required this.id,
     Key? key,
   }) : super(key: key);
   final bool isEdit;
@@ -20,6 +21,7 @@ class EditPoll extends StatefulWidget {
   final String startingQuota;
   final String startingPriority;
   final String startingQuestion;
+  final String id;
 
   @override
   State<EditPoll> createState() => _EditPollState();
@@ -114,10 +116,14 @@ class _EditPollState extends State<EditPoll> {
       'priority': _priorityController.text,
       'options': options.toString(),
       'quota': _quotaController.text,
+      '_id': widget.id,
     }));
     String url;
-    if(widget.isEdit) url = 'https://api.even-better-api.com/popups/edit';
-      else url = 'https://api.even-better-api.com/popups/create';
+    // if(widget.isEdit) url = 'https://api.even-better-api.com/popups/edit';
+    //   else url = 'https://api.even-better-api.com/popups/create';
+    if(widget.isEdit) url = 'http://10.0.2.2:3000/popups/edit';
+    else url = 'http://10.0.2.2:3000/popups/create';
+
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -126,8 +132,9 @@ class _EditPollState extends State<EditPoll> {
       body: jsonEncode(<String, String>{
         'question': _questionController.text,
         'priority': _priorityController.text,
-        'options': options.toString(),
+        'options': jsonEncode(options),
         'quota': _quotaController.text,
+        '_id': widget.id,
       }),
     );
     print(response.body);

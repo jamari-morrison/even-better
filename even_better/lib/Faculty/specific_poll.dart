@@ -13,14 +13,16 @@ class SpecificPoll extends StatefulWidget {
     required this. quota,
     required this.question,
     required this.priority,
+    required this.id,
     Key? key,
   }) : super(key: key);
 
-  final Map<String, String> optionQuantities;
+  final dynamic optionQuantities;
   final String currentAnswers;
   final String quota;
   final String question;
   final String priority;
+  final String id;
 
 
   @override
@@ -48,16 +50,17 @@ class _SpecificPollState extends State<SpecificPoll> {
     for(String option in widget.optionQuantities.keys){
        print('now here');
        print(widget.optionQuantities[option]);
-       String? currString = widget.optionQuantities[option];
-       if(currString != null){
-         int currAnswers = int.parse(currString);
+       //String? currString = widget.optionQuantities[option];
+      // if(currString != null){
+         //String tempStr = currString;
+         int currAnswers = widget.optionQuantities[option];//int.parse(tempStr);
 
          double currPercentDouble = totalResponses == 0 ? 0 : currAnswers/totalResponses;
          int currPercent = (currPercentDouble*100).round();
          String thisOptionData = option + " - "+ currPercent.toString()+"%";
 
          listItems.add(Text(thisOptionData));
-       }
+       //}
 
     }
 
@@ -79,9 +82,19 @@ class _SpecificPollState extends State<SpecificPoll> {
     });
   }
 
-  void delete(){
+  void delete() async{
     //TODO:
-    print('implement delete please <3');
+    String url = 'http://10.0.2.2:3000/popups/delete';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        '_id': widget.id,
+      }),
+    );
+    print(response);
   }
 
 
@@ -117,13 +130,15 @@ class _SpecificPollState extends State<SpecificPoll> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditPoll(isEdit: true, startingOptions: optionList, startingPriority: widget.priority, startingQuestion: widget.question, startingQuota: widget.quota)));
+                              builder: (context) => EditPoll(isEdit: true, startingOptions: optionList, startingPriority: widget.priority, startingQuestion: widget.question, startingQuota: widget.quota, id: widget.id)));
                       EasyLoading.dismiss();                    }),
                 ElevatedButton(
                     child: Text("Delete"),
                     onPressed: () async {
                         delete();
-                        _screen = 1;
+                        setState(() {
+                          _screen = 1;
+                        });
                                       }),
 
 

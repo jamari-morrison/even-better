@@ -54,8 +54,7 @@ router.get('/nextQuestion', async (req, res) => {
         }
         
         
-        res.json({message: 'no question'});
-        
+        res.json({message: 'no question'});        
     } catch(err){
         console.log(err)
         res.json({message: "Error!"})
@@ -99,12 +98,12 @@ router.post('/answer', async (req, res) => {
               })
             console.log(updateResult)
         }
-
+        const selections = req.body.answer;
         const newAnswer = new PopupAnswer(
             {questionID: req.body.questionID,
             answerer: req.body.answerer,
             timestamp: Date.now(),
-            answer: JSON.parse(req.body.answer)
+            answer: selections
             }
         );
             console.log(newAnswer)
@@ -117,6 +116,18 @@ router.post('/answer', async (req, res) => {
             message: err
           })
         })
+        console.log('start new logic -------');
+        
+      const questionToUpdate = await PopupQuestion.findOne({"_id": req.body.questionID});
+      for(i in questionToUpdate.optionQuantities){
+        if(selections.includes(questionToUpdate.optionQuantities[i].option)) questionToUpdate.optionQuantities[i].count++;
+      }
+      console.log(questionToUpdate);
+
+      const updatedQuestion = await PopupQuestion.updateOne({"_id": req.body.questionID}, questionToUpdate);
+      console.log(updatedQuestion);
+
+
     } catch(err){
         console.log(err);
         res.json({message: "Error!"})
@@ -188,16 +199,39 @@ router.post('/create', async (req, res) => {
 })
 
 router.post('/edit', async (req, res) => {
+  const newOptions = JSON.parse(req.body.options)
+  //const newOptions = req.body.options;
+  const toUpdate =  await PopupQuestion.findOne({"_id": req.body['_id']});
+  const oldOptions = [];
+  for(i in toUpdate.optionQuantities){
+    //create list of old options
+    oldOptions.push(toUpdate.optionQuantities[i].option)
+
+  }
+
+  //add new options to the list
+  for(i in newOptions){
+    if(!oldOptions.includes(newOptions[i])){
+      const newObj = {
+        "option": newOptions[i],
+        "count": 0
+      }
+      toUpdate.optionQuantities.push(newObj);
+    }
+  }
+
+  //update the rest of the new question's vals
+  toUpdate.question = req.body.question;
+  toUpdate.priority = req.body.priority;
+  toUpdate.quota = req.body.quota;
+  toUpdate.options = newOptions;
+
+
 const updateResult = await PopupQuestion.updateOne({"_id": req.body['_id']}, 
-{
-  "question": req.body.question,
-  "priority": req.body.priority,
-  "quota": req.body.quota,
-  "options": req.body.options,
-}
-).then(res =>{
+toUpdate
+).then(sol =>{
   res.json({
-    message: err
+    message: sol
   })
 })
 .catch(err => {
@@ -212,6 +246,7 @@ console.log(updateResult)
 })
 
 router.post('/delete', async (req, res) => {
+  console.log('deleting '+req.body['_id']);
   const deleteResult = await PopupQuestion.deleteOne({"_id": req.body['_id']})
   .then(msg =>{
     res.json({
