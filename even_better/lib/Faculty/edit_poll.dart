@@ -112,7 +112,7 @@ class _EditPollState extends State<EditPoll> {
     for(TextEditingController tc in optionControllers){
       options.add(tc.text);
     }
-    
+
     print(jsonEncode(<String, String>{
       'question': _questionController.text,
       'priority': _priorityController.text,
@@ -178,7 +178,15 @@ class _EditPollState extends State<EditPoll> {
                       setState(() {
 
                       });
-                    })
+                    }),
+            ElevatedButton(
+                child: Text("Cancel"),
+                onPressed: () async {
+                  int count = 0;
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
+                })
+
+
 
               ],
             )):
@@ -215,8 +223,8 @@ class _EditPollState extends State<EditPoll> {
                     onPressed: () async {
                       print('creating');
                       sendData();
-                      Navigator.pop(context);
-                    })
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);                    })
 
               ],
             ))

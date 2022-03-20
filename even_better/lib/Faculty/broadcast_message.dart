@@ -43,7 +43,11 @@ class _BroadcastMessageState extends State<BroadcastMessage> {
                 Text("The notification has been sent to all students!"),
                 ElevatedButton(
                     child: Text("Acknowledge"),
-                    onPressed: () async {Navigator.pop(context);})
+                    onPressed: () async {
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
+
+                    })
 
               ],
             )) : Container(

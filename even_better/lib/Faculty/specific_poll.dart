@@ -150,8 +150,8 @@ class _SpecificPollState extends State<SpecificPoll> {
       ElevatedButton(
           child: Text("Acknowledge"),
           onPressed: () async {
-            Navigator.pop(context);
-          }),
+            int count = 0;
+            Navigator.of(context).popUntil((_) => count++ >= 2);          }),
 
 
       ],
