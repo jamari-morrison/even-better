@@ -19,7 +19,20 @@ class _BroadcastMessageState extends State<BroadcastMessage> {
 
   Timer? _timer;
   bool _hasSent = false;
+  final _messageController = TextEditingController();
 
+  void sendMessage() async{
+    String url = 'http://10.0.2.2:3000/notifications/send';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'messageText': _messageController.text,
+      }),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +52,7 @@ class _BroadcastMessageState extends State<BroadcastMessage> {
                 Text("Broadcast Message"),
                 Text("Send a notification to all students on the app"),
                 TextFormField(
+                  controller: _messageController,
                   decoration:  InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: "MessageText",
@@ -48,6 +62,7 @@ class _BroadcastMessageState extends State<BroadcastMessage> {
                     child: Text("Send"),
                     onPressed: () async {
                       _hasSent = true;
+                      sendMessage();
                       setState(() {
 
                       });

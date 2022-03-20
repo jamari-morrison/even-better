@@ -5,7 +5,7 @@ const router = express.Router();
 const pushNotificationController = require('../controllers/push-notification.controllers')
 
 router.post('/send', async (req, res) => {
-    
+    console.log('sending '+req.body.messageText)
     pushNotificationController.SendNotification(req.body.messageText)
     res.json({msg: 'did not error'})
 });
