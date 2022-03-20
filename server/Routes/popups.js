@@ -170,11 +170,12 @@ router.get('/allAnswers', async (req, res) => {
 router.post('/create', async (req, res) => {
   console.log('creating popup');
   const optionQuantities = [];
+  const newOptions = JSON.parse(req.body.options);
   
-  for(input in req.body.options){
+  for(input in newOptions){
     console.log(input);
     var newObj = {};
-    newObj['option'] = req.body.options[input];
+    newObj['option'] = newOptions[input];
     newObj['count'] = 0;
     optionQuantities.push(newObj);
   }
@@ -184,7 +185,7 @@ router.post('/create', async (req, res) => {
       "question": req.body.question,
       "priority": parseInt(req.body.priority),
       "quota": parseInt(req.body.quota),
-      "options": req.body.options,
+      "options": newOptions,
       "optionQuantities": optionQuantities,
       "currentAnswers": 0,
   })

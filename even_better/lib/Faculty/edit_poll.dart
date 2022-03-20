@@ -93,15 +93,16 @@ class _EditPollState extends State<EditPoll> {
   }
 
   void removeItemData() {
-    List<Widget> listItems = [];
-    for(Widget w in itemsData){
-      listItems.add(w);
-    }
-    if(listItems.length != 0){
-      listItems.removeLast();
-    }
+    // List<Widget> listItems = [];
+    // for(Widget w in itemsData){
+    //   listItems.add(w);
+    // }
+    // if(listItems.length != 0){
+    //   listItems.removeLast();
+    // }
     setState(() {
-      itemsData = listItems;
+      itemsData.removeLast();
+      optionControllers.removeLast();
     });
   }
 
@@ -111,6 +112,7 @@ class _EditPollState extends State<EditPoll> {
     for(TextEditingController tc in optionControllers){
       options.add(tc.text);
     }
+    
     print(jsonEncode(<String, String>{
       'question': _questionController.text,
       'priority': _priorityController.text,
