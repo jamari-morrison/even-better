@@ -4,7 +4,7 @@ const pushNoticifationService = require("../services/push-notification.service")
 exports.SendNotification = (req, res, next) => {
     var message = {
         app_id: ONE_SIGNAL_CONFIG.APP_ID,
-        contents: {en: "Test push notification"},
+        contents: {en: req},
         included_segments: ['All'],
         content_available: true,
         small_icon: 'ic_notification_icon',

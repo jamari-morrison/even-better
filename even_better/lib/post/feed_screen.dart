@@ -22,6 +22,7 @@ import 'package:even_better/post/addpost.dart';
 import 'package:even_better/post/view_post_screen.dart';
 import 'package:like_button/like_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'dart:convert';
 import '../Faculty/faculty_homescreen.dart';
 //https://stackoverflow.com/questions/50945526/flutter-get-data-from-a-list-of-json
@@ -85,6 +86,7 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void initState() {
     super.initState();
+    initPlatform();
     checkIfShouldPopup();
     initialName();
     getUserInfo().then((result) {
@@ -588,7 +590,15 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
     );
   }
+  Future<void> initPlatform() async{
+    print('entering onesignal');
 
+    await OneSignal.shared.setAppId("68f951ef-3a62-4c97-89dc-7ef962b29bc6");
+    await OneSignal.shared.getDeviceState().then((value) => {
+      print(value?.userId)
+    });
+    print('exiting onesignal');
+  }
   Future<bool> onLikeButtonTapped(bool isLiked) async {
     /// send your request here
     // final bool success= await sendRequest();

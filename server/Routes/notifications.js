@@ -4,7 +4,11 @@ const express = require('express');
 const router = express.Router();
 const pushNotificationController = require('../controllers/push-notification.controllers')
 
-router.post('/send', pushNotificationController.SendNotification);
+router.post('/send', async (req, res) => {
+    
+    pushNotificationController.SendNotification(req.body.messageText)
+    res.json({msg: 'did not error'})
+});
 
 
 //need to be able to create a notification and store it in the database
