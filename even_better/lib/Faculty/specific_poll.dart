@@ -112,7 +112,7 @@ class _SpecificPollState extends State<SpecificPoll> {
         Padding(
           padding: EdgeInsets.fromLTRB(5, 20, 5, 10),
           child:
-                Text('Total responses: ' + widget.currentAnswers,style: TextStyle(fontSize: 15))),
+                Text('Total response  s: ' + widget.currentAnswers,style: TextStyle(fontSize: 15))),
                 Text('Quota: '+ widget.quota)
                 ,
 
@@ -153,9 +153,11 @@ class _SpecificPollState extends State<SpecificPoll> {
 
 
               ],
-            ) :  Column(
+            ) :  Center(child: Column(
         children: [
-        Text("Poll has been deleted."),
+             Padding(
+             padding: EdgeInsets.fromLTRB(0, 100, 0, 20),
+               child:Text("Poll has been deleted.", style: TextStyle(fontSize: 20),)),
 
       ElevatedButton(
           child: Text("Acknowledge"),
@@ -165,7 +167,7 @@ class _SpecificPollState extends State<SpecificPoll> {
 
 
       ],
-    ))
+    )))
     );
   }
 
