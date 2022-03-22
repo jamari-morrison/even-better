@@ -36,13 +36,15 @@ class _FeedScreenState extends State<FeedScreen> {
   bool _hasBeenPressed = false;
   Widget p = _noaddNewPost();
   List<SinglePost> ps = <SinglePost>[];
-  // Widget l = _noaddNewPosts();
+  Widget l = _noaddNewPosts();
   // List<Posting> now_ps = <Posting>[];
   // Timer? _timer;
   bool _shouldShowPopup = false;
   File? _image;
   List<String> friends = <String>[];
   List<Posting> serverposts = <Posting>[];
+  List<Posting> fserverposts = <Posting>[];
+  String postname = "";
   var pixelRatio;
   //Size in physical pixels
   var physicalScreenSize;
@@ -96,7 +98,7 @@ class _FeedScreenState extends State<FeedScreen> {
         }
       });
     });
-    fetchUsers(_username);
+    fetchFriends(_username);
     pixelRatio = window.devicePixelRatio;
     //Size in physical pixels
     physicalScreenSize = window.physicalSize;
@@ -107,26 +109,62 @@ class _FeedScreenState extends State<FeedScreen> {
     logicalScreenSize = window.physicalSize / pixelRatio;
     logicalWidth = logicalScreenSize.width;
     logicalHeight = logicalScreenSize.height;
-    getRequest().then((value) {
+
+    getRequest(_username).then((value) {
       setState(() {
         serverposts.addAll(value);
         for (Posting po in serverposts) {
+          // getDiaplayName(po.poster);
           // Future<String> name = getDiaplayName(po.poster);
           p = _buildPost(po.timestamp, po.imageUrl, po.title, po.des, po.poster,
-              po.likes, '', context);
-          SinglePost sp = SinglePost('', po.likes, p);
+              po.likes, po.id, context);
+          Posting posting = Posting(
+              title: po.title,
+              des: po.des,
+              imageUrl: po.imageUrl,
+              likes: po.likes,
+              poster: po.poster,
+              timestamp: po.timestamp,
+              id: po.id);
+          SinglePost sp = SinglePost(po.id.toString(), po.likes, p, posting);
           ps.add(sp);
+          ps.sort();
+          print("---------------0");
+          print(ps.length);
         }
-        print("000000000000000000sb");
-        print(ps.length);
-        // l = getPostWidgets();
       });
     });
-    // if (ps.isEmpty) {
-    //   setState(() {
-    //     l = _noaddNewPost();
-    //   });
-    // }
+  }
+
+  refreshPost() {
+    serverposts.clear();
+    fserverposts.clear();
+    ps.clear();
+    getRequest(_username).then((value) {
+      setState(() {
+        serverposts.addAll(value);
+        for (Posting po in serverposts) {
+          // getDiaplayName(po.poster);
+          // Future<String> name = getDiaplayName(po.poster);
+          p = _buildPost(po.timestamp, po.imageUrl, po.title, po.des, po.poster,
+              po.likes, po.id, context);
+          Posting posting = Posting(
+              title: po.title,
+              des: po.des,
+              imageUrl: po.imageUrl,
+              likes: po.likes,
+              poster: po.poster,
+              timestamp: po.timestamp,
+              id: po.id);
+          SinglePost sp = SinglePost(po.id.toString(), po.likes, p, posting);
+          ps.add(sp);
+          ps.sort();
+          print("---------------0");
+          print(ps.length);
+        }
+      });
+    });
+    fetchFriends(_username);
   }
 
   initialName() async {
@@ -141,7 +179,7 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-  Future<String> getDiaplayName(String email) async {
+  Future<String> getDisplayName(String email) async {
     print("email: " + email);
     final response = await http.get(
       Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
@@ -153,8 +191,11 @@ class _FeedScreenState extends State<FeedScreen> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       var user = json.decode(response.body);
       wholeUser u = wholeUser.fromJson(user);
-      print(u.useri.name);
+      print("aaaaaaaaaaaaaaaa" + u.useri.name);
       // print(user.toString());
+      setState(() {
+        postname = u.useri.name;
+      });
       return u.useri.name;
     } else {
       print("status code: " + response.statusCode.toString());
@@ -162,10 +203,10 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-  Future<List<Posting>> getRequest() async {
+  Future<List<Posting>> getRequest(String username) async {
     print("Ip: get -> Post");
     List<Posting> posts = <Posting>[];
-    var url = 'http://10.0.2.2:3000/posts/getUserPost/' + _username;
+    var url = 'http://10.0.2.2:3000/posts/getUserPost/' + username;
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
@@ -188,7 +229,7 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-  void fetchUsers(email) async {
+  void fetchFriends(email) async {
     print("email: " + email);
     var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
     // var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
@@ -206,9 +247,39 @@ class _FeedScreenState extends State<FeedScreen> {
         setState(() {
           friends = (jsonMembers as List).map((e) => e as String).toList();
         });
-        // if (friends != null) {
-        //   print("ffffffffffffffffff" + friends!.length.toString());
-        // }
+        if (friends != null) {
+          print("ffffffffffffffffff" + friends.length.toString());
+          for (String friend in friends) {
+            getRequest(friend).then((value) {
+              setState(() {
+                fserverposts.addAll(value);
+                print("000000000000000000sb");
+                print(fserverposts.length);
+                for (Posting po in fserverposts) {
+                  // getDiaplayName(po.poster);
+                  // Future<String> name = getDiaplayName(po.poster);
+                  p = _buildPost(po.timestamp, po.imageUrl, po.title, po.des,
+                      po.poster, po.likes, po.id, context);
+                  Posting posting = Posting(
+                      title: po.title,
+                      des: po.des,
+                      imageUrl: po.imageUrl,
+                      likes: po.likes,
+                      poster: po.poster,
+                      timestamp: po.timestamp,
+                      id: po.id);
+                  SinglePost sp =
+                      SinglePost(po.id.toString(), po.likes, p, posting);
+                  ps.add(sp);
+                  ps.sort();
+                  print("---------------1");
+                  print(ps.length);
+                }
+                l = getPostWidgets();
+              });
+            });
+          }
+        }
       }
     } else {
       print("status code: " + response.statusCode.toString());
@@ -239,44 +310,91 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget _buildPost(String time, String image, String title, String content,
-      String name, int likes, String pid, context) {
+      String name, int likes, var pid, context) {
     // String uname = "";
     // getDiaplayName(name).then((String result) {
     //   setState(() {
     //     uname = result;
     //   });
     // });
-    var itemsInMenu = [
-      DropdownMenuItem(
-        value: 1,
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              onPressed: () {
-                print("update");
-              },
-              color: Colors.transparent,
-              icon: const Icon(
-                Icons.update,
-                size: 35.0,
-                color: Colors.black,
+    var itemsInMenu;
+    if (name == _username) {
+      itemsInMenu = [
+        DropdownMenuItem(
+          value: 1,
+          child: Row(
+            children: <Widget>[
+              IconButton(
+                onPressed: () {
+                  print("update");
+                },
+                color: Colors.transparent,
+                icon: const Icon(
+                  Icons.update,
+                  size: 35.0,
+                  color: Colors.black,
+                ),
+                padding: EdgeInsets.only(right: 10.0),
               ),
-              padding: EdgeInsets.only(right: 10.0),
-            ),
-            TextButton(
-              // style: TextButton.styleFrom(primary: Colors.black),
-              onPressed: () async {
-                print("update");
-              },
-              child: Text("Update", style: TextStyle(color: Colors.black)),
-            ),
-          ],
+              TextButton(
+                // style: TextButton.styleFrom(primary: Colors.black),
+                onPressed: () async {
+                  print("update");
+                },
+                child: Text("Update", style: TextStyle(color: Colors.black)),
+              ),
+            ],
+          ),
         ),
-      ),
-      DropdownMenuItem(
-          value: 2,
-          child: Row(children: <Widget>[
-            IconButton(
+        DropdownMenuItem(
+            value: 2,
+            child: Row(children: <Widget>[
+              IconButton(
+                  onPressed: () async {
+                    Widget cancelButton = TextButton(
+                      child: Text("CANCEL"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    );
+                    Widget continueButton = TextButton(
+                      child: Text("DELETE"),
+                      onPressed: () {
+                        print("Trying to delete");
+                        deletePost(pid);
+                        Navigator.of(context).pop();
+                        setState(() {
+                          serverposts
+                              .removeWhere((element) => element.id == pid);
+                          ps.removeWhere((item) => item.pid == pid);
+                        });
+                      },
+                    );
+                    // set up the AlertDialog
+                    AlertDialog alert = AlertDialog(
+                      title: Text("Are you sure?"),
+                      content: Text("This post will be deleted permanently."),
+                      actions: [
+                        cancelButton,
+                        continueButton,
+                      ],
+                    );
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return alert;
+                      },
+                    );
+                  },
+                  color: Colors.transparent,
+                  padding: const EdgeInsets.only(right: 10.0),
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 35.0,
+                    color: Colors.black,
+                  )),
+              TextButton(
+                // style: TextButton.styleFrom(primary: Colors.black),r
                 onPressed: () async {
                   Widget cancelButton = TextButton(
                     child: Text("CANCEL"),
@@ -288,12 +406,18 @@ class _FeedScreenState extends State<FeedScreen> {
                     child: Text("DELETE"),
                     onPressed: () {
                       print("Trying to delete");
+                      deletePost(pid);
+                      Navigator.of(context).pop();
+                      setState(() {
+                        serverposts.removeWhere((element) => element.id == pid);
+                        ps.removeWhere((item) => item.pid == pid);
+                      });
                     },
                   );
                   // set up the AlertDialog
                   AlertDialog alert = AlertDialog(
                     title: Text("Are you sure?"),
-                    content: Text("This forum will be deleted permanently."),
+                    content: Text("This post will be deleted permanently."),
                     actions: [
                       cancelButton,
                       continueButton,
@@ -306,79 +430,76 @@ class _FeedScreenState extends State<FeedScreen> {
                     },
                   );
                 },
+                child: Text("Delete", style: TextStyle(color: Colors.black)),
+              ),
+            ])),
+        DropdownMenuItem(
+            value: 3,
+            child: Row(children: <Widget>[
+              IconButton(
+                onPressed: () async {
+                  print("report content");
+                },
                 color: Colors.transparent,
-                padding: const EdgeInsets.only(right: 10.0),
                 icon: const Icon(
-                  Icons.delete,
+                  Icons.report,
                   size: 35.0,
                   color: Colors.black,
-                )),
-            TextButton(
-              // style: TextButton.styleFrom(primary: Colors.black),r
-              onPressed: () async {
-                Widget cancelButton = TextButton(
-                  child: Text("CANCEL"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                );
-                Widget continueButton = TextButton(
-                  child: Text("DELETE"),
-                  onPressed: () {
-                    print("Trying to delete");
-                  },
-                );
-                // set up the AlertDialog
-                AlertDialog alert = AlertDialog(
-                  title: Text("Are you sure?"),
-                  content: Text("This forum will be deleted permanently."),
-                  actions: [
-                    cancelButton,
-                    continueButton,
-                  ],
-                );
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return alert;
-                  },
-                );
-              },
-              child: Text("Delete", style: TextStyle(color: Colors.black)),
-            ),
-          ])),
-      DropdownMenuItem(
-          value: 3,
-          child: Row(children: <Widget>[
-            IconButton(
-              onPressed: () async {
-                print("report content");
-              },
-              color: Colors.transparent,
-              icon: const Icon(
-                Icons.report,
-                size: 35.0,
-                color: Colors.black,
+                ),
+                padding: EdgeInsets.only(right: 10.0),
               ),
-              padding: EdgeInsets.only(right: 10.0),
-            ),
-            TextButton(
-              // style: TextButton.styleFrom(primary: Colors.black),
-              onPressed: () async {
-                print("report content");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ReportContent(
-                            contentId: "123",
-                            contentType: "posts",
-                          )),
-                );
-              },
-              child: Text("Report", style: TextStyle(color: Colors.black)),
-            ),
-          ]))
-    ];
+              TextButton(
+                // style: TextButton.styleFrom(primary: Colors.black),
+                onPressed: () async {
+                  print("report content");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ReportContent(
+                              contentId: "123",
+                              contentType: "posts",
+                            )),
+                  );
+                },
+                child: Text("Report", style: TextStyle(color: Colors.black)),
+              ),
+            ]))
+      ];
+    } else {
+      itemsInMenu = [
+        DropdownMenuItem(
+            value: 1,
+            child: Row(children: <Widget>[
+              IconButton(
+                onPressed: () async {
+                  print("report content");
+                },
+                color: Colors.transparent,
+                icon: const Icon(
+                  Icons.report,
+                  size: 35.0,
+                  color: Colors.black,
+                ),
+                padding: EdgeInsets.only(right: 10.0),
+              ),
+              TextButton(
+                // style: TextButton.styleFrom(primary: Colors.black),
+                onPressed: () async {
+                  print("report content");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ReportContent(
+                              contentId: "123",
+                              contentType: "posts",
+                            )),
+                  );
+                },
+                child: Text("Report", style: TextStyle(color: Colors.black)),
+              ),
+            ]))
+      ];
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Container(
@@ -431,13 +552,17 @@ class _FeedScreenState extends State<FeedScreen> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
                     ),
-                    subtitle: Text(time),
+                    subtitle: Text(
+                      time,
+                      maxLines: 1,
+                    ),
                     trailing: DropdownButtonHideUnderline(
                         child: DropdownButton(
                             icon: const Icon(
                               Icons.menu,
-                              size: 35.0,
+                              size: 30.0,
                               color: Colors.black,
                             ),
                             items: itemsInMenu,
@@ -445,16 +570,20 @@ class _FeedScreenState extends State<FeedScreen> {
                             onChanged: (value) {})),
                   ),
                   InkWell(
-                    onDoubleTap: () => print('Like post'),
+                    onDoubleTap: () {
+                      print('Like post');
+                      changedata(true, likes, pid);
+                    },
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (_) => ViewPostScreen(
-                      //       post: posts[0],
-                      //     ),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ViewPostScreen(
+                            post:
+                                ps.firstWhere((element) => element.pid == pid),
+                          ),
+                        ),
+                      );
                     },
                     child: Container(
                       margin: const EdgeInsets.all(10.0),
@@ -489,7 +618,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                 //     icon: const Icon(Icons.favorite_border),
                                 //     iconSize: 30.0,
                                 //     onPressed: () {
-                                //       likes++;
+                                //       createLikeUpdate(likes++, pid);
+                                //       refreshPost();
                                 //     }
 
                                 //     // => print('Like post'),
@@ -502,12 +632,13 @@ class _FeedScreenState extends State<FeedScreen> {
                                 //     fontWeight: FontWeight.w600,
                                 //   ),
                                 // ),
+
                                 LikeButton(
                                   size: 30,
-                                  circleColor: CircleColor(
+                                  circleColor: const CircleColor(
                                       start: Color(0xff00ddff),
                                       end: Color(0xff0099cc)),
-                                  bubblesColor: BubblesColor(
+                                  bubblesColor: const BubblesColor(
                                     dotPrimaryColor: Color(0xff33b5e5),
                                     dotSecondaryColor: Color(0xff0099cc),
                                   ),
@@ -520,8 +651,11 @@ class _FeedScreenState extends State<FeedScreen> {
                                       size: 30,
                                     );
                                   },
-                                  likeCount: 0,
-                                  onTap: onLikeButtonTapped,
+                                  likeCount: likes,
+                                  // onTap: onLikeButtonTapped,
+                                  onTap: (isLiked) {
+                                    return changedata(isLiked, likes, pid);
+                                  },
                                 ),
                               ],
                             ),
@@ -541,9 +675,9 @@ class _FeedScreenState extends State<FeedScreen> {
                                     // );
                                   },
                                 ),
-                                const Text(
-                                  '0',
-                                  style: TextStyle(
+                                Text(
+                                  likes.toString(),
+                                  style: const TextStyle(
                                     fontSize: 14.0,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -595,8 +729,17 @@ class _FeedScreenState extends State<FeedScreen> {
 
     /// if failed, you can do nothing
     // return success? !isLiked:isLiked;
-
     return !isLiked;
+  }
+
+  Future<bool> changedata(bool status, int likes, String id) async {
+    //your code
+    if (status) {
+      createLikeUpdate(likes + 1, id);
+    } else {
+      createLikeUpdate(likes, id);
+    }
+    return Future.value(!status);
   }
 
   int _index = 0;
@@ -673,48 +816,23 @@ class _FeedScreenState extends State<FeedScreen> {
                   // await GetRequest();
                   //TODO: Post real data
                   setState(() {
-                    // Posting latestpost = serverposts[serverposts.length - 1];
-                    // String pid = latestpost.pid;
-                    // int numlikes = latestpost.likes;
-
-                    // int l = serverposts.length - 1;
-                    // Posting p_more = serverposts[];
-                    p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                        _post.content, _name, 0, '', context);
-                    SinglePost sp = SinglePost('', 0, p);
-                    ps.add(sp);
-                    // l = getPostWidgets();
+                    // p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
+                    //     _post.content, _name, 0, '', context);
+                    // Posting posting = Posting(
+                    //     title: _post.title,
+                    //     des: _post.content,
+                    //     imageUrl: _post.imageUrl,
+                    //     likes: 0,
+                    //     poster: _username,
+                    //     timestamp: _post.timeAgo);
+                    // SinglePost sp = SinglePost('', 0, p, posting);
+                    // ps.add(sp);
+                    // ps.sort();
+                    // print("---------------2");
+                    // print(ps.length);
+                    refreshPost();
                   });
                 },
-                // onPressed: () async {
-                //   // _timer?.cancel();
-                //   // await EasyLoading.show(
-                //   //   status: 'loading...',
-                //   //   maskType: EasyLoadingMaskType.black,
-                //   // );
-                //   // print('EasyLoading show');
-                //   var _post = await Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => ImageFromGalleryEx()));
-                //   // EasyLoading.dismiss();
-                //   if (_post != null) {
-                //     setState(() {
-                // p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                //     _post.content, _name, 0, '', context);
-                //       Posting posting = Posting(
-                //           title: _post.title,
-                //           des: _post.content,
-                //           imageUrl: _post.imageUrl,
-                //           likes: 0,
-                //           poster: _username,
-                //           timestamp: _post.timeAgo);
-                //       SinglePost sp = SinglePost(posting, p);
-                //       ps.add(sp);
-                //       l = getPostWidgets();
-                //     });
-                //   }
-                // },
                 child: const Icon(
                   Icons.add,
                   size: 35.0,
@@ -784,7 +902,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) =>
-                                      SelectUser(currentStudent: 'morrisjj'),
+                                      SelectUser(currentStudent: _username),
                                 ),
                               );
                               // EasyLoading.dismiss();
@@ -832,6 +950,7 @@ class _FeedScreenState extends State<FeedScreen> {
     for (var i = 0; i < ls.length; i++) {
       toreturn.add(ls[i].widget);
     }
+
     return toreturn;
   }
 
@@ -984,9 +1103,17 @@ class CompanyColors {
 //   Widget widget;
 //   SinglePost(this.posting, this.widget);
 // }
-class SinglePost {
+class SinglePost implements Comparable<SinglePost> {
   String pid;
   int likes;
   Widget widget;
-  SinglePost(this.pid, this.likes, this.widget);
+  Posting posting;
+  SinglePost(this.pid, this.likes, this.widget, this.posting);
+
+  @override
+  compareTo(SinglePost b) {
+    int order = posting.timestamp.compareTo(b.posting.timestamp);
+    if (order == 0) order = b.posting.timestamp.compareTo(posting.timestamp);
+    return order;
+  }
 }

@@ -39,6 +39,23 @@ Future<http.Response> _createPost(
     }),
   );
 }
+
+void deletePost(pID) {
+  _deletePost(pID);
+  print("deleting post" + pID);
+}
+
+Future<http.Response> _deletePost(pID) {
+  String ip = BASE_URL + 'deleteByKey/' + pID;
+  print(ip);
+  return http.post(
+    Uri.parse(ip),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+}
+
 //https://stackoverflow.com/questions/49914136/how-to-integrate-flutter-app-with-node-js
 //https://medium.com/flutter/some-options-for-deserializing-json-with-flutter-7481325a4450
 // https://flutter.dev/docs/cookbook/networking/send-data
@@ -115,9 +132,43 @@ Future<http.Response> _createPost(
 //   // // return serverposts;
 // }
 
+void createPostUpdate(title, des, id) async {
+  print("update string: " + title + des);
+  String ip = BASE_URL + 'update/' + id;
+  print(ip);
+  final response = await http.post(
+    Uri.parse(ip),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'title': title,
+      'description': des,
+    }),
+  );
+  print(response.statusCode.toString());
+}
+
+void createLikeUpdate(likes, id) async {
+  print("update like: " + likes.toString());
+  String ip = BASE_URL + 'updatelike/' + id;
+  print(ip);
+  final response = await http.post(
+    Uri.parse(ip),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, dynamic>{
+      'likes': likes,
+    }),
+  );
+  print(response.statusCode.toString());
+}
+
 class Posting {
   final String title, des, imageUrl, poster, timestamp;
   final int likes;
+  var id;
   // final followers, following;
   // User(this.roseusername, this.username);
   Posting({
@@ -127,6 +178,7 @@ class Posting {
     required this.likes,
     required this.poster,
     required this.timestamp,
+    this.id,
   });
 
   factory Posting.fromJson(Map<String, dynamic> json) => Posting(
@@ -136,6 +188,7 @@ class Posting {
         likes: json['likes'] as int,
         poster: json['poster'] as String,
         timestamp: json['timestamp'] as String,
+        id: json['_id'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -145,5 +198,6 @@ class Posting {
         "likes": likes,
         "poster": poster,
         "timestamp": timestamp,
+        "_id": id,
       };
 }

@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:even_better/models/comment_model.dart';
 import 'package:even_better/models/post_model.dart';
 import 'package:even_better/screens/api.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import 'feed_screen.dart';
 
 class ViewPostScreen extends StatefulWidget {
-  final Post post;
+  final SinglePost post;
 
   ViewPostScreen({required this.post});
 
@@ -20,14 +21,6 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
   @override
   void initState() {
     super.initState();
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Loading Succeeded');
-    // EasyLoading.removeCallbacks();
   }
 
   Widget _buildComment(int index) {
@@ -137,20 +130,21 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                       child: Image(
                                         height: 50.0,
                                         width: 50.0,
-                                        image: AssetImage(
-                                            widget.post.authorImageUrl),
+                                        //TODO:
+                                        image:
+                                            AssetImage(posts[0].authorImageUrl),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
                                 ),
                                 title: Text(
-                                  widget.post.authorName,
+                                  widget.post.posting.poster,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                subtitle: Text(widget.post.timeAgo),
+                                subtitle: Text(widget.post.posting.timestamp),
                                 trailing: IconButton(
                                   icon: Icon(Icons.more_horiz),
                                   color: Colors.black,
@@ -176,7 +170,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                 ),
                               ],
                               image: DecorationImage(
-                                image: AssetImage(widget.post.imageUrl),
+                                image: AssetImage(widget.post.posting.imageUrl),
                                 fit: BoxFit.fitWidth,
                               ),
                             ),
@@ -316,7 +310,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                       child: Image(
                         height: 48.0,
                         width: 48.0,
-                        image: AssetImage(widget.post.authorImageUrl),
+                        //TODO:
+                        image: AssetImage(posts[0].authorImageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),

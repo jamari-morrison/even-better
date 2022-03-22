@@ -13,10 +13,10 @@ router.get('/all', async (req, res) => {
     }
 })
 
-router.get('/getById/:id', async (req, res) => {
+router.get('/getById/:username', async (req, res) => {
     try{
         //currently only supports single tag queries
-        const forum = await Post.findById(req.params.id);
+        const forum = await Post.findById(req.params.username);
         if (forum == null){
             res.statusCode = 500;
             res.json({message: "no post with that id"});
@@ -30,6 +30,19 @@ router.get('/getById/:id', async (req, res) => {
     }
 
 })
+
+router.post('/deleteByKey/:id', async (req, res) => {
+    try{
+        //currently only supports single tag queries
+        const post = await Post.findByIdAndDelete(req.params.id);
+        Post.deleteMany({"_id": ObjectId(req.params.id)});
+        res.json({message : "Successfully deleted post"});
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+})
+
 
 router.get('/getUserPost/:username', async (req, res) => {
     console.log('getting user posts')
@@ -75,6 +88,46 @@ router.post('/create', (req, res) => {
     })
 })
 
+router.post('/updatelike/:id', async (req, res) => {
+    console.log(req.params.id);
+    console.log(req.body.likes);
+    var toUpdate = await Post.updateOne({
+        "_id": req.params.id,
+      },{
+        "likes": req.body.likes,
+    })
 
+    if (toUpdate.modifiedCount == 0) {
+        res.status = 400;
+        res.json({
+          message: "user account deleted or does not exist"
+        })
+      } else {
+        res.json({
+          message: "success"
+        })
+    }
+})
+
+router.post('/update/:id', async (req, res) => {
+    console.log(req.params.id);
+    var toUpdate = await Post.updateOne({
+        "_id": req.params.id,
+      },{
+        "title": req.body.title,
+        "description": req.body.description,
+    })
+
+    if (toUpdate.modifiedCount == 0) {
+        res.status = 400;
+        res.json({
+          message: "user account deleted or does not exist"
+        })
+      } else {
+        res.json({
+          message: "success"
+        })
+    }
+})
 
 module.exports = router;
