@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const CommentSchema = mongoose.Schema(
     {
         "commentername": String,
-        "commenter": String,
+        "commenter":
+            { type:String,
+            required: true},
         "content": String,
         "timestamp": String,
         "parent-id": String,
