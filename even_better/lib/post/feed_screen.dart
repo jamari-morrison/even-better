@@ -231,8 +231,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   void fetchFriends(email) async {
     print("email: " + email);
-    var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
-    // var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
+    // var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
+    var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
@@ -255,25 +255,27 @@ class _FeedScreenState extends State<FeedScreen> {
                 fserverposts.addAll(value);
                 print("000000000000000000sb");
                 print(fserverposts.length);
-                for (Posting po in fserverposts) {
-                  // getDiaplayName(po.poster);
-                  // Future<String> name = getDiaplayName(po.poster);
-                  p = _buildPost(po.timestamp, po.imageUrl, po.title, po.des,
-                      po.poster, po.likes, po.id, context);
-                  Posting posting = Posting(
-                      title: po.title,
-                      des: po.des,
-                      imageUrl: po.imageUrl,
-                      likes: po.likes,
-                      poster: po.poster,
-                      timestamp: po.timestamp,
-                      id: po.id);
-                  SinglePost sp =
-                      SinglePost(po.id.toString(), po.likes, p, posting);
-                  ps.add(sp);
-                  ps.sort();
-                  print("---------------1");
-                  print(ps.length);
+                if (!fserverposts.isEmpty) {
+                  for (Posting po in fserverposts) {
+                    // getDiaplayName(po.poster);
+                    // Future<String> name = getDiaplayName(po.poster);
+                    p = _buildPost(po.timestamp, po.imageUrl, po.title, po.des,
+                        po.poster, po.likes, po.id, context);
+                    Posting posting = Posting(
+                        title: po.title,
+                        des: po.des,
+                        imageUrl: po.imageUrl,
+                        likes: po.likes,
+                        poster: po.poster,
+                        timestamp: po.timestamp,
+                        id: po.id);
+                    SinglePost sp =
+                        SinglePost(po.id.toString(), po.likes, p, posting);
+                    ps.add(sp);
+                    ps.sort();
+                    print("---------------1");
+                    print(ps.length);
+                  }
                 }
                 l = getPostWidgets();
               });
@@ -561,7 +563,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     trailing: DropdownButtonHideUnderline(
                         child: DropdownButton(
                             icon: const Icon(
-                              Icons.menu,
+                              Icons.more_horiz,
                               size: 30.0,
                               color: Colors.black,
                             ),
@@ -809,12 +811,12 @@ class _FeedScreenState extends State<FeedScreen> {
                 ),
                 color: Color(0xFFF8BBD0),
                 onPressed: () async {
-                  final NewPost _post = await Navigator.push(
+                  // final NewPost _post = await
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
-                  // await GetRequest();
-                  //TODO: Post real data
+                  refreshPost();
                   setState(() {
                     // p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
                     //     _post.content, _name, 0, '', context);
