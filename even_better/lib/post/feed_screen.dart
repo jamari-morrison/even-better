@@ -809,12 +809,12 @@ class _FeedScreenState extends State<FeedScreen> {
                 ),
                 color: Color(0xFFF8BBD0),
                 onPressed: () async {
-                  final NewPost _post = await Navigator.push(
+                  // final NewPost _post = await
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
-                  // await GetRequest();
-                  //TODO: Post real data
+                  refreshPost();
                   setState(() {
                     // p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
                     //     _post.content, _name, 0, '', context);

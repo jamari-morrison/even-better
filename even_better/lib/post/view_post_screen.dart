@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:even_better/models/comment_model.dart';
 import 'package:even_better/models/post_model.dart';
 import 'package:even_better/screens/api.dart';
+import 'package:like_button/like_button.dart';
 
 import 'feed_screen.dart';
 
@@ -65,8 +67,39 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
           color: Colors.grey,
           onPressed: () => print('Like comment'),
         ),
+        //     LikeButton(
+        //   size: 30,
+        //   circleColor: const CircleColor(
+        //       start: Color(0xff00ddff), end: Color(0xff0099cc)),
+        //   bubblesColor: const BubblesColor(
+        //     dotPrimaryColor: Color(0xff33b5e5),
+        //     dotSecondaryColor: Color(0xff0099cc),
+        //   ),
+        //   likeBuilder: (bool isLiked) {
+        //     return Icon(
+        //       Icons.favorite,
+        //       color: isLiked ? Colors.pinkAccent : Colors.grey,
+        //       size: 30,
+        //     );
+        //   },
+        //   likeCount: widget.post.likes,
+        //   // onTap: onLikeButtonTapped,
+        //   onTap: (isLiked) {
+        //     return changedata(isLiked, widget.post.likes, widget.post.pid);
+        //   },
+        // ),
       ),
     );
+  }
+
+  Future<bool> changedata(bool status, int likes, String id) async {
+    //your code
+    if (status) {
+      createLikeUpdate(likes + 1, id);
+    } else {
+      createLikeUpdate(likes, id);
+    }
+    return Future.value(!status);
   }
 
   @override
@@ -99,14 +132,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                               iconSize: 30.0,
                               color: Colors.black,
                               onPressed: () async {
-                                // _timer?.cancel();
-                                // await EasyLoading.show(
-                                //   status: 'loading...',
-                                //   maskType: EasyLoadingMaskType.black,
-                                // );
-                                // print('EasyLoading show');
                                 Navigator.pop(context);
-                                // EasyLoading.dismiss();
                               },
                             ),
                             Container(
@@ -170,7 +196,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                 ),
                               ],
                               image: DecorationImage(
-                                image: AssetImage(widget.post.posting.imageUrl),
+                                image:
+                                    getPostImage(widget.post.posting.imageUrl),
                                 fit: BoxFit.fitWidth,
                               ),
                             ),
@@ -185,17 +212,44 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                 children: <Widget>[
                                   Row(
                                     children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.favorite_border),
-                                        iconSize: 30.0,
-                                        onPressed: () => print('Like post'),
-                                      ),
-                                      Text(
-                                        '2,515',
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w600,
+                                      // IconButton(
+                                      //   icon: Icon(Icons.favorite_border),
+                                      //   iconSize: 30.0,
+                                      //   onPressed: () => print('Like post'),
+                                      // ),
+                                      // Text(
+                                      //   '2,515',
+                                      //   style: TextStyle(
+                                      //     fontSize: 14.0,
+                                      //     fontWeight: FontWeight.w600,
+                                      //   ),
+                                      // ),
+                                      LikeButton(
+                                        size: 30,
+                                        circleColor: const CircleColor(
+                                            start: Color(0xff00ddff),
+                                            end: Color(0xff0099cc)),
+                                        bubblesColor: const BubblesColor(
+                                          dotPrimaryColor: Color(0xff33b5e5),
+                                          dotSecondaryColor: Color(0xff0099cc),
                                         ),
+                                        likeBuilder: (bool isLiked) {
+                                          return Icon(
+                                            Icons.favorite,
+                                            color: isLiked
+                                                ? Colors.pinkAccent
+                                                : Colors.grey,
+                                            size: 30,
+                                          );
+                                        },
+                                        likeCount: widget.post.likes,
+                                        // onTap: onLikeButtonTapped,
+                                        onTap: (isLiked) {
+                                          return changedata(
+                                              isLiked,
+                                              widget.post.likes,
+                                              widget.post.pid);
+                                        },
                                       ),
                                     ],
                                   ),
@@ -340,4 +394,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
       ),
     );
   }
+}
+
+FileImage getPostImage(String s) {
+  return FileImage(File(s));
 }

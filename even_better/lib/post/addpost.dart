@@ -274,15 +274,15 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                           0,
                           formattedDate,
                           username);
-
-                      Navigator.pop(
-                          context,
-                          NewPost(
-                              formattedDate,
-                              _image!.path,
-                              titleController.text.replaceAll('\n', ' '),
-                              postController.text.trim(),
-                              username));
+                      Navigator.pop(context);
+                      // Navigator.pop(
+                      //     context,
+                      //     NewPost(
+                      //         formattedDate,
+                      //         _image!.path,
+                      //         titleController.text.replaceAll('\n', ' '),
+                      //         postController.text.trim(),
+                      //         username));
                       EasyLoading.dismiss();
                     }
                   },
