@@ -90,6 +90,9 @@ class _ManagePollsState extends State<ManagePolls> {
         body: Container(
             child: Column(
               children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  child:
                 ElevatedButton(
                     child: Text("Create New Poll"),
                     onPressed: () async {
@@ -104,8 +107,11 @@ class _ManagePollsState extends State<ManagePolls> {
                           MaterialPageRoute(
                               builder: (context) => EditPoll(isEdit: false, startingOptions: [], startingPriority: '', startingQuestion: '', startingQuota: '', id: '')));
                       EasyLoading.dismiss();
-                    }),
-                Text("Manage Existing Polls"),
+                    })),
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+          child:Text("Manage Existing Polls",style: TextStyle(fontSize: 20))),
+
                 Expanded(
                     child: ListView.builder(
                         itemCount: pollWidgets.length,

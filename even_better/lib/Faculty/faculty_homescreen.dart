@@ -26,8 +26,14 @@ class _FacultyHomescreenState extends State<FacultyHomescreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        body: Container(
+      body:
+      Center(
+
+        child: Container(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+
               children: [
                 ElevatedButton(
                     child: Text("Broadcast Message"),
@@ -61,7 +67,7 @@ class _FacultyHomescreenState extends State<FacultyHomescreen> {
                     })
 
               ],
-            )));
+            ))));
   }
 
   @override

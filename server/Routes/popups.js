@@ -210,7 +210,7 @@ router.post('/edit', async (req, res) => {
 
   }
 
-  //add new options to the list
+  //add new options to the list and delete old ones
   for(i in newOptions){
     if(!oldOptions.includes(newOptions[i])){
       const newObj = {
@@ -220,6 +220,8 @@ router.post('/edit', async (req, res) => {
       toUpdate.optionQuantities.push(newObj);
     }
   }
+
+
 
   //update the rest of the new question's vals
   toUpdate.question = req.body.question;

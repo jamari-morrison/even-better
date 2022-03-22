@@ -104,10 +104,18 @@ class _SpecificPollState extends State<SpecificPoll> {
         body:  Container(
              child: _screen == 0 ? Column(
               children: [
-                Text("Manage Poll - " + widget.question),
-                Text('Total responses: ' + widget.currentAnswers),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(5, 20, 5, 10),
+                  child:
+                Text("Manage Poll - " + widget.question,style: TextStyle(fontSize: 20))),
+
+        Padding(
+          padding: EdgeInsets.fromLTRB(5, 20, 5, 10),
+          child:
+                Text('Total responses: ' + widget.currentAnswers,style: TextStyle(fontSize: 15))),
                 Text('Quota: '+ widget.quota)
                 ,
+
                 Expanded(
                     child: ListView.builder(
                         itemCount: itemsData.length,
@@ -117,7 +125,9 @@ class _SpecificPollState extends State<SpecificPoll> {
                           // print(itemsData);
                           return itemsData[index];
                         })),
-                ElevatedButton(
+            Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
+
+              ElevatedButton(
                     child: Text("Edit"),
                     onPressed: () async {
 
@@ -139,7 +149,7 @@ class _SpecificPollState extends State<SpecificPoll> {
                         setState(() {
                           _screen = 1;
                         });
-                                      }),
+                                      })]),
 
 
               ],

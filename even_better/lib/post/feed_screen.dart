@@ -777,6 +777,33 @@ class _FeedScreenState extends State<FeedScreen> {
                     ),
                     Row(
                       children: <Widget>[
+                        SizedBox(
+                          width: 35.0,
+                          child: IconButton(
+                            icon: const Icon(Icons.analytics_outlined),
+                            iconSize: 30.0,
+                            onPressed: () async {
+                              // _timer?.cancel();
+                              // await EasyLoading.show(
+                              //   status: 'loading...',
+                              //   maskType: EasyLoadingMaskType.black,
+                              // );
+                              // print('EasyLoading show');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                    //SelectUser(currentStudent: 'morrisjj'),
+                                    FacultyHomescreen()
+                                ),
+                              );
+                              // EasyLoading.dismiss();
+                            }
+
+                            // => print('Direct Messages')
+                            ,
+                          ),
+                        ),
                         const SizedBox(width: 16.0),
                         SizedBox(
                           width: 35.0,
@@ -794,8 +821,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) =>
-                                      //SelectUser(currentStudent: 'morrisjj'),
-                                      FacultyHomescreen()
+                                      SelectUser(currentStudent: 'morrisjj'),
+                                      //FacultyHomescreen()
                                 ),
                               );
                               // EasyLoading.dismiss();
@@ -804,7 +831,8 @@ class _FeedScreenState extends State<FeedScreen> {
                             // => print('Direct Messages')
                             ,
                           ),
-                        )
+                        ),
+
                       ],
                     )
                   ],

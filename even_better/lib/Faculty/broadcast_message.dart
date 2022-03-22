@@ -36,32 +36,44 @@ class _BroadcastMessageState extends State<BroadcastMessage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _hasSent ? Container(
-            child: Column(
+        body: _hasSent ? Center(
+          child:
+Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Message sent!"),
-                Text("The notification has been sent to all students!"),
+
+                Text("Message sent!",style: TextStyle(fontSize: 30)),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text("The notification has been sent to all students!",style: TextStyle(fontSize: 18))),
                 ElevatedButton(
                     child: Text("Acknowledge"),
                     onPressed: () async {
-                      int count = 0;
-                      Navigator.of(context).popUntil((_) => count++ >= 2);
+                      Navigator.pop(context);
 
                     })
 
               ],
-            )) : Container(
+            )) : Padding(
+            padding: EdgeInsets.symmetric(vertical: 60, horizontal: 20),
             child: Column(
+
               children: [
-                Text("Broadcast Message"),
-                Text("Send a notification to all students on the app"),
-                TextFormField(
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text("Broadcast Message",style: TextStyle(fontSize: 30))),
+                Text("Send a notification to all students on the app",style: TextStyle(fontSize: 15)),
+
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+                child: TextFormField(
                   controller: _messageController,
                   decoration:  InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: "MessageText",
                   ),
-                ),
+                )),
                 ElevatedButton(
                     child: Text("Send"),
                     onPressed: () async {

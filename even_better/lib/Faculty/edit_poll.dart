@@ -147,7 +147,10 @@ class _EditPollState extends State<EditPoll> {
         body: _screen == 0 ? Container(
             child: Column(
               children: [
-                Text("Create New Poll"),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 40, 0, 20),
+                  child:
+                Text("Create New Poll",style: TextStyle(fontSize: 20))),
             TextFormField(
               controller: _questionController,
             decoration: const InputDecoration(
@@ -156,6 +159,7 @@ class _EditPollState extends State<EditPoll> {
         ),
     )
                 ,
+
                 Expanded(
                     child: ListView.builder(
                         itemCount: itemsData.length,
@@ -165,6 +169,7 @@ class _EditPollState extends State<EditPoll> {
                           // print(itemsData);
                           return itemsData[index];
                         })),
+                Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
                 ElevatedButton(
                     child: Text("Add Option"),
                     onPressed: () async {getItemData();}),
@@ -184,7 +189,7 @@ class _EditPollState extends State<EditPoll> {
                 onPressed: () async {
                   int count = 0;
                   Navigator.of(context).popUntil((_) => count++ >= 2);
-                })
+                })])
 
 
 
@@ -193,7 +198,10 @@ class _EditPollState extends State<EditPoll> {
         Container(
             child: Column(
               children: [
-                Text("Create New Poll"),
+                Padding(
+                    padding: EdgeInsets.fromLTRB(0, 40, 0, 20),
+                    child:
+                    Text("Create New Poll",style: TextStyle(fontSize: 20))),
                 TextFormField(
                   controller: _priorityController,
                   decoration: const InputDecoration(
