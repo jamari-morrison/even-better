@@ -45,6 +45,7 @@ class MyUser {
 
   Future getUserData() async {
     final uri = Uri.parse(
+        // 'http://10.0.2.2:3000/users/getUser/' + userEmail!);
         'https://api.even-better-api.com/users/getUser/' + userEmail!);
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',

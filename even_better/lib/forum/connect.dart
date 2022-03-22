@@ -11,8 +11,8 @@ import 'dart:convert';
 
 const String serverURL =
     // "http://ec2-18-217-202-114.us-east-2.compute.amazonaws.com:3000/";
-    // "https://api.even-better-api.com/";
-    "http://10.0.2.2:3000/";
+    "https://api.even-better-api.com/";
+// "http://10.0.2.2:3000/";
 // USER
 Future getUserData(ebuid) async {
   final uri = Uri.parse(serverURL + "users/getUser/" + ebuid);
@@ -124,7 +124,7 @@ Future<http.Response> _updateForum(forumid, title, content, time) async {
 // create comments
 @override
 void createComment(forumid, content, commenterid, time, commentername) {
-  var temp = _createComment(forumid, content, commenterid, time, commentername);
+  _createComment(forumid, content, commenterid, time, commentername);
   // print("creating comments [connect]");
 }
 
