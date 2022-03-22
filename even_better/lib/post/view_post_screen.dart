@@ -198,7 +198,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                               image: DecorationImage(
                                 image:
                                     getPostImage(widget.post.posting.imageUrl),
-                                fit: BoxFit.fitWidth,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
@@ -264,7 +264,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                         },
                                       ),
                                       Text(
-                                        '350',
+                                        '0',
                                         style: TextStyle(
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.w600,
