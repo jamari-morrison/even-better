@@ -113,7 +113,7 @@ class _createForumState extends State<createForum> {
                           RaisedButton(
                               color: CompanyColors.red,
                               child: const Text(
-                                'Comment',
+                                'Post',
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {

@@ -216,14 +216,12 @@ class _DetailedForum extends State<DetailedForum> {
           );
         }),
         // child: Center(child: responses));
-        child: Container(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) =>
-                  fa.ForumAnswer(forumComments[index]),
-              itemCount: forumComments.length,
-            )));
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) =>
+              fa.ForumAnswer(forumComments[index]),
+          itemCount: forumComments.length,
+        ));
 
     // var itemsInMenu = [
 
