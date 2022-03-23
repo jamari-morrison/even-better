@@ -63,10 +63,6 @@ class _ReportState extends State<Report> {
               ),
 
         onTap: () {
-// go to the post reported
-//TODO:
-//need to have different types here!!
-
           Navigator.push(
             context,
             MaterialPageRoute(
