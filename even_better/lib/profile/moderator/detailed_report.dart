@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:even_better/UserVerification/Helpers/account_creation.dart';
 import 'package:even_better/forum/detail_forum.dart';
+import 'package:even_better/models/forum_answer.dart';
 import 'package:even_better/models/forum_post.dart';
 import 'package:even_better/models/tag.dart';
 import 'package:even_better/profile/moderator/view_reports.dart';
@@ -66,11 +67,10 @@ class _DetailedReportState extends State<DetailedReport> {
           var tags = message[
               'tags']; //some weird type error going on here so don't pass to Forum_Post
           setState(() {
-            //TODO: need to obtain comments and tags at some point here
             page = DetailedForum(
-                postId: widget.id,
+                postId: widget.contentId,
                 post: Forum_Post(
-                    widget.id, poster, posterid, title, content, [], []),
+                    widget.contentId, poster, posterid, title, content, [], []),
                 key: widget.key,
                 comments: []);
           });
@@ -83,22 +83,30 @@ class _DetailedReportState extends State<DetailedReport> {
           // maybe we can flag a comment if they are reported, and we might change the color of
           // the comment to show that the comment is the one that being reported. But we might not
           // want normal users to notice that? Not sure what I should do...
-          String poster = message['poster'];
-          String title = message['title'];
+          String commentername = message['commentername'];
+          String commenter = message['commenter'];
           String content = message['content'];
-          String posterid = message['posterID'];
+          String timestamp = message['timestamp'];
           int likes = message['likes'];
-          var tags = message[
-              'tags']; //some weird type error going on here so don't pass to Forum_Post
           setState(() {
             //TODO: need to obtain comments and tags at some point here
-            page = DetailedForum(
-                postId: widget.id,
-                post: Forum_Post(
-                    widget.id, poster, posterid, title, content, [], []),
-                key: widget.key,
-                comments: []);
+            page = Scaffold(
+              appBar: AppBar(
+                title: const Text("Moderator Control",
+                    style: TextStyle(
+                      fontFamily: 'Billabong',
+                      fontSize: 35.0,
+                    )),
+              ),
+              body: Container(
+                margin: const EdgeInsets.only(
+                    left: 20, right: 20, top: 50, bottom: 100),
+                child: ForumAnswer(Forum_Answer(widget.contentId, commenter,
+                    content, timestamp, commentername)),
+              ),
+            );
           });
+
           break;
         default:
       }
@@ -113,6 +121,6 @@ class _DetailedReportState extends State<DetailedReport> {
 
   @override
   Widget build(BuildContext context) {
-    return page == null ? Text("loading") : page;
+    return page == null ? Text("whoops. content not found.") : page;
   }
 }

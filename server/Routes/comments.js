@@ -24,6 +24,24 @@ router.post('/create', (req, res) => {
     })
 })
 
+router.get('/getById/:id', async (req, res) => {
+    try{
+        //currently only supports single tag queries
+        const comment = await Comment.findById(req.params.id);
+        if (comment == null){
+            res.statusCode = 500;
+            res.json({message: "no comment with that id"});
+        }
+        else {
+            res.json({message: comment});
+        }
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+
+})
+
 router.get('/all', async (req, res) => {
     // console.log("At least here");
     try{

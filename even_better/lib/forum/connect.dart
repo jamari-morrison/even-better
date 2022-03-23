@@ -69,6 +69,7 @@ void deleteForum(forumID) {
 
 @override
 Future<http.Response> _deleteForum(forumID) {
+  print("calling delete with key: " + forumID);
   return http.get(
     Uri.parse(serverURL + "forums/deleteByKey/" + forumID),
     headers: <String, String>{
