@@ -166,8 +166,8 @@ void createLikeUpdate(likes, id) async {
 }
 
 class Posting {
-  final String title, des, imageUrl, poster, timestamp;
-  final int likes;
+  String title, des, imageUrl, poster, timestamp;
+  int likes;
   var id;
   // final followers, following;
   // User(this.roseusername, this.username);

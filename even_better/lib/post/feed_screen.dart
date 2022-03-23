@@ -327,8 +327,13 @@ class _FeedScreenState extends State<FeedScreen> {
           child: Row(
             children: <Widget>[
               IconButton(
-                onPressed: () {
-                  print("update");
+                onPressed: () async {
+                  TextEditingController titleController =
+                      TextEditingController();
+                  TextEditingController postController =
+                      TextEditingController();
+                  _displayTextInputDialog(
+                      context, titleController, postController, pid);
                 },
                 color: Colors.transparent,
                 icon: const Icon(
@@ -341,7 +346,14 @@ class _FeedScreenState extends State<FeedScreen> {
               TextButton(
                 // style: TextButton.styleFrom(primary: Colors.black),
                 onPressed: () async {
-                  print("update");
+                  TextEditingController titleController =
+                      TextEditingController();
+                  titleController.text = title;
+                  TextEditingController postController =
+                      TextEditingController();
+                  postController.text = content;
+                  _displayTextInputDialog(
+                      context, titleController, postController, pid);
                 },
                 child: Text("Update", style: TextStyle(color: Colors.black)),
               ),
@@ -725,13 +737,111 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  Future<bool> onLikeButtonTapped(bool isLiked) async {
-    /// send your request here
-    // final bool success= await sendRequest();
+  Future<void> _displayTextInputDialog(
+      BuildContext context,
+      TextEditingController titleController,
+      TextEditingController postController,
+      String id) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Update Text'),
+            content: Container(
+              height: 350.0,
+              width: 400,
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  _descriptionTile(titleController),
+                  SizedBox(height: 30),
+                  _contentTile(
+                    postController,
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('Update'),
+                onPressed: () {
+                  setState(() {
+                    createPostUpdate(
+                        titleController.text, postController.text, id);
+                    SinglePost toedit =
+                        ps.firstWhere((element) => element.pid == id);
+                    toedit.posting.title = titleController.text;
+                    toedit.posting.des = postController.text;
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
+  }
 
-    /// if failed, you can do nothing
-    // return success? !isLiked:isLiked;
-    return !isLiked;
+  Widget _descriptionTile(TextEditingController titleController) {
+    return ListTileTheme(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ListTile(
+        tileColor: Colors.grey[200],
+        leading: Icon(Icons.edit),
+        title: Text(
+          'Post Title',
+          style: TextStyle(
+              fontFamily: 'EB',
+              height: 2,
+              color: Colors.grey[800],
+              fontSize: 20.0),
+        ),
+        subtitle: TextField(
+          controller: titleController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Enter...',
+          ),
+          minLines: 1,
+          maxLines: 2,
+          maxLength: 44,
+        ),
+      ),
+    );
+  }
+
+  Widget _contentTile(TextEditingController postController) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      ListTile(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        tileColor: Colors.grey[200],
+        leading: Icon(Icons.edit),
+        title: Text(
+          'Post Content',
+          style: TextStyle(
+              fontFamily: 'EB',
+              height: 2,
+              color: Colors.grey[800],
+              fontSize: 20.0),
+        ),
+        subtitle: TextField(
+          controller: postController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Enter...',
+          ),
+          //keyboardType: TextInputType.multiline,
+          minLines: 1,
+          maxLines: 3,
+          maxLength: 300,
+        ),
+      ),
+    ]);
   }
 
   Future<bool> changedata(bool status, int likes, String id) async {
