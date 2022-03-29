@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -5,6 +7,7 @@ import 'package:even_better/profile/moderator/report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ViewReports extends StatefulWidget {
   const ViewReports({Key? key}) : super(key: key);
@@ -15,19 +18,21 @@ class ViewReports extends StatefulWidget {
 
 class _ViewReportsState extends State<ViewReports> {
   List<Report> reports = [];
-  Timer? _timer;
+  // Timer? _timer;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
 
   @override
   void initState() {
     super.initState();
     getallReports();
-    EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
-      if (status == EasyLoadingStatus.dismiss) {
-        _timer?.cancel();
-      }
-    });
-    EasyLoading.showSuccess('Reports Loaded');
+    // EasyLoading.addStatusCallback((status) {
+    //   print('EasyLoading Status $status');
+    //   if (status == EasyLoadingStatus.dismiss) {
+    //     _timer?.cancel();
+    //   }
+    // });
+    // EasyLoading.showSuccess('Reports Loaded');
   }
 
   void getallReports() async {
@@ -55,10 +60,30 @@ class _ViewReportsState extends State<ViewReports> {
     });
   }
 
+  void _onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getallReports();
+    });
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getallReports();
+    });
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var listpage = Container(
-        padding: const EdgeInsets.all(2.0),
+    var listpage = SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        header: WaterDropHeader(),
+        footer: ClassicFooter(),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) => reports[index],
