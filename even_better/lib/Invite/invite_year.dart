@@ -35,7 +35,6 @@ class _InviteYearState extends State<InviteYear> {
               status: 'loading...',
               maskType: EasyLoadingMaskType.black,
             );
-            print('loading all students');
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -49,7 +48,6 @@ class _InviteYearState extends State<InviteYear> {
 
     setState(() {
       itemsData = listItems;
-      //print(listItems);
     });
   }
 
@@ -66,8 +64,6 @@ class _InviteYearState extends State<InviteYear> {
                 itemCount: itemsData.length,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  // print("printing");
-                  // print(itemsData);
                   return itemsData[index];
                 }))
       ],
@@ -78,7 +74,6 @@ class _InviteYearState extends State<InviteYear> {
   void initState() {
     super.initState();
     EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {
         _timer?.cancel();
       }
