@@ -13,7 +13,7 @@ class Forum_Post {
   // DateTime _now = DateTime.now();
   String title;
   String details;
-  // List<Tag> tags;
+  List<Tag> tags;
 
   List<Forum_Answer> answers;
 
