@@ -50,7 +50,7 @@ class _DetailedForum extends State<DetailedForum> {
   }
 
   void _onRefresh() async {
-    print("trying to refresh");
+    // print("trying to refresh");
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
@@ -58,7 +58,7 @@ class _DetailedForum extends State<DetailedForum> {
   }
 
   void _onLoading() async {
-    print("trying to refresh");
+    // print("trying to refresh");
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
@@ -104,9 +104,9 @@ class _DetailedForum extends State<DetailedForum> {
         }
       });
     } else if (response.statusCode == HttpStatus.noContent) {
-      print("No content");
+      // print("No content");
     } else {
-      print("Loading Comments DB Error!!!!!");
+      // print("Loading Comments DataBase Error!");
     }
   }
 
@@ -231,7 +231,7 @@ class _DetailedForum extends State<DetailedForum> {
         children: <Widget>[
           IconButton(
             onPressed: () async {
-              print("update");
+              // print("update");
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -250,7 +250,7 @@ class _DetailedForum extends State<DetailedForum> {
           TextButton(
             // style: TextButton.styleFrom(primary: Colors.black),
             onPressed: () async {
-              print("update");
+              // print("update");
               Navigator.push(
                 context,
                 MaterialPageRoute(

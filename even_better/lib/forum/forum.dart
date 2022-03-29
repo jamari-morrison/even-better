@@ -79,7 +79,7 @@ class _ForumListPageState extends State<ForumListPage> {
         forumPosts = listItems;
       });
     } else {
-      print("Loading Forum DB Error!!!!!");
+      print("Loading Forum Database Error!");
     }
   }
 

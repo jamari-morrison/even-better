@@ -52,10 +52,10 @@ class _commentForumState extends State<commentForum> {
     _displayname = MyUser.getDisplayName();
     _ifModerator = MyUser.getIsModerator();
     _roseuid = MyUser.getRoseUsername();
-    print("firebase uid is " + fbuid! + " and email is " + email!);
-    print("EB uid is " + _ebuid);
-    print("displayname is " + _displayname);
-    print(_ifModerator);
+    // print("firebase uid is " + fbuid! + " and email is " + email!);
+    // print("EB uid is " + _ebuid);
+    // print("displayname is " + _displayname);
+    // print(_ifModerator);
   }
 
   @override
