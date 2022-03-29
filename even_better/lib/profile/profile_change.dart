@@ -55,7 +55,7 @@ class ProfileUpdateState extends State<ProfileUpdate> {
   void initState() {
     super.initState();
     // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
+    //
     //   if (status == EasyLoadingStatus.dismiss) {
     //     _timer?.cancel();
     //   }
@@ -162,7 +162,6 @@ class ProfileUpdateState extends State<ProfileUpdate> {
                         maskType: EasyLoadingMaskType.black,
                       );
 
-                      print('EasyLoading updating profile');
                       _sendDataBack(context);
                       EasyLoading.dismiss();
                     }

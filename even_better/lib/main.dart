@@ -15,7 +15,7 @@ import 'Questionaire/multiple_notifier.dart';
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
-  // print("running program");
+  //
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(

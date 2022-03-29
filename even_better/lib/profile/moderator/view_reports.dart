@@ -27,7 +27,7 @@ class _ViewReportsState extends State<ViewReports> {
     super.initState();
     getallReports();
     // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
+    //
     //   if (status == EasyLoadingStatus.dismiss) {
     //     _timer?.cancel();
     //   }
@@ -43,14 +43,14 @@ class _ViewReportsState extends State<ViewReports> {
     });
 
     List<dynamic> reslist = jsonDecode(response.body);
-    // print("reslist is: " + reslist.toString());
+    //
     for (var report in reslist) {
       String id = report['_id'];
       String reason = report['reason'];
       String timestamp = report['timestamp'];
       String contentType = report['content-type'];
       String contentId = report['content-id'];
-      // print(contentType);
+      //
 
       Report tempFP = Report(contentId, contentType, id, reason, timestamp);
       listItems.add(tempFP);

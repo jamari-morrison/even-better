@@ -35,7 +35,7 @@ class _commentForumState extends State<commentForum> {
     super.initState();
     getCurrentUser();
     // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
+    //
     //   if (status == EasyLoadingStatus.dismiss) {
     //     _timer?.cancel();
     //   }
@@ -52,10 +52,10 @@ class _commentForumState extends State<commentForum> {
     _displayname = MyUser.getDisplayName();
     _ifModerator = MyUser.getIsModerator();
     _roseuid = MyUser.getRoseUsername();
-    // print("firebase uid is " + fbuid! + " and email is " + email!);
-    // print("EB uid is " + _ebuid);
-    // print("displayname is " + _displayname);
-    // print(_ifModerator);
+    //
+    //
+    //
+    //
   }
 
   @override
@@ -90,14 +90,14 @@ class _commentForumState extends State<commentForum> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // print("---!!!Creating comment: " + text);
+                          //
                           // TODO: implement submit comment
                           // _timer?.cancel();
                           // await EasyLoading.show(
                           //   status: 'Commenting...',
                           //   maskType: EasyLoadingMaskType.black,
                           // );
-                          // print('EasyLoading show');
+                          //
                           // forum.add_comment(
                           //     Forum_Answer("answer6", "morrison jamari", text));
                           DateTime now = DateTime.now();

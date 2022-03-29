@@ -15,10 +15,8 @@ class ReportContent extends StatelessWidget {
       createAlbumReportContent(
               contentId, contentType, reportTextController.text)
           .then((value) {
-        print("Report successful");
         Navigator.pop(context);
       }).catchError((err) {
-        print("Report failed");
         modalErrorHandler(err, context, "failed to submit error report");
       });
     } else {

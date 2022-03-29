@@ -34,10 +34,8 @@ class _QuestionaireState extends State<Questionaire> {
       'Content-Type': 'application/json; charset=UTF-8',
     });
 
-    print(response.body);
-
     final responseData = jsonDecode(response.body);
-    print(responseData['message']);
+
     if (responseData['message'] == 'has question') {
       setState(() {
         countries = responseData['question']['options'];
@@ -46,7 +44,7 @@ class _QuestionaireState extends State<Questionaire> {
       });
     } else {
       //redirect to dm's here :D
-      print('nothing to show');
+
     }
   }
 
@@ -67,7 +65,6 @@ class _QuestionaireState extends State<Questionaire> {
         'answer': jsonEncode(selections),
       }),
     );
-    print(response.body);
   }
 
   @override
@@ -108,7 +105,8 @@ class _QuestionaireState extends State<Questionaire> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) => FeedScreen()));
+                                builder: (BuildContext context) =>
+                                    FeedScreen()));
                       },
                     ),
                   ],
@@ -202,12 +200,11 @@ class _QuestionaireState extends State<Questionaire> {
               FlatButton(
                 child: Text("Submit"),
                 onPressed: () {
-                 // Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                      SelectUser(currentStudent: 'morrisjj'),
+                      builder: (_) => SelectUser(currentStudent: 'morrisjj'),
                     ),
                   );
                   EasyLoading.dismiss();

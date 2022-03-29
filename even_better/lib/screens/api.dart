@@ -12,14 +12,11 @@ String BASE_URL = 'http://10.0.2.2:3000/posts/';
 
 void createPost(title, description, url, likes, time, username) {
   _createPost(title, description, url, likes, time, username);
-  print("post url ${url}");
 }
 
 Future<http.Response> _createPost(
     title, description, url, likes, time, username) {
-  print("Ip: create ->");
   String ip = BASE_URL + 'create';
-  print(ip);
 
   return http.post(
     Uri.parse(ip),
@@ -40,12 +37,11 @@ Future<http.Response> _createPost(
 
 void deletePost(pID) {
   _deletePost(pID);
-  print("deleting post" + pID);
 }
 
 Future<http.Response> _deletePost(pID) {
   String ip = BASE_URL + 'deleteByKey/' + pID;
-  print(ip);
+
   return http.post(
     Uri.parse(ip),
     headers: <String, String>{
@@ -55,9 +51,8 @@ Future<http.Response> _deletePost(pID) {
 }
 
 void createPostUpdate(title, des, id) async {
-  print("update string: " + title + des);
   String ip = BASE_URL + 'update/' + id;
-  print(ip);
+
   final response = await http.post(
     Uri.parse(ip),
     headers: <String, String>{
@@ -68,13 +63,11 @@ void createPostUpdate(title, des, id) async {
       'description': des,
     }),
   );
-  print(response.statusCode.toString());
 }
 
 void createLikeUpdate(likes, id) async {
-  print("update like: " + likes.toString());
   String ip = BASE_URL + 'updatelike/' + id;
-  print(ip);
+
   final response = await http.post(
     Uri.parse(ip),
     headers: <String, String>{
@@ -84,7 +77,6 @@ void createLikeUpdate(likes, id) async {
       'likes': likes,
     }),
   );
-  print(response.statusCode.toString());
 }
 
 class Posting {

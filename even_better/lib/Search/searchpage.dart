@@ -33,7 +33,6 @@ class _MySearchPageState extends State<MySearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(_users.length);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -161,13 +160,11 @@ class _MySearchPageState extends State<MySearchPage> {
       });
       return users;
     } else {
-      print("status code: " + response.statusCode.toString());
       throw Exception('failed to get all user info');
     }
   }
 
   void fetchFriends(email) async {
-    print("email: " + email);
     var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
     // var url = '10.0.2.2/users/getUserFriends/' + email;
     var response = await http.get(
@@ -178,17 +175,13 @@ class _MySearchPageState extends State<MySearchPage> {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonMembers = json.decode(response.body);
-      print(response.body);
-      print(jsonMembers);
+
       if (jsonMembers != null) {
         setState(() {
           friends = (jsonMembers as List).map((e) => e as String).toList();
         });
-
-        print("ffffffffffffffffff" + friends.length.toString());
       }
     } else {
-      print("status code: " + response.statusCode.toString());
       throw Exception('failed to get all user info');
     }
   }
@@ -204,11 +197,11 @@ class _MySearchPageState extends State<MySearchPage> {
     if (email != null) {
       _username = email!;
     }
-    print("fffffff" + _username);
+
     fetchFriends(_username);
-    print("fffff" + friends.length.toString());
+
     // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
+    //
     //   if (status == EasyLoadingStatus.dismiss) {
     //     _timer?.cancel();
     //   }

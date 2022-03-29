@@ -25,7 +25,7 @@ Future getUserData(ebuid) async {
     UserData output = UserData.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    // print("whoops, no user data??");
+    //
   }
 }
 
@@ -35,7 +35,7 @@ Future getUserData(ebuid) async {
 @override
 void createForum(title, poster, posterID, content, time, comments, tags) {
   _createForum(title, poster, posterID, content, time, comments, tags);
-  // print("creating forum [connect]");
+  //
 }
 
 @override
@@ -64,12 +64,12 @@ Future<http.Response> _createForum(
 @override
 void deleteForum(forumID) {
   _deleteForum(forumID);
-  // print("deleting forum [connect]");
+  //
 }
 
 @override
 Future<http.Response> _deleteForum(forumID) {
-  // print("calling delete with key: " + forumID);
+  //
   return http.get(
     Uri.parse(serverURL + "forums/deleteByKey/" + forumID),
     headers: <String, String>{
@@ -82,7 +82,7 @@ Future<http.Response> _deleteForum(forumID) {
 @override
 void deleteComment(commentID) {
   _deleteComment(commentID);
-  // print("deleting forum [connect]");
+  //
 }
 
 @override
@@ -100,7 +100,7 @@ Future<http.Response> _deleteComment(commentID) {
 @override
 void updateForumDB(forumid, title, content, time) {
   _updateForum(forumid, title, content, time);
-  // print("updating forum [connect]");
+  //
 }
 
 @override
@@ -126,7 +126,7 @@ Future<http.Response> _updateForum(forumid, title, content, time) async {
 @override
 void createComment(forumid, content, commenterid, time, commentername) {
   _createComment(forumid, content, commenterid, time, commentername);
-  // print("creating comments [connect]");
+  //
 }
 
 @override
@@ -150,8 +150,8 @@ Future<http.Response> _createComment(
 //----------------------------------------------------------------
 // get comments for the forum
 void getcurrentComments(forumid) {
-  // print(currentComments(forumid));
-  // print("getting comments [connect]");
+  //
+  //
 }
 
 Future<http.Response> currentComments(forumid) {
@@ -167,7 +167,7 @@ Future<http.Response> currentComments(forumid) {
 // create tag
 // void createTag(title, poster, content, time, tags) {
 //   _createTag(title, poster, content, time, tags);
-//   // print("creating forum [connect]");
+//   //
 // }
 
 // Future<http.Response> _createTag(title, poster, content, time, tags) {

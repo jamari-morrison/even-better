@@ -21,7 +21,6 @@ class _WrapperState extends State<Wrapper> {
   void initState() {
     super.initState();
     EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {
         _timer?.cancel();
       }
@@ -35,15 +34,11 @@ class _WrapperState extends State<Wrapper> {
     // when user logs in, a user object will be stored in this variable, set to null if logged out.
     final user = Provider.of<MyUser?>(context, listen: true);
 
-    print("${user}  [Wrapper]");
     // return either home or authenticate widget
     // return const FirstTime();
     if (user == null) {
-      print('first time page [Wrapper]');
       return FirstTime(mainContext: context);
     } else {
-      print('home page [Wrapper]');
-
       return FeedScreen();
     }
   }

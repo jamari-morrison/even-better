@@ -50,7 +50,7 @@ class _DetailedForum extends State<DetailedForum> {
   }
 
   void _onRefresh() async {
-    // print("trying to refresh");
+    //
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
@@ -58,7 +58,7 @@ class _DetailedForum extends State<DetailedForum> {
   }
 
   void _onLoading() async {
-    // print("trying to refresh");
+    //
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
@@ -68,7 +68,7 @@ class _DetailedForum extends State<DetailedForum> {
   void getComments() async {
     List<Forum_Answer> listItems = [];
     String temp = serverurl + "/comments/get/" + post.postId;
-    // print(temp);
+    //
     final response = await http.get(
       Uri.parse(serverurl + "/comments/get/" + post.postId),
       headers: <String, String>{
@@ -78,7 +78,7 @@ class _DetailedForum extends State<DetailedForum> {
 
     if (response != null && response.statusCode == HttpStatus.ok) {
       List<dynamic> reslist = jsonDecode(response.body);
-      // print("reslist is: " + reslist.toString());
+      //
       for (var comment in reslist) {
         String aid = comment['_id'];
         String commenter = comment['commenter'];
@@ -89,9 +89,9 @@ class _DetailedForum extends State<DetailedForum> {
         // getUserData(commenter).then((val) {
         //   var userData = val.userData;
         //   displayName = userData["name"];
-        //   print("obtained user data! for each comment");
+        //
         // }).catchError((err) {
-        //   print("failed to get user data :(");
+        //
         // });
         Forum_Answer tempFA =
             Forum_Answer(aid, commenter, tempContent, tempTime, displayName);
@@ -104,9 +104,9 @@ class _DetailedForum extends State<DetailedForum> {
         }
       });
     } else if (response.statusCode == HttpStatus.noContent) {
-      // print("No content");
+      //
     } else {
-      // print("Loading Comments DataBase Error!");
+      //
     }
   }
 
@@ -231,7 +231,7 @@ class _DetailedForum extends State<DetailedForum> {
         children: <Widget>[
           IconButton(
             onPressed: () async {
-              // print("update");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -250,7 +250,7 @@ class _DetailedForum extends State<DetailedForum> {
           TextButton(
             // style: TextButton.styleFrom(primary: Colors.black),
             onPressed: () async {
-              // print("update");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -281,7 +281,7 @@ class _DetailedForum extends State<DetailedForum> {
                 Widget continueButton = TextButton(
                   child: Text("DELETE"),
                   onPressed: () {
-                    // print("Trying to delete");
+                    //
                     deleteForum(post.postId);
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
@@ -323,7 +323,7 @@ class _DetailedForum extends State<DetailedForum> {
               Widget continueButton = TextButton(
                 child: Text("DELETE"),
                 onPressed: () {
-                  // print("Trying to delete");
+                  //
                   deleteForum(post.postId);
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -354,7 +354,7 @@ class _DetailedForum extends State<DetailedForum> {
         child: Row(children: <Widget>[
           IconButton(
             onPressed: () async {
-              // print("report content");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -375,7 +375,7 @@ class _DetailedForum extends State<DetailedForum> {
           TextButton(
             // style: TextButton.styleFrom(primary: Colors.black),
             onPressed: () async {
-              // print("report content");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -393,7 +393,7 @@ class _DetailedForum extends State<DetailedForum> {
         child: Row(children: <Widget>[
           IconButton(
             onPressed: () async {
-              // print("report content");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -442,7 +442,7 @@ class _DetailedForum extends State<DetailedForum> {
           ),
           IconButton(
             onPressed: () async {
-              // print("add comments");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => commentForum(post)),

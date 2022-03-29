@@ -49,7 +49,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
   }
 
   void _onRefresh() async {
-    // print("trying to refresh");
+    //
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
@@ -67,7 +67,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
     List<Comment> listItems = [];
     String serverurl = "http://10.0.2.2:3000/comments";
     String temp = serverurl + "/getpostcomment/" + widget.post.pid;
-    print(temp);
+
     final response = await http.get(
       Uri.parse(temp),
       headers: <String, String>{
@@ -77,7 +77,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
 
     if (response != null && response.statusCode == HttpStatus.ok) {
       var jsonMembers = json.decode(response.body);
-      print(jsonMembers);
+
       setState(() {
         // posts =
         //     jsonMembers.map<Posting>((json) => Posting.fromJson(json)).toList();
@@ -86,10 +86,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
             .toList();
       });
     } else if (response.statusCode == HttpStatus.noContent) {
-      print("No content");
-    } else {
-      print("Loading Comments DB Error!!!!!");
-    }
+    } else {}
   }
 
   List<Widget> getList() {
@@ -352,9 +349,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                       IconButton(
                                         icon: Icon(Icons.chat),
                                         iconSize: 30.0,
-                                        onPressed: () {
-                                          print('Chat');
-                                        },
+                                        onPressed: () {},
                                       ),
                                       Text(
                                         mycomments.length.toString(),
@@ -473,13 +468,10 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                     ),
                     color: Color(0xFF23B66F),
                     onPressed: () async {
-                      print(widget.post.pid);
-                      print(commentController.text);
-                      print(_username);
                       DateTime now = DateTime.now();
                       String now_string =
                           DateFormat('yyyy-MM-dd kk:mm').format(now);
-                      print(now_string);
+
                       createComment(widget.post.pid, commentController.text,
                           _username, now_string);
                       connect.createComment(

@@ -68,7 +68,7 @@ Tag section in create post page. ********************************
                           //                             width: 320.0,
                           //                             child: FlatButton(
                           //                               onPressed: () {
-                          //                                 print(newTag);
+                          //                                  
                           //                               },
                           //                               child: const Text(
                           //                                 "Create",

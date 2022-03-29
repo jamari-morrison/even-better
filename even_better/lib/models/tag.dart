@@ -14,7 +14,6 @@ class Tag extends StatelessWidget {
 
   Tag(this.name, set) {
     // tagged_forum = <String>[];
-    print("the tag with name ${name} is created [Tag]");
   }
 
   String get tagName {
@@ -23,12 +22,11 @@ class Tag extends StatelessWidget {
 
   // void addPost(String fid) {
   //   tagged_forum.add(fid);
-  //   print("the forum post ${fid} is added to the tag ${name}");
+  //
   // }
 
   void addPost(Forum_Post fid) {
     tagged_forum.add(fid);
-    print("the forum post is added to the tag ${name}");
   }
 
   static Tag changeColor(Tag t) {
@@ -46,7 +44,7 @@ class Tag extends StatelessWidget {
   // void initState() {
   //   super.initState();
   //   EasyLoading.addStatusCallback((status) {
-  //     print('EasyLoading Status $status');
+  //
   //     if (status == EasyLoadingStatus.dismiss) {
   //       _timer?.cancel();
   //     }
@@ -64,7 +62,6 @@ class Tag extends StatelessWidget {
           children: <Widget>[
             TextButton(
               onPressed: () {
-                print(tagName + " pressed");
                 var forward = Tag(name, "");
                 Navigator.push(
                   context,
@@ -84,14 +81,13 @@ class Tag extends StatelessWidget {
           children: <Widget>[
             TextButton(
               onPressed: () async {
-                print(tagName + " pressed");
                 var forward = Tag(name, "");
                 _timer?.cancel();
                 await EasyLoading.show(
                   status: 'loading...',
                   maskType: EasyLoadingMaskType.black,
                 );
-                print('EasyLoading show');
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(

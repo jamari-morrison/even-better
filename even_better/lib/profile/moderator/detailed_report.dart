@@ -35,7 +35,6 @@ class _DetailedReportState extends State<DetailedReport> {
     super.initState();
     obtainContent();
     EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {
         _timer?.cancel();
       }
@@ -44,8 +43,6 @@ class _DetailedReportState extends State<DetailedReport> {
   }
 
   void obtainContent() async {
-    print("content type is : " + widget.contentType);
-    print("id is: " + widget.contentId);
     print(
         "call is : + https://api.even-better-api.com/${widget.contentType}/getById/${widget.contentId}");
     final uri = Uri.parse(
@@ -56,7 +53,6 @@ class _DetailedReportState extends State<DetailedReport> {
 
     final message = jsonDecode(response.body)['message'];
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("message is: " + message.toString());
       switch (widget.contentType) {
         case "forums":
           String poster = message['poster'];

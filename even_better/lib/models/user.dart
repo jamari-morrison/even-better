@@ -12,18 +12,13 @@ class MyUser {
   static late String displayName;
 
   MyUser(this.fbuid, this.userEmail) {
-    print('User obj with uid: ${this.fbuid} [MyUser]');
-    print('User obj with user email: ${this.userEmail} [MyUser]');
     getUserData().then((val) {
       var userData = val.userData;
       roseUsername = userData["rose-username"];
       isModerator = userData["moderator"];
       ebuid = userData["_id"];
       displayName = userData["name"];
-      print("obtained user data!");
-    }).catchError((err) {
-      print("failed to get user data :(");
-    });
+    }).catchError((err) {});
     //obtain other user data
   }
 
@@ -55,9 +50,7 @@ class MyUser {
     if (response.statusCode == 200 || response.statusCode == 201) {
       UserData output = UserData.fromJson(jsonDecode(response.body));
       return output;
-    } else {
-      print("whoops, no user data??");
-    }
+    } else {}
   }
 }
 

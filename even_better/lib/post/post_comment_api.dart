@@ -9,13 +9,11 @@ String BASE_URL = 'http://10.0.2.2:3000/';
 
 void createComment(postid, content, commenter, time) {
   _createComment(postid, content, commenter, time);
-  // print("creating comments [connect]");
+  //
 }
 
 @override
 Future<http.Response> _createComment(postid, content, commenter, time) {
-  print("starrrrrrrrrrrrrrt");
-  print(BASE_URL + "postcomments/create");
   return http.post(
     Uri.parse(BASE_URL + "postcomments/create"),
     headers: <String, String>{
@@ -30,10 +28,7 @@ Future<http.Response> _createComment(postid, content, commenter, time) {
   );
 }
 
-void getcurrentComments(postid) {
-  print(currentComments(postid));
-  print("getting comments [connect]");
-}
+void getcurrentComments(postid) {}
 
 Future<http.Response> currentComments(postid) {
   return http.get(
@@ -46,7 +41,7 @@ Future<http.Response> currentComments(postid) {
 
 void deleteComment(commentID) {
   _deleteComment(commentID);
-  // print("deleting forum [connect]");
+  //
 }
 
 @override

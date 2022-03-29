@@ -6,8 +6,6 @@ void createAddFriend(friend) async {
   final user = FirebaseAuth.instance.currentUser;
   String? email = user!.email;
   if (email != null) {
-    print("email: " + email);
-    print("friend's username: " + friend);
     final response = await http.post(
       Uri.parse('https://api.even-better-api.com/users/addfriend/' +
           email), //http://10.0.2.2:3000/users/update
@@ -16,7 +14,6 @@ void createAddFriend(friend) async {
       },
       body: jsonEncode(<String, String>{"friend": friend}),
     );
-    print(response.statusCode.toString());
   }
   ;
 }

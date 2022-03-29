@@ -54,8 +54,7 @@ class _DirectMessageState extends State<DirectMessage> {
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
-    print('got in');
-    print(response.body);
+
     // EasyLoading.dismiss();
 
     Map<String, dynamic> responseList = jsonDecode(response.body);
@@ -97,8 +96,6 @@ class _DirectMessageState extends State<DirectMessage> {
   }
 
   void _handleGetMessage(String message) {
-    print('handling get');
-    print(message);
     final textMessage = types.TextMessage(
       author: _recipient,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -131,20 +128,17 @@ class _DirectMessageState extends State<DirectMessage> {
     super.initState();
     getMessageHistory();
     socket.connect();
-    print('START');
 
     socket.onConnect((_) {
-      print('connect');
       socket.emit('init', {'userID': widget.currentStudent});
     });
-    socket.on('event', (data) => print(data));
-    socket.onDisconnect((_) => print('disconnect'));
+    socket.on('event', (data) => socket.onDisconnect((_) =>
 
-    //TODO: get timestamp from server, don't make own
-    //TODO: upload message id to server so they're the same (?)
-    socket.on('fromServer', (_) => {_handleGetMessage(_.toString())});
+        //TODO: get timestamp from server, don't make own
+        //TODO: upload message id to server so they're the same (?)
+        socket.on('fromServer', (_) => {_handleGetMessage(_.toString())})));
+
     EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {
         _timer?.cancel();
       }

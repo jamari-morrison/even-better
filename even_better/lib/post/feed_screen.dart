@@ -68,10 +68,8 @@ class _FeedScreenState extends State<FeedScreen> {
       'Content-Type': 'application/json; charset=UTF-8',
     });
 
-    print(response.body);
-
     final responseData = jsonDecode(response.body);
-    print(responseData['message']);
+
     if (responseData['message'] == 'true') {
       setState(() {
         _shouldShowPopup = true;
@@ -94,7 +92,7 @@ class _FeedScreenState extends State<FeedScreen> {
     checkIfShouldPopup();
     initialName();
     getUserInfo().then((result) {
-      // print(result.avatar);
+      //
       setState(() {
         _name = result.name;
         if (result.avatar != "N/A" && result.avatar.isNotEmpty) {
@@ -133,15 +131,13 @@ class _FeedScreenState extends State<FeedScreen> {
           SinglePost sp = SinglePost(po.id.toString(), po.likes, p, posting);
           ps.add(sp);
           ps.sort();
-          print("---------------0");
-          print(ps.length);
         }
       });
     });
   }
 
   void _onRefresh() async {
-    // print("trying to refresh");
+    //
     await Future.delayed(Duration(milliseconds: 100), () {
       refreshPost();
     });
@@ -171,8 +167,6 @@ class _FeedScreenState extends State<FeedScreen> {
           SinglePost sp = SinglePost(po.id.toString(), po.likes, p, posting);
           ps.add(sp);
           ps.sort();
-          print("---------------0");
-          print(ps.length);
         }
       });
     });
@@ -192,7 +186,6 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Future<String> getDisplayName(String email) async {
-    print("email: " + email);
     final response = await http.get(
       // Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
       Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
@@ -203,20 +196,18 @@ class _FeedScreenState extends State<FeedScreen> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       var user = json.decode(response.body);
       wholeUser u = wholeUser.fromJson(user);
-      print("aaaaaaaaaaaaaaaa" + u.useri.name);
-      // print(user.toString());
+
+      //
       setState(() {
         postname = u.useri.name;
       });
       return u.useri.name;
     } else {
-      print("status code: " + response.statusCode.toString());
       throw Exception('failed to load user');
     }
   }
 
   Future<List<Posting>> getRequest(String username) async {
-    print("Ip: get -> Post");
     List<Posting> posts = <Posting>[];
     var url = 'http://10.0.2.2:3000/posts/getUserPost/' + username;
     var response = await http.get(
@@ -227,7 +218,7 @@ class _FeedScreenState extends State<FeedScreen> {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonMembers = json.decode(response.body);
-      print(jsonMembers);
+
       setState(() {
         // posts =
         //     jsonMembers.map<Posting>((json) => Posting.fromJson(json)).toList();
@@ -236,13 +227,11 @@ class _FeedScreenState extends State<FeedScreen> {
       });
       return posts;
     } else {
-      print("status code: " + response.statusCode.toString());
       throw Exception('failed to get all user posts info');
     }
   }
 
   void fetchFriends(email) async {
-    print("email: " + email);
     // var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
     var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
     var response = await http.get(
@@ -253,20 +242,17 @@ class _FeedScreenState extends State<FeedScreen> {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonMembers = json.decode(response.body);
-      print(response.body);
-      print(jsonMembers);
+
       if (jsonMembers != null) {
         setState(() {
           friends = (jsonMembers as List).map((e) => e as String).toList();
         });
         if (friends != null) {
-          print("ffffffffffffffffff" + friends.length.toString());
           for (String friend in friends) {
             getRequest(friend).then((value) {
               setState(() {
                 fserverposts.addAll(value);
-                print("000000000000000000sb");
-                print(fserverposts.length);
+
                 if (!fserverposts.isEmpty) {
                   for (Posting po in fserverposts) {
                     // getDiaplayName(po.poster);
@@ -285,8 +271,6 @@ class _FeedScreenState extends State<FeedScreen> {
                         SinglePost(po.id.toString(), po.likes, p, posting);
                     ps.add(sp);
                     ps.sort();
-                    print("---------------1");
-                    print(ps.length);
                   }
                 }
                 l = getPostWidgets();
@@ -296,7 +280,6 @@ class _FeedScreenState extends State<FeedScreen> {
         }
       }
     } else {
-      print("status code: " + response.statusCode.toString());
       throw Exception('failed to get all user info');
     }
   }
@@ -319,7 +302,6 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   FileImage getPostImage(String s) {
-    print(s);
     return FileImage(File(s));
   }
 
@@ -408,7 +390,6 @@ class _FeedScreenState extends State<FeedScreen> {
                     Widget continueButton = TextButton(
                       child: Text("DELETE"),
                       onPressed: () {
-                        print("Trying to delete");
                         deletePost(pid);
                         Navigator.of(context).pop();
                         setState(() {
@@ -453,7 +434,6 @@ class _FeedScreenState extends State<FeedScreen> {
                   Widget continueButton = TextButton(
                     child: Text("DELETE"),
                     onPressed: () {
-                      print("Trying to delete");
                       deletePost(pid);
                       Navigator.of(context).pop();
                       setState(() {
@@ -485,9 +465,7 @@ class _FeedScreenState extends State<FeedScreen> {
             value: 3,
             child: Row(children: <Widget>[
               IconButton(
-                onPressed: () async {
-                  print("report content");
-                },
+                onPressed: () async {},
                 color: Colors.transparent,
                 icon: const Icon(
                   Icons.report,
@@ -499,7 +477,6 @@ class _FeedScreenState extends State<FeedScreen> {
               TextButton(
                 // style: TextButton.styleFrom(primary: Colors.black),
                 onPressed: () async {
-                  print("report content");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -519,9 +496,7 @@ class _FeedScreenState extends State<FeedScreen> {
             value: 1,
             child: Row(children: <Widget>[
               IconButton(
-                onPressed: () async {
-                  print("report content");
-                },
+                onPressed: () async {},
                 color: Colors.transparent,
                 icon: const Icon(
                   Icons.report,
@@ -533,7 +508,6 @@ class _FeedScreenState extends State<FeedScreen> {
               TextButton(
                 // style: TextButton.styleFrom(primary: Colors.black),
                 onPressed: () async {
-                  print("report content");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -619,7 +593,6 @@ class _FeedScreenState extends State<FeedScreen> {
                   ),
                   InkWell(
                     onDoubleTap: () {
-                      print('Like post');
                       changedata(true, likes, pid);
                     },
                     onTap: () {
@@ -1036,7 +1009,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               //   status: 'loading...',
                               //   maskType: EasyLoadingMaskType.black,
                               // );
-                              // print('EasyLoading show');
+                              //
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
