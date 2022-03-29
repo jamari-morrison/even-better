@@ -971,24 +971,6 @@ class _FeedScreenState extends State<FeedScreen> {
                           builder: (context) => ImageFromGalleryEx()));
                   // refreshPost();
                   _onRefresh();
-                  setState(() {
-                    // p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                    //     _post.content, _name, 0, '', context);
-                    // Posting posting = Posting(
-                    //     title: _post.title,
-                    //     des: _post.content,
-                    //     imageUrl: _post.imageUrl,
-                    //     likes: 0,
-                    //     poster: _username,
-                    //     timestamp: _post.timeAgo);
-                    // SinglePost sp = SinglePost('', 0, p, posting);
-                    // ps.add(sp);
-                    // ps.sort();
-                    // print("---------------2");
-                    // print(ps.length);
-                    _onRefresh();
-                    // refreshPost();
-                  });
                 },
                 child: const Icon(
                   Icons.add,
