@@ -943,6 +943,9 @@ class _FeedScreenState extends State<FeedScreen> {
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
                   // refreshPost();
+                  serverposts.clear();
+                  fserverposts.clear();
+                  ps.clear();
                   _onRefresh();
                 },
                 child: const Icon(
