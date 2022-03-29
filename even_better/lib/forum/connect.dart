@@ -25,7 +25,7 @@ Future getUserData(ebuid) async {
     UserData output = UserData.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    print("whoops, no user data??");
+    // print("whoops, no user data??");
   }
 }
 
@@ -69,7 +69,7 @@ void deleteForum(forumID) {
 
 @override
 Future<http.Response> _deleteForum(forumID) {
-  print("calling delete with key: " + forumID);
+  // print("calling delete with key: " + forumID);
   return http.get(
     Uri.parse(serverURL + "forums/deleteByKey/" + forumID),
     headers: <String, String>{
@@ -150,8 +150,8 @@ Future<http.Response> _createComment(
 //----------------------------------------------------------------
 // get comments for the forum
 void getcurrentComments(forumid) {
-  print(currentComments(forumid));
-  print("getting comments [connect]");
+  // print(currentComments(forumid));
+  // print("getting comments [connect]");
 }
 
 Future<http.Response> currentComments(forumid) {

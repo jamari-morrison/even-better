@@ -24,6 +24,8 @@ import 'package:like_button/like_button.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 //https://stackoverflow.com/questions/50945526/flutter-get-data-from-a-list-of-json
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -39,6 +41,8 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget l = _noaddNewPosts();
   // List<Posting> now_ps = <Posting>[];
   // Timer? _timer;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
   bool _shouldShowPopup = false;
   File? _image;
   List<String> friends = <String>[];
@@ -136,10 +140,18 @@ class _FeedScreenState extends State<FeedScreen> {
     });
   }
 
+  void _onRefresh() async {
+    // print("trying to refresh");
+    await Future.delayed(Duration(milliseconds: 100), () {
+      refreshPost();
+    });
+    _refreshController.refreshCompleted();
+  }
+
   refreshPost() {
-    serverposts.clear();
-    fserverposts.clear();
-    ps.clear();
+    // serverposts.clear();
+    // fserverposts.clear();
+    // ps.clear();
     getRequest(_username).then((value) {
       setState(() {
         serverposts.addAll(value);
@@ -182,8 +194,8 @@ class _FeedScreenState extends State<FeedScreen> {
   Future<String> getDisplayName(String email) async {
     print("email: " + email);
     final response = await http.get(
-      Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
-      // Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
+      // Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
+      Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -327,11 +339,16 @@ class _FeedScreenState extends State<FeedScreen> {
           child: Row(
             children: <Widget>[
               IconButton(
-                onPressed: () {
-                  print("update");
+                onPressed: () async {
+                  TextEditingController titleController =
+                      TextEditingController();
+                  TextEditingController postController =
+                      TextEditingController();
+                  _displayTextInputDialog(
+                      context, titleController, postController, pid);
                 },
                 color: Colors.transparent,
-                icon: const Icon(
+                icon: Icon(
                   Icons.update,
                   size: 35.0,
                   color: Colors.black,
@@ -341,7 +358,36 @@ class _FeedScreenState extends State<FeedScreen> {
               TextButton(
                 // style: TextButton.styleFrom(primary: Colors.black),
                 onPressed: () async {
-                  print("update");
+                  TextEditingController titleController =
+                      TextEditingController();
+                  titleController.text = title;
+                  TextEditingController postController =
+                      TextEditingController();
+                  postController.text = content;
+                  await _displayTextInputDialog(
+                      context, titleController, postController, pid);
+                  // WidgetsBinding.instance
+                  //     ?.addPostFrameCallback((_) => setState(() {
+                  //           refreshPost();
+                  //         }));
+                  setState(() {
+                    SinglePost toedit =
+                        ps.firstWhere((element) => element.pid == pid);
+                    ps
+                        .firstWhere((element) => element.pid == pid)
+                        .posting
+                        .title = titleController.text;
+                    ps.firstWhere((element) => element.pid == pid).posting.des =
+                        postController.text;
+                    serverposts
+                        .firstWhere((element) => element.id == pid)
+                        .title = titleController.text;
+                    serverposts.firstWhere((element) => element.id == pid).des =
+                        postController.text;
+                    toedit.posting.title = titleController.text;
+                    toedit.posting.des = postController.text;
+                    _onRefresh();
+                  });
                 },
                 child: Text("Update", style: TextStyle(color: Colors.black)),
               ),
@@ -675,15 +721,24 @@ class _FeedScreenState extends State<FeedScreen> {
                                     //     ),
                                     //   ),
                                     // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ViewPostScreen(
+                                          post: ps.firstWhere(
+                                              (element) => element.pid == pid),
+                                        ),
+                                      ),
+                                    );
                                   },
                                 ),
-                                Text(
-                                  likes.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                // Text(
+                                //   likes.toString(),
+                                //   style: const TextStyle(
+                                //     fontSize: 14.0,
+                                //     fontWeight: FontWeight.w600,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],
@@ -725,13 +780,111 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  Future<bool> onLikeButtonTapped(bool isLiked) async {
-    /// send your request here
-    // final bool success= await sendRequest();
+  Future<void> _displayTextInputDialog(
+      BuildContext context,
+      TextEditingController titleController,
+      TextEditingController postController,
+      String id) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Update Text'),
+            content: Container(
+              height: 350.0,
+              width: 400,
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  _descriptionTile(titleController),
+                  SizedBox(height: 30),
+                  _contentTile(
+                    postController,
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('Update'),
+                onPressed: () {
+                  setState(() {
+                    createPostUpdate(
+                        titleController.text, postController.text, id);
+                    SinglePost toedit =
+                        ps.firstWhere((element) => element.pid == id);
+                    toedit.posting.title = titleController.text;
+                    toedit.posting.des = postController.text;
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
+  }
 
-    /// if failed, you can do nothing
-    // return success? !isLiked:isLiked;
-    return !isLiked;
+  Widget _descriptionTile(TextEditingController titleController) {
+    return ListTileTheme(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ListTile(
+        tileColor: Colors.grey[200],
+        leading: Icon(Icons.edit),
+        title: Text(
+          'Post Title',
+          style: TextStyle(
+              fontFamily: 'EB',
+              height: 2,
+              color: Colors.grey[800],
+              fontSize: 20.0),
+        ),
+        subtitle: TextField(
+          controller: titleController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Enter...',
+          ),
+          minLines: 1,
+          maxLines: 2,
+          maxLength: 44,
+        ),
+      ),
+    );
+  }
+
+  Widget _contentTile(TextEditingController postController) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      ListTile(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        tileColor: Colors.grey[200],
+        leading: Icon(Icons.edit),
+        title: Text(
+          'Post Content',
+          style: TextStyle(
+              fontFamily: 'EB',
+              height: 2,
+              color: Colors.grey[800],
+              fontSize: 20.0),
+        ),
+        subtitle: TextField(
+          controller: postController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Enter...',
+          ),
+          //keyboardType: TextInputType.multiline,
+          minLines: 1,
+          maxLines: 3,
+          maxLength: 300,
+        ),
+      ),
+    ]);
   }
 
   Future<bool> changedata(bool status, int likes, String id) async {
@@ -754,7 +907,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
     switch (_index) {
       case 0:
-        child = _postHome();
+        child = postHome();
         break;
       case 1:
         child = MySearchPage();
@@ -816,24 +969,8 @@ class _FeedScreenState extends State<FeedScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
-                  refreshPost();
-                  setState(() {
-                    // p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
-                    //     _post.content, _name, 0, '', context);
-                    // Posting posting = Posting(
-                    //     title: _post.title,
-                    //     des: _post.content,
-                    //     imageUrl: _post.imageUrl,
-                    //     likes: 0,
-                    //     poster: _username,
-                    //     timestamp: _post.timeAgo);
-                    // SinglePost sp = SinglePost('', 0, p, posting);
-                    // ps.add(sp);
-                    // ps.sort();
-                    // print("---------------2");
-                    // print(ps.length);
-                    refreshPost();
-                  });
+                  // refreshPost();
+                  _onRefresh();
                 },
                 child: const Icon(
                   Icons.add,
@@ -866,7 +1003,7 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  Widget _postHome() {
+  Widget postHome() {
     return _shouldShowPopup
         ? Questionaire(currentStudent: 'morrisjj')
         : ListView(

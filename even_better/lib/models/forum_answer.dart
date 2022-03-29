@@ -33,10 +33,10 @@ class Forum_Answer {
     // print('In Answer, display name is' + displayName);
   }
 
-  void liked() {
-    likes++;
-    print('liked the answer');
-  }
+  // void liked() {
+  //   likes++;
+  //   print('liked the answer');
+  // }
 }
 
 class ForumAnswer extends StatelessWidget {
@@ -101,7 +101,7 @@ class ForumAnswer extends StatelessWidget {
                                   Widget continueButton = TextButton(
                                     child: Text("DELETE"),
                                     onPressed: () {
-                                      print("Trying to delete");
+                                      // print("Trying to delete");
                                       deleteComment(answers.aid);
                                       Navigator.of(context).pop();
                                       // Navigator.of(context).pop();
