@@ -56,6 +56,13 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
     _refreshController.refreshCompleted();
   }
 
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getComments();
+    });
+    _refreshController.loadComplete();
+  }
+
   void getComments() async {
     List<Comment> listItems = [];
     String serverurl = "http://10.0.2.2:3000/comments";
