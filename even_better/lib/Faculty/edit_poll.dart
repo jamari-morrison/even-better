@@ -207,7 +207,7 @@ class _EditPollState extends State<EditPoll> {
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Priority (range: 1 - 1000)',
-                    helperText: 'Priority determines the order in which polls are shown. The lower the number, the sooner the poll will be shown to students.'
+                    helperText: 'Priority determines the order in which polls are shown. \n The lower the number, the sooner the poll will be shown to students.'
                   ),
                 )
                 ,
@@ -216,7 +216,7 @@ class _EditPollState extends State<EditPoll> {
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     labelText: 'Quota',
-                    helperText: 'Quota determines how many responses the poll will require before it is taken out of circulation.'
+                    helperText: 'Quota determines how many responses the poll will require before it is \n taken out of circulation.'
                   ),
                 ),
                 ElevatedButton(

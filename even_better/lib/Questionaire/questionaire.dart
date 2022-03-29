@@ -34,28 +34,18 @@ class _QuestionaireState extends State<Questionaire> {
       'Content-Type': 'application/json; charset=UTF-8',
     });
 
-    print(response.body);
 
     final responseData = jsonDecode(response.body);
-    print(responseData['message']);
     if (responseData['message'] == 'has question') {
       setState(() {
         countries = responseData['question']['options'];
         questionTitle = responseData['question']['question'];
         questionID = responseData['question']['_id'];
       });
-    } else {
-      //redirect to dm's here :D
-      print('nothing to show');
     }
   }
 
   void sendPopupData(List<String> selections) async {
-    print(jsonEncode(<String, String>{
-      'questionID': questionID.toString(),
-      'answerer': widget.currentStudent.toString(),
-      'answer': jsonEncode(selections),
-    }).toString());
     final response = await http.post(
       Uri.parse('https://api.even-better-api.com/popups/answer'),
       headers: <String, String>{
@@ -67,7 +57,6 @@ class _QuestionaireState extends State<Questionaire> {
         'answer': jsonEncode(selections),
       }),
     );
-    print(response.body);
   }
 
   @override
@@ -113,14 +102,12 @@ class _QuestionaireState extends State<Questionaire> {
                     ),
                   ],
                 )
-                // ListTile(
-                //   title: Text('Single choice Dialog'),
-                //   onTap: () => _showMultiChoiceDialog(context),
-                // )
+
               ]).toList())
             : Text('joe')));
   }
 
+  //test
   @override
   void initState() {
     super.initState();

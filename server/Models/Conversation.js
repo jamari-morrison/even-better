@@ -11,6 +11,8 @@ const ConversationSchema = mongoose.Schema(
                 "timestamp" : {type: Number, required: true}
             }
         ]
-})
+    }
+
+)
 
 module.exports = mongoose.model('ConversationModel', ConversationSchema);

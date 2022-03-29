@@ -31,7 +31,6 @@ class _SelectUserState extends State<SelectUser> {
     super.initState();
     getItemData();
     EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {
         _timer?.cancel();
       }
@@ -53,7 +52,7 @@ class _SelectUserState extends State<SelectUser> {
     Map<Widget, String> listMap = {};
 
     final uri = Uri.https(
-        'api.even-better-api.com:3000',
+        'api.even-better-api.com',
         '/students/all', {}); //in future don't grab all students
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -70,7 +69,6 @@ class _SelectUserState extends State<SelectUser> {
                 status: 'loading...',
                 maskType: EasyLoadingMaskType.black,
               );
-              print('EasyLoading show');
               Navigator.push(
                   context,
                   MaterialPageRoute(

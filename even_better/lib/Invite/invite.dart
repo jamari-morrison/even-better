@@ -30,7 +30,6 @@ class _InviteState extends State<Invite> {
          'Content-Type': 'application/json; charset=UTF-8',
        });
 
-    print(response.body);
 
     List<dynamic> responseList = jsonDecode(response.body);
 
@@ -47,7 +46,6 @@ class _InviteState extends State<Invite> {
       listStatuses.add({'color': statusColor, 'text': statusString});
       setState(() {
         itemStatuses = listStatuses;
-        //print(listItems);
       });
     }
     for (var student in responseList) {
@@ -56,7 +54,6 @@ class _InviteState extends State<Invite> {
 
     setState(() {
       itemsData = listItems;
-      //print(listItems);
     });
   }
 
@@ -74,8 +71,6 @@ class _InviteState extends State<Invite> {
               itemCount: itemsData.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    // print("printing");
-                    // print(itemsData);
                     return itemsData[index];
                   }))
 
@@ -119,7 +114,6 @@ class _ButtonWidgetState extends State<ButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.data);
     return Container(
         height: 75,
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -150,12 +144,10 @@ class _ButtonWidgetState extends State<ButtonWidget> {
                                 constraints: BoxConstraints.tightFor(width: 88, height: 22),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    print('entering onpress');
-                                    print(widget.data['status']);
+
                                     if(widget.data['status'] == 'Invite' && !_clicked){
 
 
-      print('pong');
                                       final response = await http.post(
                                         Uri.parse(
                                             'https://api.even-better-api.com/students/invite'),
@@ -168,7 +160,6 @@ class _ButtonWidgetState extends State<ButtonWidget> {
                                           'rose-username': widget.data['rose-username'],
                                         }),
                                       );
-                                      print(response);
 
                                       _clicked = true;
                                       setState((){});
