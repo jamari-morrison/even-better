@@ -24,6 +24,8 @@ import 'package:like_button/like_button.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 //https://stackoverflow.com/questions/50945526/flutter-get-data-from-a-list-of-json
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -39,6 +41,8 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget l = _noaddNewPosts();
   // List<Posting> now_ps = <Posting>[];
   // Timer? _timer;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
   bool _shouldShowPopup = false;
   File? _image;
   List<String> friends = <String>[];
@@ -136,10 +140,18 @@ class _FeedScreenState extends State<FeedScreen> {
     });
   }
 
+  void _onRefresh() async {
+    // print("trying to refresh");
+    await Future.delayed(Duration(milliseconds: 100), () {
+      refreshPost();
+    });
+    _refreshController.refreshCompleted();
+  }
+
   refreshPost() {
-    serverposts.clear();
-    fserverposts.clear();
-    ps.clear();
+    // serverposts.clear();
+    // fserverposts.clear();
+    // ps.clear();
     getRequest(_username).then((value) {
       setState(() {
         serverposts.addAll(value);
@@ -182,8 +194,8 @@ class _FeedScreenState extends State<FeedScreen> {
   Future<String> getDisplayName(String email) async {
     print("email: " + email);
     final response = await http.get(
-      Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
-      // Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
+      // Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
+      Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -336,7 +348,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       context, titleController, postController, pid);
                 },
                 color: Colors.transparent,
-                icon: const Icon(
+                icon: Icon(
                   Icons.update,
                   size: 35.0,
                   color: Colors.black,
@@ -352,8 +364,30 @@ class _FeedScreenState extends State<FeedScreen> {
                   TextEditingController postController =
                       TextEditingController();
                   postController.text = content;
-                  _displayTextInputDialog(
+                  await _displayTextInputDialog(
                       context, titleController, postController, pid);
+                  // WidgetsBinding.instance
+                  //     ?.addPostFrameCallback((_) => setState(() {
+                  //           refreshPost();
+                  //         }));
+                  setState(() {
+                    SinglePost toedit =
+                        ps.firstWhere((element) => element.pid == pid);
+                    ps
+                        .firstWhere((element) => element.pid == pid)
+                        .posting
+                        .title = titleController.text;
+                    ps.firstWhere((element) => element.pid == pid).posting.des =
+                        postController.text;
+                    serverposts
+                        .firstWhere((element) => element.id == pid)
+                        .title = titleController.text;
+                    serverposts.firstWhere((element) => element.id == pid).des =
+                        postController.text;
+                    toedit.posting.title = titleController.text;
+                    toedit.posting.des = postController.text;
+                    _onRefresh();
+                  });
                 },
                 child: Text("Update", style: TextStyle(color: Colors.black)),
               ),
@@ -687,15 +721,24 @@ class _FeedScreenState extends State<FeedScreen> {
                                     //     ),
                                     //   ),
                                     // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ViewPostScreen(
+                                          post: ps.firstWhere(
+                                              (element) => element.pid == pid),
+                                        ),
+                                      ),
+                                    );
                                   },
                                 ),
-                                Text(
-                                  likes.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                // Text(
+                                //   likes.toString(),
+                                //   style: const TextStyle(
+                                //     fontSize: 14.0,
+                                //     fontWeight: FontWeight.w600,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],
@@ -864,7 +907,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
     switch (_index) {
       case 0:
-        child = _postHome();
+        child = postHome();
         break;
       case 1:
         child = MySearchPage();
@@ -926,7 +969,8 @@ class _FeedScreenState extends State<FeedScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
-                  refreshPost();
+                  // refreshPost();
+                  _onRefresh();
                   setState(() {
                     // p = _buildPost(_post.timeAgo, _post.imageUrl, _post.title,
                     //     _post.content, _name, 0, '', context);
@@ -942,7 +986,8 @@ class _FeedScreenState extends State<FeedScreen> {
                     // ps.sort();
                     // print("---------------2");
                     // print(ps.length);
-                    refreshPost();
+                    _onRefresh();
+                    // refreshPost();
                   });
                 },
                 child: const Icon(
@@ -976,7 +1021,7 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  Widget _postHome() {
+  Widget postHome() {
     return _shouldShowPopup
         ? Questionaire(currentStudent: 'morrisjj')
         : ListView(

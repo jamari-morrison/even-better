@@ -45,8 +45,8 @@ router.post('/deleteByKey/:id', async (req, res) => {
 
 
 router.get('/getUserPost/:username', async (req, res) => {
-    console.log('getting user posts')
-    console.log(req.params.username)
+    // console.log('getting user posts')
+    // console.log(req.params.username)
     try {
       var posts = await Post.find({
         "poster": req.params.username
@@ -68,8 +68,8 @@ router.get('/getUserPost/:username', async (req, res) => {
 
 
 router.post('/create', (req, res) => {
-    console.log('creating post')
-    console.log(req.body)
+    // console.log('creating post')
+    // console.log(req.body)
     const post = new Post({
         "title": req.body.title,
         "description": req.body.description || "",
@@ -89,8 +89,8 @@ router.post('/create', (req, res) => {
 })
 
 router.post('/updatelike/:id', async (req, res) => {
-    console.log(req.params.id);
-    console.log(req.body.likes);
+    // console.log(req.params.id);
+    // console.log(req.body.likes);
     var toUpdate = await Post.updateOne({
         "_id": req.params.id,
       },{
@@ -110,7 +110,7 @@ router.post('/updatelike/:id', async (req, res) => {
 })
 
 router.post('/update/:id', async (req, res) => {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     var toUpdate = await Post.updateOne({
         "_id": req.params.id,
       },{

@@ -24,15 +24,6 @@ class MySearchPage extends StatefulWidget {
   _MySearchPageState createState() => _MySearchPageState();
 }
 
-// class MySearchPage extends StatelessWidget {
-//   // List<Person> people = getItemData() as List<Person>;
-//   static List<Person> people = [
-//     Person('Mike', 'Barron', 64),
-//     Person('Todd', 'Black', 30),
-//     Person('Ahmad', 'Edwards', 55),
-//     Person('Anthony', 'Johnson', 67),
-//     Person('Annette', 'Brooks', 39),
-//   ];
 class _MySearchPageState extends State<MySearchPage> {
   List<UserI> _users = <UserI>[];
   // Timer? _timer;

@@ -1,17 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:even_better/post/homescreen_post_comment_api.dart';
+import 'package:even_better/post/post_comment_api.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:even_better/forum/connect.dart' as connect;
 import 'package:even_better/models/comment_model.dart';
 import 'package:even_better/models/post_model.dart';
 import 'package:even_better/screens/api.dart';
+import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'feed_screen.dart';
 
 class ViewPostScreen extends StatefulWidget {
   final SinglePost post;
-
   ViewPostScreen({required this.post});
 
   @override
@@ -20,12 +26,88 @@ class ViewPostScreen extends StatefulWidget {
 
 class _ViewPostScreenState extends State<ViewPostScreen> {
   Timer? _timer;
+  TextEditingController commentController = TextEditingController();
+  String _username = "";
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
+  List<ViewPostComment> mycomments = <ViewPostComment>[];
+  String? email;
+  String? name;
   @override
   void initState() {
     super.initState();
+    initialName();
+    getComments();
   }
 
-  Widget _buildComment(int index) {
+  initialName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      _username = email!;
+    }
+  }
+
+  void _onRefresh() async {
+    // print("trying to refresh");
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getComments();
+    });
+    _refreshController.refreshCompleted();
+  }
+
+  void getComments() async {
+    List<Comment> listItems = [];
+    String serverurl = "http://10.0.2.2:3000/comments";
+    String temp = serverurl + "/getpostcomment/" + widget.post.pid;
+    print(temp);
+    final response = await http.get(
+      Uri.parse(temp),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response != null && response.statusCode == HttpStatus.ok) {
+      var jsonMembers = json.decode(response.body);
+      print(jsonMembers);
+      setState(() {
+        // posts =
+        //     jsonMembers.map<Posting>((json) => Posting.fromJson(json)).toList();
+        mycomments = jsonMembers
+            .map<ViewPostComment>((json) => ViewPostComment.fromJson(json))
+            .toList();
+      });
+    } else if (response.statusCode == HttpStatus.noContent) {
+      print("No content");
+    } else {
+      print("Loading Comments DB Error!!!!!");
+    }
+  }
+
+  List<Widget> getList() {
+    List<Widget> childs = [];
+    if (mycomments.isNotEmpty) {
+      for (var i = 0; i < mycomments.length; i++) {
+        childs.add(_buildComment(i));
+      }
+    } else {
+      childs.add(
+        const SizedBox(
+          height: 0.0,
+        ),
+      );
+    }
+    return childs;
+  }
+
+  Widget _buildComment(int i) {
+    ViewPostComment temp = mycomments[i];
+    var ifdelete = false;
+    if (temp.commentername == _username) {
+      ifdelete = true;
+    }
+    ;
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: ListTile(
@@ -47,26 +129,30 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
               child: Image(
                 height: 50.0,
                 width: 50.0,
-                image: AssetImage(comments[index].authorImageUrl),
+                image: AssetImage(posts[0].authorImageUrl),
                 fit: BoxFit.cover,
               ),
             ),
           ),
         ),
         title: Text(
-          comments[index].authorName,
+          temp.commentername,
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text(comments[index].text),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.favorite_border,
-          ),
-          color: Colors.grey,
-          onPressed: () => print('Like comment'),
-        ),
+        subtitle: Text(temp.content),
+        trailing: ifdelete
+            ? IconButton(
+                icon: Icon(
+                  Icons.delete_outlined,
+                ),
+                color: Colors.grey,
+                onPressed: () {
+                  connect.deleteComment(temp.id);
+                  _onRefresh();
+                })
+            : null,
         //     LikeButton(
         //   size: 30,
         //   circleColor: const CircleColor(
@@ -171,11 +257,11 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                   ),
                                 ),
                                 subtitle: Text(widget.post.posting.timestamp),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.more_horiz),
-                                  color: Colors.black,
-                                  onPressed: () => print('More'),
-                                ),
+                                // trailing: IconButton(
+                                //   icon: Icon(Icons.more_horiz),
+                                //   color: Colors.black,
+                                //   onPressed: () => print('More'),
+                                // ),
                               ),
                             ),
                           ],
@@ -264,7 +350,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                         },
                                       ),
                                       Text(
-                                        '0',
+                                        mycomments.length.toString(),
                                         style: TextStyle(
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.w600,
@@ -274,11 +360,11 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                   ),
                                 ],
                               ),
-                              IconButton(
-                                icon: Icon(Icons.bookmark_border),
-                                iconSize: 30.0,
-                                onPressed: () => print('Save post'),
-                              ),
+                              // IconButton(
+                              //   icon: Icon(Icons.bookmark_border),
+                              //   iconSize: 30.0,
+                              //   onPressed: () => print('Save post'),
+                              // ),
                             ],
                           ),
                         ),
@@ -291,7 +377,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
             SizedBox(height: 10.0),
             Container(
               width: double.infinity,
-              height: 600.0,
+              // height: 600.0,
+              // height: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -299,15 +386,9 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                   topRight: Radius.circular(30.0),
                 ),
               ),
-              child: Column(
-                children: <Widget>[
-                  _buildComment(0),
-                  _buildComment(1),
-                  _buildComment(2),
-                  _buildComment(3),
-                  _buildComment(4),
-                ],
-              ),
+              child: Column(children: getList()
+                  // ],
+                  ),
             )
           ],
         ),
@@ -333,6 +414,11 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
           child: Padding(
             padding: EdgeInsets.all(12.0),
             child: TextField(
+              controller: commentController,
+              minLines: null,
+              maxLines:
+                  null, // If this is null, there is no limit to the number of lines, and the text container will start with enough vertical space for one line and automatically grow to accommodate additional lines as they are entered.
+              expands: true,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 enabledBorder: OutlineInputBorder(
@@ -379,7 +465,25 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     color: Color(0xFF23B66F),
-                    onPressed: () => print('Post comment'),
+                    onPressed: () async {
+                      print(widget.post.pid);
+                      print(commentController.text);
+                      print(_username);
+                      DateTime now = DateTime.now();
+                      String now_string =
+                          DateFormat('yyyy-MM-dd kk:mm').format(now);
+                      print(now_string);
+                      createComment(widget.post.pid, commentController.text,
+                          _username, now_string);
+                      connect.createComment(
+                          widget.post.pid,
+                          commentController.text,
+                          "xxxx",
+                          now_string,
+                          _username);
+                      _onRefresh();
+                      commentController.clear();
+                    },
                     child: Icon(
                       Icons.send,
                       size: 25.0,
