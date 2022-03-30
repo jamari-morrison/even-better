@@ -209,7 +209,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Future<List<Posting>> getRequest(String username) async {
     List<Posting> posts = <Posting>[];
-    var url = 'http://api.even-better-api.com/posts/getUserPost/' + username;
+    var url = 'https://api.even-better-api.com/posts/getUserPost/' + username;
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{

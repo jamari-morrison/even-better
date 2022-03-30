@@ -65,7 +65,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
 
   void getComments() async {
     List<Comment> listItems = [];
-    String serverurl = "http://api.even-better-api.com/comments";
+    String serverurl = "https://api.even-better-api.com/comments";
     String temp = serverurl + "/getpostcomment/" + widget.post.pid;
 
     final response = await http.get(
