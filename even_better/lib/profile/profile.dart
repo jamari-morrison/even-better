@@ -51,7 +51,7 @@ class ProfileAppState extends State<ProfileApp> {
     super.initState();
     initialName();
     getUserInfo().then((result) {
-      // print(result.avatar);
+      //
       setState(() {
         me = result;
         _name = result.name;
@@ -82,7 +82,6 @@ class ProfileAppState extends State<ProfileApp> {
   }
 
   void fetchUsers(email) async {
-    print("email: " + email);
     var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
     // var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
     var response = await http.get(
@@ -93,18 +92,16 @@ class ProfileAppState extends State<ProfileApp> {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       var jsonMembers = json.decode(response.body);
-      print(response.body);
-      print(jsonMembers);
+
       if (jsonMembers != null) {
         setState(() {
           friends = (jsonMembers as List).map((e) => e as String).toList();
         });
         // if (friends != null) {
-        //   print("ffffffffffffffffff" + friends!.length.toString());
+        //
         // }
       }
     } else {
-      print("status code: " + response.statusCode.toString());
       throw Exception('failed to get all user info');
     }
   }

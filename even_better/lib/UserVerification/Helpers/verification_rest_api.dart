@@ -31,7 +31,6 @@ Future<AlbumBool> createAlbumValidateRose(roseUsername) async {
     AlbumBool output = AlbumBool.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    print("status code: " + response.statusCode.toString());
     throw Exception('failed to create album checkExistFailed');
   }
 }
@@ -48,13 +47,11 @@ Future<AlbumBool> createAlbumIsEmailValidated(email) async {
     AlbumBool output = AlbumBool.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    print("status code: " + response.statusCode.toString());
     throw Exception('failed to create album');
   }
 }
 
 Future<AlbumSendEmail> createAlbumSendEmail(email) async {
-  print("sending email to " + email + "...");
   final response = await http.post(
     Uri.parse('https://api.even-better-api.com/users/sendValidationEmail/'),
     headers: <String, String>{
@@ -66,7 +63,6 @@ Future<AlbumSendEmail> createAlbumSendEmail(email) async {
     AlbumSendEmail output = AlbumSendEmail.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    print("status code: " + response.statusCode.toString());
     throw Exception('failed to create album sendValidationEmail');
   }
 }
@@ -98,7 +94,6 @@ class AlbumSignUp {
 }
 
 Future<AlbumSignUp> createAlbumSignUpEB(username, roseUsername, name) async {
-  print(name);
   final response = await http.post(
     Uri.parse('https://api.even-better-api.com/users/signup'),
     headers: <String, String>{
@@ -115,7 +110,6 @@ Future<AlbumSignUp> createAlbumSignUpEB(username, roseUsername, name) async {
     AlbumSignUp output = AlbumSignUp.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    print("status code: " + response.statusCode.toString());
     throw Exception('failed to create album');
   }
 }
@@ -149,7 +143,6 @@ Future<AlbumConfirmName> createAlbumConfirmName(roseUsername) async {
         AlbumConfirmName.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    print("status code: " + response.statusCode.toString());
     throw Exception('failed to create album');
   }
 }

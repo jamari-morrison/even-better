@@ -12,7 +12,7 @@
 //   });
 
 //   factory Album.fromJson(Map<String, dynamic> json) {
-//     // print(json['message']);
+//     //  
 //     return Album(
 //       //for whatever reason dynamic makes this parse directly to a boolean :(
 //       message: json['message'] ? "true" : "false",
@@ -32,10 +32,10 @@
 //   );
 //   if (response.statusCode == 200 || response.statusCode == 201) {
 //     Album output = Album.fromJson(jsonDecode(response.body));
-//     print("message is: " + output.message);
+//      
 //     return output;
 //   } else {
-//     print("status code: " + response.statusCode.toString());
+//      
 //     throw Exception('failed to create album');
 //   }
 // }
@@ -68,7 +68,7 @@
 //     AlbumUpdate output = AlbumUpdate.fromJson(jsonDecode(response.body));
 //     return output;
 //   } else {
-//     print("status code: " + response.statusCode.toString());
+//      
 //     throw Exception('failed to update album');
 //   }
 // }

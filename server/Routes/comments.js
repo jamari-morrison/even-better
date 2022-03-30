@@ -4,12 +4,13 @@ const router = express.Router();
 
 // create need to update forum field comments, and create the comment itself.
 router.post('/create', (req, res) => {
-    // console.log('creating comment')
-    // console.log(req.body)
+    // console.log('creating comment');
+    // console.log(req.body.commenterid);
+    // console.log(req.body.commenter);
     const comment = new Comment({
         "content": req.body.content,
         "likes": req.body.likes || 0,
-        "commenter": req.body.commenterid,
+        "commenter": req.body.commenter,
         "commentername": req.body.commentername,
         "timestamp": req.body.timestamp,
         "parent-id": req.body['parent-id']
@@ -21,6 +22,24 @@ router.post('/create', (req, res) => {
     .catch(err => {
         res.json({message: err})
     })
+})
+
+router.get('/getById/:id', async (req, res) => {
+    try{
+        //currently only supports single tag queries
+        const comment = await Comment.findById(req.params.id);
+        if (comment == null){
+            res.statusCode = 500;
+            res.json({message: "no comment with that id"});
+        }
+        else {
+            res.json({message: comment});
+        }
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+
 })
 
 router.get('/all', async (req, res) => {
@@ -39,6 +58,17 @@ router.get('/get/:forumid', async (req, res) => {
     try{
         // console.log('made it to getting specific comments')
         const comments = await Comment.find({"parent-id": req.params.forumid});
+        res.json(comments);
+    } catch(err){
+        res.statusCode = 500;
+        res.json({message: "Error!"})
+    }
+})
+
+router.get('/getpostcomment/:postid', async (req, res) => {
+    try{
+        // console.log('made it to getting specific comments')
+        const comments = await Comment.find({"parent-id": req.params.postid,"commenter":"xxxx"});
         res.json(comments);
     } catch(err){
         res.statusCode = 500;

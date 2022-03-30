@@ -63,7 +63,7 @@ class _TagPageState extends State<TagPage> {
 
   // void _onCreateForumPressed() {
   //   // Navigator.pop(context);
-  //   print('add new post');
+  //
   //   Navigator.push(
   //     context,
   //     MaterialPageRoute(builder: (context) => createForum(Data)),

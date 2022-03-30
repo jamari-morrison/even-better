@@ -20,7 +20,6 @@ class _DeletionRevalidateState extends State<DeletionRevalidate> {
   final TextEditingController passwordController = TextEditingController();
 
   hasCredentials() {
-    print("checking has creds");
     return usernameController.text.trim() != "" &&
         passwordController.text.trim() != "";
   }
@@ -37,8 +36,6 @@ class _DeletionRevalidateState extends State<DeletionRevalidate> {
   }
 
   deleteAccount() async {
-    print(FirebaseAuth.instance.currentUser);
-
     AuthCredential credential = EmailAuthProvider.credential(
         email: usernameController.text, password: passwordController.text);
     FirebaseAuth.instance.currentUser!
@@ -65,11 +62,9 @@ class _DeletionRevalidateState extends State<DeletionRevalidate> {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
         }).catchError((error) {
-          print(error);
           modalErrorHandler(
               error, context, "Firebase Account Deletion Failure");
         }).catchError((error) {
-          print(error);
           modalErrorHandler(
               error, context, "Even Better Account Deletion Failure");
         });

@@ -18,7 +18,7 @@ class Post {
 final List<Post> posts = [
   Post(
       authorName: 'Sam Martin',
-      authorImageUrl: 'assets/images/user0.png',
+      authorImageUrl: 'assets/images/user00.jpg',
       timeAgo: '5 min',
       imageUrl: 'assets/images/post0.jpg',
       postId: '1234'),

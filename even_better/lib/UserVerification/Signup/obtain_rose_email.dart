@@ -36,7 +36,6 @@ class _ObtainRoseEmailState extends State<ObtainRoseEmail> {
         }).catchError((error) {
           //modal!
           modalErrorHandler(error, context, "error sending email");
-          print("error sending email: " + error);
         });
       } else {
         //MODAL

@@ -35,6 +35,7 @@ class _InviteYearState extends State<InviteYear> {
               status: 'loading...',
               maskType: EasyLoadingMaskType.black,
             );
+
             Navigator.push(
                 context,
                 MaterialPageRoute(

@@ -10,11 +10,10 @@ class AuthService {
     if (user != null) {
       return MyUser(user.uid, userEmail);
     } else {
-      print('No user specified, shouldve returned null [_userFromFirebase]');
       return null;
     }
     // return (user != null) ? MyUser(uid: user.uid) : null;
-    // print('MyUser created [_userFromFirebase]');
+    //
     // return MyUser(user.uid);
   }
 
@@ -41,7 +40,7 @@ class AuthService {
   //     User? user = cred.user;
   //     return _userFromFirebase(user);
   //   } catch (e) {
-  //     print(e.toString());
+  //
   //     return null;
   //   }
   // }
@@ -54,7 +53,6 @@ class AuthService {
       User? user = cred.user;
       return _userFromFirebase(user);
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -80,7 +78,6 @@ class AuthService {
       User? user = cred.user;
       return _userFromFirebase(user);
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -90,7 +87,6 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
