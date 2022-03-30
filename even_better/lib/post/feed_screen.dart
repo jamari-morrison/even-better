@@ -61,7 +61,7 @@ class _FeedScreenState extends State<FeedScreen> {
   var logicalHeight;
 
   void checkIfShouldPopup() async {
-    final uri = Uri.http('10.0.2.2:3000', '/popups/shouldQuestion',
+    final uri = Uri.https('api.even-better-api.com', '/popups/shouldQuestion',
         {'rose-username': 'morrisjj'});
 
     final response = await http.get(uri, headers: <String, String>{
