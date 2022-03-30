@@ -145,9 +145,9 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   refreshPost() {
-    // serverposts.clear();
-    // fserverposts.clear();
-    // ps.clear();
+    serverposts.clear();
+    fserverposts.clear();
+    ps.clear();
     getRequest(_username).then((value) {
       setState(() {
         serverposts.addAll(value);
@@ -943,9 +943,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
                   // refreshPost();
-                  serverposts.clear();
-                  fserverposts.clear();
-                  ps.clear();
+
                   _onRefresh();
                 },
                 child: const Icon(
