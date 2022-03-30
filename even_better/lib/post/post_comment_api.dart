@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
-// String BASE_URL = 'https://api.even-better-api.com/';
-String BASE_URL = 'http://10.0.2.2:3000/';
+String BASE_URL = 'https://api.even-better-api.com/';
+// String BASE_URL = 'http://10.0.2.2:3000/';
 
 void createComment(postid, content, commenter, time) {
   _createComment(postid, content, commenter, time);

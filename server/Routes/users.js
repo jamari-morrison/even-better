@@ -69,7 +69,6 @@ router.get('/all', async (req, res) => {
 
 router.post('/signup', async (req, res) => {
   console.log('creating user')
-  console.log(req.body)
 
   //add the username to the placeholder accnt to "create" the accnt
   var toUpdate = await User.updateOne({
@@ -274,7 +273,6 @@ router.get('/emailValidated/:username', async (req, res) => {
 
 router.post('/update/', async (req, res) => {
   console.log('updating user')
-  console.log(req.body)
 
   //add the username to the placeholder accnt to "create" the accnt
   var toUpdate = await User.updateOne({
@@ -342,7 +340,6 @@ router.get('/getUser/:ebuid', async (req, res) => {
 
 router.post('/updatestring/:username', async (req, res) => {
   console.log('updating user')
-  console.log(req.body)
 
   var toUpdate = await User.updateOne({
     "username": req.params.username,
@@ -367,7 +364,6 @@ router.post('/updatestring/:username', async (req, res) => {
 
 router.post('/updatebool/:username', async (req, res) => {
   console.log('updating bool')
-  console.log(req.body)
   console.log(req.params.username)
   var toUpdate = await User.updateOne({
     "username": req.params.username,
@@ -420,7 +416,6 @@ router.post('/updatebool/:username', async (req, res) => {
 
 router.post('/updateava/:username', async (req, res) => {
   console.log('updating ava')
-  console.log(req.body)
   console.log(req.body.avatar)
   console.log(req.params.username)
 
@@ -444,7 +439,6 @@ router.post('/updateava/:username', async (req, res) => {
 
 router.post('/addfriend/:username', async (req, res) => {
   console.log("adding friend")
-  console.log(req.body)
   console.log(req.params.username)
   var toUpdate1 = await User.update(
     {  "username": req.params.username },

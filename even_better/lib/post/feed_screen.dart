@@ -187,8 +187,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Future<String> getDisplayName(String email) async {
     final response = await http.get(
-      // Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
-      Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
+      Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
+      // Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -209,7 +209,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Future<List<Posting>> getRequest(String username) async {
     List<Posting> posts = <Posting>[];
-    var url = 'http://10.0.2.2:3000/posts/getUserPost/' + username;
+    var url = 'http://api.even-better-api.com/posts/getUserPost/' + username;
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
