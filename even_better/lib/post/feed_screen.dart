@@ -232,8 +232,8 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   void fetchFriends(email) async {
-    // var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
-    var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
+    var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
+    // var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
