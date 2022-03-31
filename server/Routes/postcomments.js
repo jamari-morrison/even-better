@@ -5,7 +5,6 @@ const router = express.Router();
 // create need to update forum field comments, and create the comment itself.
 router.post('/create', (req, res) => {
     console.log('creating postcomment')
-    console.log(req.body)
     const comment = new PostComment({
         "content": req.body.content,
         "likes": req.body.likes || 0,

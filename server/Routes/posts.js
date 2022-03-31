@@ -52,8 +52,6 @@ router.get('/getUserPost/:username', async (req, res) => {
         "poster": req.params.username
       });
       console.log(res.statusCode);
-      // console.log(user.friend);
-     console.log(posts);
       if (posts != null) {
         res.status = 200;
         res.json( posts );
@@ -68,8 +66,6 @@ router.get('/getUserPost/:username', async (req, res) => {
 
 
 router.post('/create', (req, res) => {
-    // console.log('creating post')
-    // console.log(req.body)
     const post = new Post({
         "title": req.body.title,
         "description": req.body.description || "",

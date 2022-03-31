@@ -7,8 +7,8 @@ void createAddFriend(friend) async {
   String? email = user!.email;
   if (email != null) {
     final response = await http.post(
-      Uri.parse('https://api.even-better-api.com/users/addfriend/' +
-          email), //http://10.0.2.2:3000/users/update
+      Uri.parse('https://api.even-better-api.com/users/addfriend/' + email),
+      //http://10.0.2.2:3000/users/update
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

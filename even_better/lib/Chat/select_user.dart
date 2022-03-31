@@ -51,7 +51,7 @@ class _SelectUserState extends State<SelectUser> {
     List<Widget> listItems = [];
     Map<Widget, String> listMap = {};
 
-    final uri = Uri.https('api.even-better-api.com:3000', '/students/all',
+    final uri = Uri.https('api.even-better-api.com', '/students/all',
         {}); //in future don't grab all students
     final response = await http.get(uri, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -68,7 +68,6 @@ class _SelectUserState extends State<SelectUser> {
                 status: 'loading...',
                 maskType: EasyLoadingMaskType.black,
               );
-
               Navigator.push(
                   context,
                   MaterialPageRoute(

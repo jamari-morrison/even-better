@@ -49,7 +49,6 @@ class _InviteYearState extends State<InviteYear> {
 
     setState(() {
       itemsData = listItems;
-      //
     });
   }
 
@@ -66,8 +65,6 @@ class _InviteYearState extends State<InviteYear> {
                 itemCount: itemsData.length,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  //
-                  //
                   return itemsData[index];
                 }))
       ],

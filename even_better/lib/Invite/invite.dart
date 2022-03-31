@@ -45,7 +45,6 @@ class _InviteState extends State<Invite> {
       listStatuses.add({'color': statusColor, 'text': statusString});
       setState(() {
         itemStatuses = listStatuses;
-        //
       });
     }
     for (var student in responseList) {
@@ -57,7 +56,6 @@ class _InviteState extends State<Invite> {
 
     setState(() {
       itemsData = listItems;
-      //
     });
   }
 
@@ -72,8 +70,6 @@ class _InviteState extends State<Invite> {
                 itemCount: itemsData.length,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  //
-                  //
                   return itemsData[index];
                 }))
       ],

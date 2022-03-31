@@ -59,7 +59,6 @@ router.post('/studentFromEmail', async (req, res) => {
 
 router.post('/create', (req, res) => {
   console.log('creating student')
-  console.log(req.body)
   const user = new Student({
     "name": req.body['name'],
     "rose-username": req.body['rose-username'],

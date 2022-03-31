@@ -41,12 +41,6 @@ class _DirectMessageState extends State<DirectMessage> {
   });
   Timer? _timer;
 
-  // IO.Socket socket = IO.io('http://10.0.2.2:3000', OptionBuilder()
-  //     .setTransports(['websocket']) // for Flutter or Dart VM
-  //     .disableAutoConnect()  // disable auto-connection
-  //     .setExtraHeaders({'foo': 'bar'}) // optional
-  //     .build());
-
   void getMessageHistory() async {
     final uri = Uri.https('api.even-better-api.com', '/messages/conversation',
         {'sender': widget.currentStudent, 'recipient': widget.recipient});
@@ -132,11 +126,8 @@ class _DirectMessageState extends State<DirectMessage> {
     socket.onConnect((_) {
       socket.emit('init', {'userID': widget.currentStudent});
     });
-    socket.on('event', (data) => socket.onDisconnect((_) =>
-
-        //TODO: get timestamp from server, don't make own
-        //TODO: upload message id to server so they're the same (?)
-        socket.on('fromServer', (_) => {_handleGetMessage(_.toString())})));
+    socket.on('event', (data) => {});
+    socket.onDisconnect((_) => {});
 
     EasyLoading.addStatusCallback((status) {
       if (status == EasyLoadingStatus.dismiss) {

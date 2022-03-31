@@ -41,7 +41,6 @@ io.on('connection', (socket) => {
     })
 
     socket.on('fromClient', async (msg) =>  {
-        console.log(msg);
         req = msg;//JSON.stringify(msg['text']);
         let conversation = await Conversation.find({$or: [{"users": [req['sender'], req['recipient']]}, {"users": [req['recipient'], req['sender']]}]});
         

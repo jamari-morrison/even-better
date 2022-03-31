@@ -35,7 +35,6 @@ class _QuestionaireState extends State<Questionaire> {
     });
 
     final responseData = jsonDecode(response.body);
-
     if (responseData['message'] == 'has question') {
       setState(() {
         countries = responseData['question']['options'];
@@ -44,16 +43,10 @@ class _QuestionaireState extends State<Questionaire> {
       });
     } else {
       //redirect to dm's here :D
-
     }
   }
 
   void sendPopupData(List<String> selections) async {
-    print(jsonEncode(<String, String>{
-      'questionID': questionID.toString(),
-      'answerer': widget.currentStudent.toString(),
-      'answer': jsonEncode(selections),
-    }).toString());
     final response = await http.post(
       Uri.parse('https://api.even-better-api.com/popups/answer'),
       headers: <String, String>{

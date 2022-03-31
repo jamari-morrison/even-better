@@ -61,7 +61,7 @@ class _FeedScreenState extends State<FeedScreen> {
   var logicalHeight;
 
   void checkIfShouldPopup() async {
-    final uri = Uri.http('10.0.2.2:3000', '/popups/shouldQuestion',
+    final uri = Uri.https('api.even-better-api.com', '/popups/shouldQuestion',
         {'rose-username': 'morrisjj'});
 
     final response = await http.get(uri, headers: <String, String>{
@@ -145,9 +145,9 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   refreshPost() {
-    // serverposts.clear();
-    // fserverposts.clear();
-    // ps.clear();
+    serverposts.clear();
+    fserverposts.clear();
+    ps.clear();
     getRequest(_username).then((value) {
       setState(() {
         serverposts.addAll(value);
@@ -187,8 +187,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Future<String> getDisplayName(String email) async {
     final response = await http.get(
-      // Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
-      Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
+      Uri.parse('https://api.even-better-api.com/users/getUser/' + email),
+      // Uri.parse('http://10.0.2.2:3000/users/users/getUser/' + email),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -209,7 +209,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Future<List<Posting>> getRequest(String username) async {
     List<Posting> posts = <Posting>[];
-    var url = 'http://10.0.2.2:3000/posts/getUserPost/' + username;
+    var url = 'https://api.even-better-api.com/posts/getUserPost/' + username;
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
@@ -232,8 +232,8 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   void fetchFriends(email) async {
-    // var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
-    var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
+    var url = 'https://api.even-better-api.com/users/getUserFriends/' + email;
+    // var url = 'http://10.0.2.2:3000/users/getUserFriends/' + email;
     var response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
@@ -943,6 +943,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       MaterialPageRoute(
                           builder: (context) => ImageFromGalleryEx()));
                   // refreshPost();
+
                   _onRefresh();
                 },
                 child: const Icon(

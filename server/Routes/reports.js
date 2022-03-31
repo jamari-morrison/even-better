@@ -33,7 +33,6 @@ router.post('/deleteById', async (req, res) => {
 router.post('/submit', async (req, res) => {
     //save the report to the reports collection
     console.log('submitting report')
-    console.log(req.body)
     const reason = req.body.reason;
     const contentType = req.body['content-type'];
     const report = new Report({

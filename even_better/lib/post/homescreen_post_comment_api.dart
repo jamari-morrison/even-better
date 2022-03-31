@@ -6,8 +6,8 @@ import 'dart:io';
 
 //documentation: https://flutter.dev/docs/cookbook/networking/send-data
 //if we need to work with responses, add stuff from here ^
-// String BASE_URL = 'https://api.even-better-api.com/posts/';
-String BASE_URL = 'http://10.0.2.2:3000/comments/';
+// String BASE_URL = 'https://api.even-better-api.com/comments/';
+// String BASE_URL = 'http://10.0.2.2:3000/comments/';
 // List<Posting> serverposts = <Posting>[];
 
 class ViewPostComment {

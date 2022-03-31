@@ -36,7 +36,14 @@ class _MySearchPageState extends State<MySearchPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Search Page'),
+        title: const Text(
+          'Search Page',
+          style: TextStyle(
+            fontFamily: 'Billabong',
+            fontSize: 30.0,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: ListView.builder(
         itemCount: _users.length,
