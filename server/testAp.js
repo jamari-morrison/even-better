@@ -95,4 +95,5 @@ app.get('/', (req, res) => {
 mongoose.connect(process.env.DB_CONNECT, {useNewUrlParser: true}, () => console.log('Connected'));
 
 
-server.listen(3306, () => {console.log('listening in 3000')});
+//server.listen(3306, () => {console.log('listening in 3000')});
+module.exports = server
