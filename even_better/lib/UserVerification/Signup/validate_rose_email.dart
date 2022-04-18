@@ -24,10 +24,9 @@ class _ValidateRoseEmailState extends State<ValidateRoseEmail> {
   late Future<AlbumBool> futureAlbum;
 
   void checkEmailValidated() {
-    print("Checking email validate");
     createAlbumIsEmailValidated(widget.roseUsername).then((isVerifiedAlbum) {
       var isVerified = isVerifiedAlbum.message;
-      print(isVerified);
+
       if (!isVerified) {
         modalErrorHandler("User is not verified", context, "not verified :(");
       } else {

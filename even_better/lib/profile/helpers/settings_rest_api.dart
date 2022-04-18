@@ -13,7 +13,6 @@ class Album {
   });
 
   factory Album.fromJson(Map<String, dynamic> json) {
-    print(json['message']);
     return Album(
       //for whatever reason dynamic makes this parse directly to a boolean :(
       message: json['message'],
@@ -34,13 +33,11 @@ Future<Album> createAlbumDeleteAccount(ebUsername) async {
     Album output = Album.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    print("status code: " + response.statusCode.toString());
     throw Exception('bad response');
   }
 }
 
 Future<Album> createAlbumDeleteReport(reportId) async {
-  print("calling delete report");
   final response = await http.post(
     Uri.parse('https://api.even-better-api.com/reports/deleteById'),
     headers: <String, String>{
@@ -50,10 +47,9 @@ Future<Album> createAlbumDeleteReport(reportId) async {
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     Album output = Album.fromJson(jsonDecode(response.body));
-    print(output.toString());
+
     return output;
   } else {
-    print("status code: " + response.statusCode.toString());
     throw Exception('bad response');
   }
 }

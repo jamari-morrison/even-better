@@ -30,7 +30,7 @@ class _ForumListPageState extends State<ForumListPage> {
       RefreshController(initialRefresh: true);
   // Timer? _timer;
   String serverurl = "https://api.even-better-api.com";
-  // String serverurl = "https://api.even-better-api.com";
+  // String serverurl = "http://10.0.2.2:3000";
   _ForumListPageState();
 
   @override
@@ -63,7 +63,7 @@ class _ForumListPageState extends State<ForumListPage> {
     });
     if (response != null && response.statusCode == HttpStatus.ok) {
       List<dynamic> reslist = jsonDecode(response.body);
-      // print("reslist is: " + reslist.toString());
+      //
       for (var forum in reslist) {
         String id = forum['_id'];
         String tempPoster = forum['poster'];
@@ -78,9 +78,7 @@ class _ForumListPageState extends State<ForumListPage> {
       setState(() {
         forumPosts = listItems;
       });
-    } else {
-      print("Loading Forum DB Error!!!!!");
-    }
+    } else {}
   }
 
   @override
@@ -160,7 +158,7 @@ class _ForumListPageState extends State<ForumListPage> {
 
   void _onCreateForumPressed() {
     // Navigator.pop(context);
-    // print('add new post');
+    //
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => createForum()),
@@ -170,7 +168,7 @@ class _ForumListPageState extends State<ForumListPage> {
 
 // code in init
 // EasyLoading.addStatusCallback((status) {
-//   print('EasyLoading Status $status');
+//
 //   if (status == EasyLoadingStatus.dismiss) {
 //     _timer?.cancel();
 //   }
@@ -217,7 +215,7 @@ class _ForumListPageState extends State<ForumListPage> {
 //           status: 'loading...',
 //           maskType: EasyLoadingMaskType.black,
 //         );
-//         print('EasyLoading show');
+//
 //         Navigator.push(
 //           context,
 //           MaterialPageRoute(
@@ -238,7 +236,7 @@ class _ForumListPageState extends State<ForumListPage> {
 //                   children: <Widget>[
 //                     TextButton(
 //                       onPressed: () {
-//                         print("showing more tags");
+//
 //                         // sleep(Duration(seconds: 3));
 //                         // setState(() => loading = false);
 //                       },

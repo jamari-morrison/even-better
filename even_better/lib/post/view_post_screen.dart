@@ -1,14 +1,23 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'dart:io';
+import 'package:even_better/post/homescreen_post_comment_api.dart';
+import 'package:even_better/post/post_comment_api.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:even_better/forum/connect.dart' as connect;
 import 'package:even_better/models/comment_model.dart';
 import 'package:even_better/models/post_model.dart';
 import 'package:even_better/screens/api.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
+import 'package:like_button/like_button.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'feed_screen.dart';
 
 class ViewPostScreen extends StatefulWidget {
-  final Post post;
-
+  final SinglePost post;
   ViewPostScreen({required this.post});
 
   @override
@@ -17,20 +26,92 @@ class ViewPostScreen extends StatefulWidget {
 
 class _ViewPostScreenState extends State<ViewPostScreen> {
   Timer? _timer;
+  TextEditingController commentController = TextEditingController();
+  String _username = "";
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
+  List<ViewPostComment> mycomments = <ViewPostComment>[];
+  String? email;
+  String? name;
   @override
   void initState() {
     super.initState();
-    // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
-    //   if (status == EasyLoadingStatus.dismiss) {
-    //     _timer?.cancel();
-    //   }
-    // });
-    // EasyLoading.showSuccess('Loading Succeeded');
-    // EasyLoading.removeCallbacks();
+    initialName();
+    getComments();
   }
 
-  Widget _buildComment(int index) {
+  initialName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    email = user?.email;
+    if (email != null) {
+      _username = email!;
+    }
+  }
+
+  void _onRefresh() async {
+    //
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getComments();
+    });
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 1000), () {
+      getComments();
+    });
+    _refreshController.loadComplete();
+  }
+
+  void getComments() async {
+    List<Comment> listItems = [];
+    String serverurl = "https://api.even-better-api.com/comments";
+    String temp = serverurl + "/getpostcomment/" + widget.post.pid;
+
+    final response = await http.get(
+      Uri.parse(temp),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response != null && response.statusCode == HttpStatus.ok) {
+      var jsonMembers = json.decode(response.body);
+
+      setState(() {
+        // posts =
+        //     jsonMembers.map<Posting>((json) => Posting.fromJson(json)).toList();
+        mycomments = jsonMembers
+            .map<ViewPostComment>((json) => ViewPostComment.fromJson(json))
+            .toList();
+      });
+    } else if (response.statusCode == HttpStatus.noContent) {
+    } else {}
+  }
+
+  List<Widget> getList() {
+    List<Widget> childs = [];
+    if (mycomments.isNotEmpty) {
+      for (var i = 0; i < mycomments.length; i++) {
+        childs.add(_buildComment(i));
+      }
+    } else {
+      childs.add(
+        const SizedBox(
+          height: 0.0,
+        ),
+      );
+    }
+    return childs;
+  }
+
+  Widget _buildComment(int i) {
+    ViewPostComment temp = mycomments[i];
+    var ifdelete = false;
+    if (temp.commentername == _username) {
+      ifdelete = true;
+    }
+    ;
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: ListTile(
@@ -52,28 +133,63 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
               child: Image(
                 height: 50.0,
                 width: 50.0,
-                image: AssetImage(comments[index].authorImageUrl),
+                image: AssetImage(posts[0].authorImageUrl),
                 fit: BoxFit.cover,
               ),
             ),
           ),
         ),
         title: Text(
-          comments[index].authorName,
+          temp.commentername,
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text(comments[index].text),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.favorite_border,
-          ),
-          color: Colors.grey,
-          onPressed: () => print('Like comment'),
-        ),
+        subtitle: Text(temp.content),
+        trailing: ifdelete
+            ? IconButton(
+                icon: Icon(
+                  Icons.delete_outlined,
+                ),
+                color: Colors.grey,
+                onPressed: () {
+                  connect.deleteComment(temp.id);
+                  _onRefresh();
+                })
+            : null,
+        //     LikeButton(
+        //   size: 30,
+        //   circleColor: const CircleColor(
+        //       start: Color(0xff00ddff), end: Color(0xff0099cc)),
+        //   bubblesColor: const BubblesColor(
+        //     dotPrimaryColor: Color(0xff33b5e5),
+        //     dotSecondaryColor: Color(0xff0099cc),
+        //   ),
+        //   likeBuilder: (bool isLiked) {
+        //     return Icon(
+        //       Icons.favorite,
+        //       color: isLiked ? Colors.pinkAccent : Colors.grey,
+        //       size: 30,
+        //     );
+        //   },
+        //   likeCount: widget.post.likes,
+        //   // onTap: onLikeButtonTapped,
+        //   onTap: (isLiked) {
+        //     return changedata(isLiked, widget.post.likes, widget.post.pid);
+        //   },
+        // ),
       ),
     );
+  }
+
+  Future<bool> changedata(bool status, int likes, String id) async {
+    //your code
+    if (status) {
+      createLikeUpdate(likes + 1, id);
+    } else {
+      createLikeUpdate(likes, id);
+    }
+    return Future.value(!status);
   }
 
   @override
@@ -106,14 +222,7 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                               iconSize: 30.0,
                               color: Colors.black,
                               onPressed: () async {
-                                // _timer?.cancel();
-                                // await EasyLoading.show(
-                                //   status: 'loading...',
-                                //   maskType: EasyLoadingMaskType.black,
-                                // );
-                                // print('EasyLoading show');
                                 Navigator.pop(context);
-                                // EasyLoading.dismiss();
                               },
                             ),
                             Container(
@@ -137,25 +246,26 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                       child: Image(
                                         height: 50.0,
                                         width: 50.0,
-                                        image: AssetImage(
-                                            widget.post.authorImageUrl),
+                                        //TODO:
+                                        image:
+                                            AssetImage(posts[0].authorImageUrl),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
                                 ),
                                 title: Text(
-                                  widget.post.authorName,
+                                  widget.post.posting.poster,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                subtitle: Text(widget.post.timeAgo),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.more_horiz),
-                                  color: Colors.black,
-                                  onPressed: () => print('More'),
-                                ),
+                                subtitle: Text(widget.post.posting.timestamp),
+                                // trailing: IconButton(
+                                //   icon: Icon(Icons.more_horiz),
+                                //   color: Colors.black,
+                                //   onPressed: () => print('More'),
+                                // ),
                               ),
                             ),
                           ],
@@ -176,8 +286,9 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                 ),
                               ],
                               image: DecorationImage(
-                                image: AssetImage(widget.post.imageUrl),
-                                fit: BoxFit.fitWidth,
+                                image:
+                                    getPostImage(widget.post.posting.imageUrl),
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
@@ -191,17 +302,44 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                 children: <Widget>[
                                   Row(
                                     children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.favorite_border),
-                                        iconSize: 30.0,
-                                        onPressed: () => print('Like post'),
-                                      ),
-                                      Text(
-                                        '2,515',
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w600,
+                                      // IconButton(
+                                      //   icon: Icon(Icons.favorite_border),
+                                      //   iconSize: 30.0,
+                                      //   onPressed: () => print('Like post'),
+                                      // ),
+                                      // Text(
+                                      //   '2,515',
+                                      //   style: TextStyle(
+                                      //     fontSize: 14.0,
+                                      //     fontWeight: FontWeight.w600,
+                                      //   ),
+                                      // ),
+                                      LikeButton(
+                                        size: 30,
+                                        circleColor: const CircleColor(
+                                            start: Color(0xff00ddff),
+                                            end: Color(0xff0099cc)),
+                                        bubblesColor: const BubblesColor(
+                                          dotPrimaryColor: Color(0xff33b5e5),
+                                          dotSecondaryColor: Color(0xff0099cc),
                                         ),
+                                        likeBuilder: (bool isLiked) {
+                                          return Icon(
+                                            Icons.favorite,
+                                            color: isLiked
+                                                ? Colors.pinkAccent
+                                                : Colors.grey,
+                                            size: 30,
+                                          );
+                                        },
+                                        likeCount: widget.post.likes,
+                                        // onTap: onLikeButtonTapped,
+                                        onTap: (isLiked) {
+                                          return changedata(
+                                              isLiked,
+                                              widget.post.likes,
+                                              widget.post.pid);
+                                        },
                                       ),
                                     ],
                                   ),
@@ -211,12 +349,10 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                       IconButton(
                                         icon: Icon(Icons.chat),
                                         iconSize: 30.0,
-                                        onPressed: () {
-                                          print('Chat');
-                                        },
+                                        onPressed: () {},
                                       ),
                                       Text(
-                                        '350',
+                                        mycomments.length.toString(),
                                         style: TextStyle(
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.w600,
@@ -226,11 +362,11 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                                   ),
                                 ],
                               ),
-                              IconButton(
-                                icon: Icon(Icons.bookmark_border),
-                                iconSize: 30.0,
-                                onPressed: () => print('Save post'),
-                              ),
+                              // IconButton(
+                              //   icon: Icon(Icons.bookmark_border),
+                              //   iconSize: 30.0,
+                              //   onPressed: () => print('Save post'),
+                              // ),
                             ],
                           ),
                         ),
@@ -243,7 +379,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
             SizedBox(height: 10.0),
             Container(
               width: double.infinity,
-              height: 600.0,
+              // height: 600.0,
+              // height: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -251,15 +388,9 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                   topRight: Radius.circular(30.0),
                 ),
               ),
-              child: Column(
-                children: <Widget>[
-                  _buildComment(0),
-                  _buildComment(1),
-                  _buildComment(2),
-                  _buildComment(3),
-                  _buildComment(4),
-                ],
-              ),
+              child: Column(children: getList()
+                  // ],
+                  ),
             )
           ],
         ),
@@ -285,6 +416,11 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
           child: Padding(
             padding: EdgeInsets.all(12.0),
             child: TextField(
+              controller: commentController,
+              minLines: null,
+              maxLines:
+                  null, // If this is null, there is no limit to the number of lines, and the text container will start with enough vertical space for one line and automatically grow to accommodate additional lines as they are entered.
+              expands: true,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 enabledBorder: OutlineInputBorder(
@@ -316,7 +452,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                       child: Image(
                         height: 48.0,
                         width: 48.0,
-                        image: AssetImage(widget.post.authorImageUrl),
+                        //TODO:
+                        image: AssetImage(posts[0].authorImageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -330,7 +467,22 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     color: Color(0xFF23B66F),
-                    onPressed: () => print('Post comment'),
+                    onPressed: () async {
+                      DateTime now = DateTime.now();
+                      String now_string =
+                          DateFormat('yyyy-MM-dd kk:mm').format(now);
+
+                      createComment(widget.post.pid, commentController.text,
+                          _username, now_string);
+                      connect.createComment(
+                          widget.post.pid,
+                          commentController.text,
+                          "xxxx",
+                          now_string,
+                          _username);
+                      _onRefresh();
+                      commentController.clear();
+                    },
                     child: Icon(
                       Icons.send,
                       size: 25.0,
@@ -345,4 +497,8 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
       ),
     );
   }
+}
+
+FileImage getPostImage(String s) {
+  return FileImage(File(s));
 }

@@ -20,23 +20,23 @@ class Forum_Answer {
 
   Forum_Answer(
       this.aid, this.ebuid, this.text, this.timestamp, this.displayName) {
-    // print('Forum Answer with uid: ${aid} [Forum_Answer]');
-    // print('Forum Answer with answer: ${text} [Forum_Answer]');
+    //
+    //
     // getUserData(ebuid).then((val) {
     //   var userData = val.userData;
     //   isModerator = userData["moderator"];
     //   displayName = userData["name"];
-    //   print("obtained user data!");
+    //
     // }).catchError((err) {
-    //   print("failed to get user data :(");
+    //
     // });
-    // print('In Answer, display name is' + displayName);
+    //
   }
 
-  void liked() {
-    likes++;
-    print('liked the answer');
-  }
+  // void liked() {
+  //   likes++;
+  //
+  // }
 }
 
 class ForumAnswer extends StatelessWidget {
@@ -101,7 +101,7 @@ class ForumAnswer extends StatelessWidget {
                                   Widget continueButton = TextButton(
                                     child: Text("DELETE"),
                                     onPressed: () {
-                                      print("Trying to delete");
+                                      //
                                       deleteComment(answers.aid);
                                       Navigator.of(context).pop();
                                       // Navigator.of(context).pop();
@@ -130,7 +130,7 @@ class ForumAnswer extends StatelessWidget {
                     // ),
                     IconButton(
                       onPressed: () async {
-                        // print("report content");
+                        //
                         Navigator.push(
                           context,
                           MaterialPageRoute(

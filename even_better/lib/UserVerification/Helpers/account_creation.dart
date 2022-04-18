@@ -10,7 +10,6 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 //intermediary functions that communicate with FirebaseAuth. Could merge these together if we wanted to
 
 void modalErrorHandler(error, context, title) {
-  print(error);
   //pop up modal to show failure!
 
   Widget cancelButton = TextButton(
@@ -29,7 +28,6 @@ void modalErrorHandler(error, context, title) {
   //     ? error.toString()
   //     : error.toString().split("] ")[1];
 
-  print("message! : " + errorMessage);
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text(title),
@@ -49,7 +47,6 @@ void modalErrorHandler(error, context, title) {
 void requestLoginEB(String username, String password, context) async {
   //verify account with our FireBase
 
-  print("Even better username: ${username}\n password: ${password}");
   _auth
       .signInWithEmailAndPassword(email: username, password: password)
       .then((val) {

@@ -2,7 +2,7 @@
     package="com.example.even_better">
    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="even_better"
+        android:label="Even Better"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

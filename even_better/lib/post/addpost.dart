@@ -32,7 +32,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
   void initState() {
     super.initState();
     // EasyLoading.addStatusCallback((status) {
-    //   print('EasyLoading Status $status');
+    //
     //   if (status == EasyLoadingStatus.dismiss) {
     //     _timer?.cancel();
     //   }
@@ -77,7 +77,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                           status: 'loading library...',
                           maskType: EasyLoadingMaskType.black,
                         );
-                        print('EasyLoading show');
+
                         _imgFromGallery();
                         Navigator.of(context).pop();
                         EasyLoading.dismiss();
@@ -91,7 +91,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                         status: 'loading camera...',
                         maskType: EasyLoadingMaskType.black,
                       );
-                      print('EasyLoading show');
+
                       _imgFromCamera();
                       Navigator.of(context).pop();
                       EasyLoading.dismiss();
@@ -252,7 +252,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                     //   status: 'Creating...',
                     //   maskType: EasyLoadingMaskType.black,
                     // );
-                    // print('EasyLoading show');
+                    //
                     if (_image == null ||
                         titleController.text.isEmpty ||
                         postController.text.isEmpty) {
@@ -266,7 +266,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                       DateTime now = DateTime.now();
                       String formattedDate =
                           DateFormat('yyyy-MM-dd kk:mm').format(now);
-                      print(formattedDate);
+
                       createPost(
                           titleController.text.replaceAll('\n', ' '),
                           postController.text.trim(),
@@ -274,15 +274,15 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
                           0,
                           formattedDate,
                           username);
-
-                      Navigator.pop(
-                          context,
-                          NewPost(
-                              formattedDate,
-                              _image!.path,
-                              titleController.text.replaceAll('\n', ' '),
-                              postController.text.trim(),
-                              username));
+                      Navigator.pop(context);
+                      // Navigator.pop(
+                      //     context,
+                      //     NewPost(
+                      //         formattedDate,
+                      //         _image!.path,
+                      //         titleController.text.replaceAll('\n', ' '),
+                      //         postController.text.trim(),
+                      //         username));
                       EasyLoading.dismiss();
                     }
                   },

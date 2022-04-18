@@ -46,7 +46,6 @@ class ForgotPassword extends StatelessWidget {
                 child: ElevatedButton(
                     onPressed: () {
                       resetPassword(usernameController.text).then((value) {
-                        print("reset successful");
                         Navigator.of(context).pop();
                         //inform the user of success!
                         modalErrorHandler(

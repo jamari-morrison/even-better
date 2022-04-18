@@ -34,7 +34,6 @@ class _QuestionaireState extends State<Questionaire> {
       'Content-Type': 'application/json; charset=UTF-8',
     });
 
-
     final responseData = jsonDecode(response.body);
     if (responseData['message'] == 'has question') {
       setState(() {
@@ -97,12 +96,12 @@ class _QuestionaireState extends State<Questionaire> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) => FeedScreen()));
+                                builder: (BuildContext context) =>
+                                    FeedScreen()));
                       },
                     ),
                   ],
                 )
-
               ]).toList())
             : Text('joe')));
   }
@@ -189,12 +188,11 @@ class _QuestionaireState extends State<Questionaire> {
               FlatButton(
                 child: Text("Submit"),
                 onPressed: () {
-                 // Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                      SelectUser(currentStudent: 'morrisjj'),
+                      builder: (_) => SelectUser(currentStudent: 'morrisjj'),
                     ),
                   );
                   EasyLoading.dismiss();

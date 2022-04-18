@@ -37,6 +37,7 @@ class _DetailedForum extends State<DetailedForum> {
   List<Forum_Answer> comments;
   Forum_Post post;
   Timer? _timer;
+  bool isempty = true;
   RefreshController _refreshController =
       RefreshController(initialRefresh: true);
   // String serverurl = "http://10.0.2.2:3000";
@@ -49,7 +50,7 @@ class _DetailedForum extends State<DetailedForum> {
   }
 
   void _onRefresh() async {
-    print("trying to refresh");
+    //
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
@@ -57,7 +58,7 @@ class _DetailedForum extends State<DetailedForum> {
   }
 
   void _onLoading() async {
-    print("trying to refresh");
+    //
     await Future.delayed(Duration(milliseconds: 1000), () {
       getComments();
     });
@@ -67,7 +68,7 @@ class _DetailedForum extends State<DetailedForum> {
   void getComments() async {
     List<Forum_Answer> listItems = [];
     String temp = serverurl + "/comments/get/" + post.postId;
-    // print(temp);
+    //
     final response = await http.get(
       Uri.parse(serverurl + "/comments/get/" + post.postId),
       headers: <String, String>{
@@ -77,7 +78,7 @@ class _DetailedForum extends State<DetailedForum> {
 
     if (response != null && response.statusCode == HttpStatus.ok) {
       List<dynamic> reslist = jsonDecode(response.body);
-      // print("reslist is: " + reslist.toString());
+      //
       for (var comment in reslist) {
         String aid = comment['_id'];
         String commenter = comment['commenter'];
@@ -88,9 +89,9 @@ class _DetailedForum extends State<DetailedForum> {
         // getUserData(commenter).then((val) {
         //   var userData = val.userData;
         //   displayName = userData["name"];
-        //   print("obtained user data! for each comment");
+        //
         // }).catchError((err) {
-        //   print("failed to get user data :(");
+        //
         // });
         Forum_Answer tempFA =
             Forum_Answer(aid, commenter, tempContent, tempTime, displayName);
@@ -98,11 +99,14 @@ class _DetailedForum extends State<DetailedForum> {
       }
       setState(() {
         forumComments = listItems;
+        if (forumComments.isNotEmpty) {
+          isempty = false;
+        }
       });
     } else if (response.statusCode == HttpStatus.noContent) {
-      print("No content");
+      //
     } else {
-      print("Loading Comments DB Error!!!!!");
+      //
     }
   }
 
@@ -137,26 +141,55 @@ class _DetailedForum extends State<DetailedForum> {
         ],
       ),
     );
-    var responses = Container(
-        margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          "Be the first one to contribute!",
-          textScaleFactor: 2,
-          style: TextStyle(
-            fontFamily: 'Billabong',
-          ),
-        ));
-    if (forumComments.isNotEmpty) {
-      responses = Container(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) =>
-                fa.ForumAnswer(forumComments[index]),
-            itemCount: forumComments.length,
-          ));
-    }
+    var noResponse = SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        header: WaterDropHeader(),
+        footer: CustomFooter(builder: (context, mode) {
+          Widget body;
+          if (mode == LoadStatus.idle) {
+            body = Text("pull up to refresh");
+          } else if (mode == LoadStatus.loading) {
+            body = CupertinoActivityIndicator();
+          } else if (mode == LoadStatus.failed) {
+            body = Text("Load Failed!Click to retry!");
+          } else if (mode == LoadStatus.canLoading) {
+            body = Text("release to load more");
+          } else {
+            body = Text("No more Data");
+          }
+          return Container(
+            height: 55.0,
+            child: Center(child: body),
+          );
+        }),
+        // child: Center(child: responses));
+        child: Center(
+            child: Container(
+                margin:
+                    const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Be the first one to contribute!",
+                  textScaleFactor: 2,
+                  style: TextStyle(
+                    fontFamily: 'Billabong',
+                  ),
+                ))));
+
+    // if (forumComments.isNotEmpty) {
+    //   responses = Container(
+    //       padding: const EdgeInsets.all(8.0),
+    //       child: ListView.builder(
+    //         physics: const AlwaysScrollableScrollPhysics(),
+    //         itemBuilder: (BuildContext context, int index) =>
+    //             fa.ForumAnswer(forumComments[index]),
+    //         itemCount: forumComments.length,
+    //       ));
+    // }
     var thelist = SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
@@ -183,7 +216,12 @@ class _DetailedForum extends State<DetailedForum> {
           );
         }),
         // child: Center(child: responses));
-        child: Center(child: responses));
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) =>
+              fa.ForumAnswer(forumComments[index]),
+          itemCount: forumComments.length,
+        ));
 
     // var itemsInMenu = [
 
@@ -193,7 +231,7 @@ class _DetailedForum extends State<DetailedForum> {
         children: <Widget>[
           IconButton(
             onPressed: () async {
-              print("update");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -212,7 +250,7 @@ class _DetailedForum extends State<DetailedForum> {
           TextButton(
             // style: TextButton.styleFrom(primary: Colors.black),
             onPressed: () async {
-              print("update");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -243,7 +281,7 @@ class _DetailedForum extends State<DetailedForum> {
                 Widget continueButton = TextButton(
                   child: Text("DELETE"),
                   onPressed: () {
-                    // print("Trying to delete");
+                    //
                     deleteForum(post.postId);
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
@@ -285,7 +323,7 @@ class _DetailedForum extends State<DetailedForum> {
               Widget continueButton = TextButton(
                 child: Text("DELETE"),
                 onPressed: () {
-                  // print("Trying to delete");
+                  //
                   deleteForum(post.postId);
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -316,7 +354,7 @@ class _DetailedForum extends State<DetailedForum> {
         child: Row(children: <Widget>[
           IconButton(
             onPressed: () async {
-              // print("report content");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -337,7 +375,7 @@ class _DetailedForum extends State<DetailedForum> {
           TextButton(
             // style: TextButton.styleFrom(primary: Colors.black),
             onPressed: () async {
-              // print("report content");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -355,7 +393,7 @@ class _DetailedForum extends State<DetailedForum> {
         child: Row(children: <Widget>[
           IconButton(
             onPressed: () async {
-              // print("report content");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -404,7 +442,7 @@ class _DetailedForum extends State<DetailedForum> {
           ),
           IconButton(
             onPressed: () async {
-              // print("add comments");
+              //
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => commentForum(post)),
@@ -427,7 +465,7 @@ class _DetailedForum extends State<DetailedForum> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
-              child: thelist,
+              child: isempty ? noResponse : thelist,
             ),
           ),
         ],

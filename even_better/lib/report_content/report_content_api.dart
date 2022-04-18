@@ -19,9 +19,7 @@ class AlbumBool {
 Future<AlbumBool> createAlbumReportContent(
     String contentId, contentType, reason) async {
   var response;
-  print("content type: " + contentType);
-  print("content id: " + contentId);
-  print("reason: " + reason);
+
   // if (contentType == "post") {
   response = await http.post(
     Uri.parse('https://api.even-better-api.com/reports/submit'),
@@ -57,7 +55,6 @@ Future<AlbumBool> createAlbumReportContent(
     AlbumBool output = AlbumBool.fromJson(jsonDecode(response.body));
     return output;
   } else {
-    print("status code: " + response.statusCode.toString());
     throw Exception('failed to create album');
   }
 }
