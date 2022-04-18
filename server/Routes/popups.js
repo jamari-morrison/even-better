@@ -39,7 +39,6 @@ router.get('/nextQuestion', async (req, res) => {
                 })
               console.log(updateResult)
 
-
             //get the popup information and return it
             console.log('actually getting next question')
             const questions = await PopupQuestion.find()
@@ -117,17 +116,19 @@ router.post('/answer', async (req, res) => {
           })
         })
         console.log('start new logic -------');
-        
-      const questionToUpdate = await PopupQuestion.findOne({"_id": req.body.questionID});
-      for(i in questionToUpdate.optionQuantities){
-        if(selections.includes(questionToUpdate.optionQuantities[i].option)) questionToUpdate.optionQuantities[i].count++;
-      }
-      console.log(questionToUpdate);
+      
+      if(selections){
 
-      const updatedQuestion = await PopupQuestion.updateOne({"_id": req.body.questionID}, questionToUpdate);
-      console.log(updatedQuestion);
+      
+        const questionToUpdate = await PopupQuestion.findOne({"_id": req.body.questionID});
+        for(i in questionToUpdate.optionQuantities){
+          if(selections.includes(questionToUpdate.optionQuantities[i].option)) questionToUpdate.optionQuantities[i].count++;
+        }
+        console.log(questionToUpdate);
 
-
+        const updatedQuestion = await PopupQuestion.updateOne({"_id": req.body.questionID}, questionToUpdate);
+        console.log(updatedQuestion);
+    }
     } catch(err){
         console.log(err);
         res.json({message: "Error!"})
