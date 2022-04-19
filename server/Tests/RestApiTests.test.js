@@ -7,7 +7,7 @@ describe('Test Endpoints', ()  => {
   beforeAll(done => { //pass a callback to tell jest it is async
     //start the server before any test
     server.listen(3306, () => done());
-})
+    })
 
     //test conversations
     test('Get All Messages', async () => {
