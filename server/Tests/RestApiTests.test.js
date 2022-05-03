@@ -185,7 +185,90 @@ describe('Test Endpoints', ()  => {
 
         expect(res.body[0].answer).toBeInstanceOf(Array);
     });
+  test('Get all reports', async () => {
+      const res = await requestWithSupertest.get('/reports/all'); 
 
+        
+        expect(res.type).toEqual(expect.stringContaining('json'));
+
+
+        expect(res.body[0]).toHaveProperty('_id');
+        expect(res.body[0]).toHaveProperty('content-type');
+        expect(res.body[0]).toHaveProperty('content-id');
+        expect(res.body[0]).toHaveProperty('reason');
+        expect(res.body[0]).toHaveProperty('timestamp');
+        expect(res.body[0]).toHaveProperty('__v');
+
+    });
+  test('Get all users', async () => {
+      const res = await requestWithSupertest.get('/users/all'); 
+
+        
+        expect(res.type).toEqual(expect.stringContaining('json'));
+
+
+        expect(res.body[0]).toHaveProperty('rose-username');
+        expect(res.body[0]).toHaveProperty('creation-time');
+        expect(res.body[0]).toHaveProperty('friends');
+        expect(res.body[0]).toHaveProperty('__v');
+        expect(res.body[0]).toHaveProperty('username');
+        expect(res.body[0]).toHaveProperty('name');
+        expect(res.body[0]).toHaveProperty('bio');
+        expect(res.body[0]).toHaveProperty('companyname');
+        expect(res.body[0]).toHaveProperty('moderator');
+
+    });
+
+    test('Signup user', async () => {
+      const res = await requestWithSupertest.post('/users/signup').send({
+        "name": "test user",
+    "username": "test-username",
+    "rose-username": "test-rose-username",
+        })
+      .set('Content-Type', 'application/json');;
+        expect(res.type).toEqual(expect.stringContaining('json'));
+
+        expect(res.statusCode).toBe(200);
+
+    });
+    test('Update user', async () => {
+      const res = await requestWithSupertest.post('/users/update').send({
+        "name": "test user changed",
+    "username": "test-username",
+        })
+      .set('Content-Type', 'application/json');;
+        expect(res.type).toEqual(expect.stringContaining('json'));
+
+        expect(res.statusCode).toBe(200);
+
+    });
+
+
+    test('Send Validation Email', async () => {
+      const res = await requestWithSupertest.post('/users/sendValidationEmail').send({
+    "username": "test-username",
+    "rose-username": "test-rose-username",
+        })
+      .set('Content-Type', 'application/json');;
+        expect(res.type).toEqual(expect.stringContaining('json'));
+
+        expect(res.statusCode).toBe(200);
+    });
+
+
+
+    test('Delete user', async () => {
+      const res = await requestWithSupertest.post('/users/signup').send({
+    "username": "test-username",
+        })
+      .set('Content-Type', 'application/json');;
+        expect(res.type).toEqual(expect.stringContaining('json'));
+
+        expect(res.statusCode).toBe(200);
+
+    });
   });
+
+
 
   

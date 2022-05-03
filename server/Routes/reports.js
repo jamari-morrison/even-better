@@ -70,8 +70,8 @@ router.post('/submit', async (req, res) => {
     });
     var mailOptions = {
         from: 'rosebot94',
-        //send to seth's rose email for now
-        to: 'lakstise' + '@rose-hulman.edu',
+        //send to bot's email for now
+        to: 'rosebot94' + '@gmail.com',
         subject: "Content Reported by User",
         html: `<h1>Reason for Report:</h1><p>${reason}</p><h1>Content Reported On:</h1><p>${content}</p>
         <h2><a href='https://api.even-better-api.com/${contentType}/deleteByKey/${req.body['content-id']}'>click here to delete content</a></h2>`
